@@ -34,13 +34,13 @@ var AddUserAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     AddUserAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe usuário e senha', this.req.body.userName == '' || this.req.body.password == '');
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o número do cracha, usuário e senha', this.req.body.userId == '' || this.req.body.userName == '' || this.req.body.password == '');
     };
     AddUserAction.prototype.generateSQL = function () {
-        return 'select * from usuario where usuario.user = \'' + this.req.body.userName + '\';';
+        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\';';
     };
     AddUserAction.prototype.insertUserSQL = function () {
-        return 'insert into usuario (usuario.user, usuario.senha) values (\'' + this.req.body.userName + '\', \'' + this.req.body.password + '\');';
+        return 'insert into TBUSUARIO (TBUSUARIO.CDUSUARIO ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CDPERMISSAO) values (\'' + this.req.body.userId + '\',\'' + this.req.body.userName + '\', \'' + this.req.body.password + '\', \'' + this.req.body.permissao + '\');';
     };
     AddUserAction.prototype.Post = function () {
         var _this = this;

@@ -37,7 +37,7 @@ var LogonAction = /** @class */ (function (_super) {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Usuário e senha inválidos', this.req.body.userName == '' || this.req.body.password == '');
     };
     LogonAction.prototype.generateSQL = function () {
-        return 'select * from usuario where usuario.user = \'' + this.req.body.userName + '\' and usuario.senha = \'' + this.req.body.password + '\';';
+        return 'select U.LOGIN, U.SENHA from TBUSUARIO U where U.LOGIN = \'' + this.req.body.userName + '\' and U.SENHA = \'' + this.req.body.password + '\';';
     };
     LogonAction.prototype.Post = function () {
         var _this = this;
