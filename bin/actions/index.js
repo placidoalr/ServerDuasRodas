@@ -4,3 +4,5 @@ var logon_1 = require("./logon");
 exports.LogonAction = logon_1.LogonAction;
 var addUser_1 = require("./addUser");
 exports.AddUserAction = addUser_1.AddUserAction;
+var listaOM_1 = require("./listaOM");
+exports.ListaOMAction = listaOM_1.ListaOMAction;
