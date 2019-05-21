@@ -1,4 +1,4 @@
-import {Post} from '../decorators';
+import {Get} from '../decorators';
 import {Action} from '../kernel/action';
 import {ActionType} from '../kernel/route-types';
 import {VPUtils} from '../utils/vputils';
@@ -11,11 +11,11 @@ export class ListaOMAction extends Action{
     
 
     private generateSQL() : string {
-        return 'select O.CDOM, O.DTGERACAO, O.PRIORIDADE, O.OBS from TBOM O ORDER BY O.PRIORIDADE, O.CDOM;';
+        return 'select O.CDOM, O.DTGERACAO, O.PRIORIDADE, O.DSOM from TBOM O ORDER BY O.PRIORIDADE, O.CDOM;';
     }
 
-    @Post('/om')
-    public Get(){
+    @Get('/om')
+    public GetOM(){
 
         new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
             (data : any) => {

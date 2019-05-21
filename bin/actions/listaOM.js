@@ -32,9 +32,9 @@ var ListaOMAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     ListaOMAction.prototype.generateSQL = function () {
-        return 'select O.CDOM, O.DTGERACAO, O.PRIORIDADE, O.OBS from TBOM O ORDER BY O.PRIORIDADE, O.CDOM;';
+        return 'select O.CDOM, O.DTGERACAO, O.PRIORIDADE, O.DSOM from TBOM O ORDER BY O.PRIORIDADE, O.CDOM;';
     };
-    ListaOMAction.prototype.Get = function () {
+    ListaOMAction.prototype.GetOM = function () {
         var _this = this;
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             _this.sendAnswer(data);
@@ -46,11 +46,11 @@ var ListaOMAction = /** @class */ (function (_super) {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/om'),
+        decorators_1.Get('/om'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], ListaOMAction.prototype, "Get", null);
+    ], ListaOMAction.prototype, "GetOM", null);
     return ListaOMAction;
 }(action_1.Action));
 exports.ListaOMAction = ListaOMAction;
