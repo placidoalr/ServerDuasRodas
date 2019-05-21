@@ -1,4 +1,5 @@
-drop database DR_BD;
+drop database DR_DB;
+COMMIT;
 
 CREATE DATABASE dr_db;
 
