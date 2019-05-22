@@ -11,7 +11,7 @@ export class ListaOMAction extends Action{
     
 
     private generateSQL() : string {
-        return 'select O.CDOM, O.DTGERACAO, O.PRIORIDADE, O.DSOM from TBOM O ORDER BY O.PRIORIDADE, O.CDOM;';
+        return 'select O.CDOM, O.DTGERACAO,O.TPOM, O.PRIORIDADE, O.DSOM from TBOM O ORDER BY O.PRIORIDADE, O.CDOM;';
     }
 
     @Get('/om')
