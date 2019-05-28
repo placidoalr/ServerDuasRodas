@@ -10,14 +10,14 @@ export class ListaOMAction extends Action{
 
     
 
-    private generateSQL(userid:any,setorid:any) : string {
-        return 'select O.IDOM, O.CDOM, O.DTGERACAO,O.TPOM, O.PRIORIDADE, O.DSOM from TBOM O WHERE O.MANU_ATRIB = '+userid+' or O.MANU_ATRIB = "" and O.SETOR_ATRIB = '+setorid+' ORDER BY O.PRIORIDADE;';
+    private generateSQL(idom:any) : string {
+        return 'select * from TBOM O WHERE O.IDOM ='+idom+';';
     }
 
-    @Get('/listaom')
+    @Get('/om')
     public GetOM(){
         
-        new MySQLFactory().getConnection().select(this.generateSQL(this.req.query.userid,this.req.query.setorid)).subscribe(
+        new MySQLFactory().getConnection().select(this.generateSQL(this.req.query.idom)).subscribe(
             (data : any) => {
                 this.sendAnswer(data);
             },
