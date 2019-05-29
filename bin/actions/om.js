@@ -26,31 +26,37 @@ var decorators_1 = require("../decorators");
 var action_1 = require("../kernel/action");
 var route_types_1 = require("../kernel/route-types");
 var mysql_factory_1 = require("../mysql/mysql_factory");
-var ListaOMAction = /** @class */ (function (_super) {
-    __extends(ListaOMAction, _super);
-    function ListaOMAction() {
+var OMAction = /** @class */ (function (_super) {
+    __extends(OMAction, _super);
+    function OMAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    ListaOMAction.prototype.generateSQL = function (userid, setorid) {
-        return 'select O.IDOM, O.CDOM, O.DTGERACAO,O.TPOM, O.PRIORIDADE, O.DSOM from TBOM O WHERE O.MANU_ATRIB = ' + userid + ' or O.MANU_ATRIB is null and O.SETOR_ATRIB = ' + setorid + ' ORDER BY O.PRIORIDADE;';
+    OMAction.prototype.generateSQL = function (idom) {
+        return 'select * from TBOM O WHERE O.IDOM =' + idom + ';';
     };
-    ListaOMAction.prototype.GetListaOM = function () {
+    OMAction.prototype.GetOM = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL(this.req.query.userid, this.req.query.setorid)).subscribe(function (data) {
-            _this.sendAnswer(data);
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL(this.req.query.idom)).subscribe(function (data) {
+            if (data.length == 0) {
+                _this.sendAnswer({});
+            }
+            else {
+                _this.sendAnswer(data[0]);
+            }
         }, function (error) {
+            console.log(error);
             _this.sendError(error);
         });
     };
-    ListaOMAction.prototype.defineVisibility = function () {
+    OMAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Get('/listaom'),
+        decorators_1.Get('/om'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], ListaOMAction.prototype, "GetListaOM", null);
-    return ListaOMAction;
+    ], OMAction.prototype, "GetOM", null);
+    return OMAction;
 }(action_1.Action));
-exports.ListaOMAction = ListaOMAction;
+exports.OMAction = OMAction;

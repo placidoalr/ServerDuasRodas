@@ -6,7 +6,7 @@ import {KernelUtils} from '../kernel/kernel-utils';
 import {MySQL} from '../mysql/mysql';
 import {MySQLFactory} from '../mysql/mysql_factory';
 
-export class ListaOMAction extends Action{
+export class OMAction extends Action{
 
     
 
@@ -19,12 +19,17 @@ export class ListaOMAction extends Action{
         
         new MySQLFactory().getConnection().select(this.generateSQL(this.req.query.idom)).subscribe(
             (data : any) => {
-                this.sendAnswer(data);
+                if (data.length == 0){
+                    this.sendAnswer({});
+                } else {
+                    this.sendAnswer(data[0]);
+                }                
             },
             (error : any) => {
+                console.log(error)
                 this.sendError(error);
             }
-        );
+        )
     }
 
     defineVisibility() {

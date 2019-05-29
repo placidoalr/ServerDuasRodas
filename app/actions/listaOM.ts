@@ -11,11 +11,11 @@ export class ListaOMAction extends Action{
     
 
     private generateSQL(userid:any,setorid:any) : string {
-        return 'select O.IDOM, O.CDOM, O.DTGERACAO,O.TPOM, O.PRIORIDADE, O.DSOM from TBOM O WHERE O.MANU_ATRIB = '+userid+' or O.MANU_ATRIB = "" and O.SETOR_ATRIB = '+setorid+' ORDER BY O.PRIORIDADE;';
+        return 'select O.IDOM, O.CDOM, O.DTGERACAO,O.TPOM, O.PRIORIDADE, O.DSOM from TBOM O WHERE O.MANU_ATRIB = '+userid+' or O.MANU_ATRIB is null and O.SETOR_ATRIB = '+setorid+' ORDER BY O.PRIORIDADE;';
     }
 
     @Get('/listaom')
-    public GetOM(){
+    public GetListaOM(){
         
         new MySQLFactory().getConnection().select(this.generateSQL(this.req.query.userid,this.req.query.setorid)).subscribe(
             (data : any) => {
