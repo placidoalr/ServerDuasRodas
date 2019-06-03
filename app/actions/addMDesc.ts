@@ -8,42 +8,28 @@ import { MySQLFactory } from '../mysql/mysql_factory';
 export class AddMDescAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o número do cracha, usuário e senha', this.req.body.userId == '' || this.req.body.userName == '' || this.req.body.password == '');
+        new KernelUtils().createExceptionApiError('1001', 'Informe o tempo levado', this.req.body.time == '' ||  this.req.body.desc);
     }
 
-    private generateSQL() : string {
-        return 'select * from TB_OM_DESC where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\';';
-    }
     private insertUserSQL() : string{
-        return 'insert into TBUSUARIO (TBUSUARIO.CDUSUARIO ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CDPERMISSAO) values (\''+ this.req.body.userId+'\',\''+ this.req.body.userName +'\', \''+ this.req.body.password+'\', \''+ this.req.body.permissao+'\');';
+        return 'insert into TB_OM_DESC (TB_OM_DESC.IDOM ,TB_OM_DESC.DESC, TB_OM_DESC.TEMPO_UTIL) values (\''+ this.req.body.idom+'\',\''+ this.req.body.desc +'\', \''+ this.req.body.time+'\');';
     }
 
-    @Post('/addUser')
+    @Post('/addMDesc')
     public Post(){
         this.validateData();
 
-        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-            (data : any) => {
-                if (data.length || data.length > 0){
-                    console.log(data);
-                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
-                  return;
-                }else{
-                    console.log(data);
-                    new MySQLFactory().getConnection().select(this.insertUserSQL()).subscribe(
-                        (data : any) => {
-                            console.log(data);
-                        }
-                    );
-                }
-                this.sendAnswer({
-                    token    : new VPUtils().generateGUID().toUpperCase()
-                });
-            },
-            (error : any) => {
-                this.sendError(error);
-            }
+        
+        new MySQLFactory().getConnection().select(this.insertUserSQL()).subscribe(
+        (data : any) => {
+        console.log(data);
+        }
         );
+
+        this.sendAnswer({
+        token    : new VPUtils().generateGUID().toUpperCase()
+        });
+
     }
 
     defineVisibility() {
