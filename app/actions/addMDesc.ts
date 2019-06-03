@@ -12,7 +12,7 @@ export class AddMDescAction extends Action{
     }
 
     private generateSQL() : string {
-        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\';';
+        return 'select * from TB_OM_DESC where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\';';
     }
     private insertUserSQL() : string{
         return 'insert into TBUSUARIO (TBUSUARIO.CDUSUARIO ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CDPERMISSAO) values (\''+ this.req.body.userId+'\',\''+ this.req.body.userName +'\', \''+ this.req.body.password+'\', \''+ this.req.body.permissao+'\');';
