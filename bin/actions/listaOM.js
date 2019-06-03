@@ -31,8 +31,10 @@ var ListaOMAction = /** @class */ (function (_super) {
     function ListaOMAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+
     ListaOMAction.prototype.generateSQL = function (userid, setorid) {
         return 'select O.IDOM, O.CDOM, O.DTGERACAO,O.TPOM, O.PRIORIDADE, O.DSOM from TBOM O WHERE O.MANU_ATRIB = ' + userid + ' or O.MANU_ATRIB is null and O.SETOR_ATRIB = ' + setorid + ' ORDER BY O.PRIORIDADE;';
+
     };
     ListaOMAction.prototype.GetListaOM = function () {
         var _this = this;
