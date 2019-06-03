@@ -32,7 +32,7 @@ var ListaOMAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     ListaOMAction.prototype.generateSQL = function () {
-        return 'select O.CDOM, O.DTGERACAO, O.PRIORIDADE, O.DSOM from TBOM O ORDER BY O.PRIORIDADE, O.CDOM;';
+        return 'select O.CDOM, O.DTGERACAO,O.TPOM, O.PRIORIDADE, O.DSOM from TBOM O ORDER BY O.PRIORIDADE, O.CDOM;';
     };
     ListaOMAction.prototype.GetOM = function () {
         var _this = this;
