@@ -6,25 +6,30 @@ import {KernelUtils} from '../kernel/kernel-utils';
 import {MySQL} from '../mysql/mysql';
 import {MySQLFactory} from '../mysql/mysql_factory';
 
-export class ListaOMAction extends Action{
+export class OMAction extends Action{
 
     
 
-    private generateSQL(userid:any,setorid:any) : string {
-        return 'select O.IDOM, O.CDOM, O.DTGERACAO,O.TPOM, O.PRIORIDADE, O.DSOM from TBOM O WHERE O.MANU_ATRIB = '+userid+' or O.MANU_ATRIB is null and O.SETOR_ATRIB = '+setorid+' ORDER BY O.PRIORIDADE;';
+    private generateSQL(idom:any) : string {
+        return 'select * from TBOM O WHERE O.IDOM ='+idom+';';
     }
 
-    @Get('/listaom')
-    public GetListaOM(){
+    @Get('/om')
+    public GetOM(){
         
-        new MySQLFactory().getConnection().select(this.generateSQL(this.req.query.userid,this.req.query.setorid)).subscribe(
+        new MySQLFactory().getConnection().select(this.generateSQL(this.req.query.idom)).subscribe(
             (data : any) => {
-                this.sendAnswer(data);
+                if (data.length == 0){
+                    this.sendAnswer({});
+                } else {
+                    this.sendAnswer(data[0]);
+                }                
             },
             (error : any) => {
+                console.log(error)
                 this.sendError(error);
             }
-        );
+        )
     }
 
     defineVisibility() {
