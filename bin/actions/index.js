@@ -8,3 +8,5 @@ var listaOM_1 = require("./listaOM");
 exports.ListaOMAction = listaOM_1.ListaOMAction;
 var om_1 = require("./om");
 exports.OMAction = om_1.OMAction;
+var addMDesc_1 = require("./addMDesc");
+exports.AddMDescAction = addMDesc_1.AddMDescAction;

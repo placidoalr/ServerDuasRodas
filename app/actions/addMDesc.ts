@@ -8,7 +8,7 @@ import { MySQLFactory } from '../mysql/mysql_factory';
 export class AddMDescAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o tempo levado', this.req.body.time == '' ||  this.req.body.desc);
+        new KernelUtils().createExceptionApiError('1001', 'Informe o tempo levado', this.req.body.time == '' ||  this.req.body.desc == '');
     }
 
     private insertUserSQL() : string{

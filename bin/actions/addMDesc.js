@@ -25,32 +25,38 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var decorators_1 = require("../decorators");
 var action_1 = require("../kernel/action");
 var route_types_1 = require("../kernel/route-types");
+var vputils_1 = require("../utils/vputils");
+var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
-var ListaOMAction = /** @class */ (function (_super) {
-    __extends(ListaOMAction, _super);
-    function ListaOMAction() {
+var AddMDescAction = /** @class */ (function (_super) {
+    __extends(AddMDescAction, _super);
+    function AddMDescAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    ListaOMAction.prototype.generateSQL = function (userid, setorid) {
-        return 'select O.IDOM, O.CDOM, O.DTGERACAO,O.TPOM, O.PRIORIDADE, O.DSOM from TBOM O WHERE O.MANU_ATRIB = ' + userid + ' or O.MANU_ATRIB is null and O.SETOR_ATRIB = ' + setorid + ' ORDER BY O.PRIORIDADE;';
+    AddMDescAction.prototype.validateData = function () {
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o tempo levado', this.req.body.desc == '');
     };
-    ListaOMAction.prototype.GetListaOM = function () {
-        var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL(this.req.query.userid, this.req.query.setorid)).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
+    AddMDescAction.prototype.insertUserSQL = function () {
+        return 'insert into TB_OM_DESC (TB_OM_DESC.IDOM ,TB_OM_DESC.DESC, TB_OM_DESC.TEMPO_UTIL) values (\'' + this.req.body.idom + '\',\'' + this.req.body.desc + '\', \'' + this.req.body.time + '\');';
+    };
+    AddMDescAction.prototype.Post = function () {
+        this.validateData();
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.insertUserSQL()).subscribe(function (data) {
+            console.log(data);
+        });
+        this.sendAnswer({
+            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
         });
     };
-    ListaOMAction.prototype.defineVisibility = function () {
+    AddMDescAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Get('/listaom'),
+        decorators_1.Post('/addMDesc'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], ListaOMAction.prototype, "GetListaOM", null);
-    return ListaOMAction;
+    ], AddMDescAction.prototype, "Post", null);
+    return AddMDescAction;
 }(action_1.Action));
-exports.ListaOMAction = ListaOMAction;
+exports.AddMDescAction = AddMDescAction;

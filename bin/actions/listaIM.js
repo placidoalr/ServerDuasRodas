@@ -31,12 +31,12 @@ var ListaOMAction = /** @class */ (function (_super) {
     function ListaOMAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    ListaOMAction.prototype.generateSQL = function (userid, setorid) {
-        return 'select O.IDOM, O.CDOM, O.DTGERACAO,O.TPOM, O.PRIORIDADE, O.DSOM from TBOM O WHERE O.MANU_ATRIB = ' + userid + ' or O.MANU_ATRIB is null and O.SETOR_ATRIB = ' + setorid + ' ORDER BY O.PRIORIDADE;';
+    ListaOMAction.prototype.generateSQL = function () {
+        return 'select * from TB_IM;';
     };
     ListaOMAction.prototype.GetListaOM = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL(this.req.query.userid, this.req.query.setorid)).subscribe(function (data) {
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             _this.sendAnswer(data);
         }, function (error) {
             _this.sendError(error);
@@ -46,7 +46,7 @@ var ListaOMAction = /** @class */ (function (_super) {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Get('/listaom'),
+        decorators_1.Get('/listaim'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
