@@ -10,3 +10,5 @@ var om_1 = require("./om");
 exports.OMAction = om_1.OMAction;
 var addMDesc_1 = require("./addMDesc");
 exports.AddMDescAction = addMDesc_1.AddMDescAction;
+var listaIM_1 = require("./listaIM");
+exports.ListaIMAction = listaIM_1.ListaIMAction;

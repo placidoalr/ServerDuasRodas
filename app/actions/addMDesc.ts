@@ -17,6 +17,7 @@ export class AddMDescAction extends Action{
 
     @Post('/addMDesc')
     public Post(){
+        console.log(this.req.body.idom)
         this.validateData();
 
         

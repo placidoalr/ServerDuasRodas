@@ -26,23 +26,24 @@ var decorators_1 = require("../decorators");
 var action_1 = require("../kernel/action");
 var route_types_1 = require("../kernel/route-types");
 var mysql_factory_1 = require("../mysql/mysql_factory");
-var ListaOMAction = /** @class */ (function (_super) {
-    __extends(ListaOMAction, _super);
-    function ListaOMAction() {
+var ListaIMAction = /** @class */ (function (_super) {
+    __extends(ListaIMAction, _super);
+    function ListaIMAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    ListaOMAction.prototype.generateSQL = function () {
+    ListaIMAction.prototype.generateSQL = function () {
         return 'select * from TB_IM;';
     };
-    ListaOMAction.prototype.GetListaOM = function () {
+    ListaIMAction.prototype.GetListaOM = function () {
         var _this = this;
+        console.log("AWOWW");
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             _this.sendAnswer(data);
         }, function (error) {
             _this.sendError(error);
         });
     };
-    ListaOMAction.prototype.defineVisibility = function () {
+    ListaIMAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
@@ -50,7 +51,7 @@ var ListaOMAction = /** @class */ (function (_super) {
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], ListaOMAction.prototype, "GetListaOM", null);
-    return ListaOMAction;
+    ], ListaIMAction.prototype, "GetListaOM", null);
+    return ListaIMAction;
 }(action_1.Action));
-exports.ListaOMAction = ListaOMAction;
+exports.ListaIMAction = ListaIMAction;

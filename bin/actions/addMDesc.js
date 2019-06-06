@@ -34,12 +34,13 @@ var AddMDescAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     AddMDescAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o tempo levado', this.req.body.desc == '');
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o tempo levado', this.req.body.time == '' || this.req.body.desc == '');
     };
     AddMDescAction.prototype.insertUserSQL = function () {
         return 'insert into TB_OM_DESC (TB_OM_DESC.IDOM ,TB_OM_DESC.DESC, TB_OM_DESC.TEMPO_UTIL) values (\'' + this.req.body.idom + '\',\'' + this.req.body.desc + '\', \'' + this.req.body.time + '\');';
     };
     AddMDescAction.prototype.Post = function () {
+        console.log(this.req.body.idom);
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.insertUserSQL()).subscribe(function (data) {
             console.log(data);
