@@ -8,17 +8,17 @@ import { MySQLFactory } from '../mysql/mysql_factory';
 export class AddUserAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o nome do Centro de Trabalho', this.req.body.name == '');
+        new KernelUtils().createExceptionApiError('1001', 'Informe a causa do defeito', this.req.body.dscausa == '');
     }
 
     private generateSQL() : string {
-        return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\';';
+        return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.dscausa + '\';';
     }
     private insertUserSQL() : string{
-        return 'insert into TBCT (TBCT.NOME ) values (\''+ this.req.body.name+'\');';
+        return 'insert into TBCAUSADEF (TBCAUSADEF.DSCAUSA ) values (\''+ this.req.body.dscausa+'\');';
     }
 
-    @Post('/addCT')
+    @Post('/addCausaDef')
     public Post(){
         this.validateData();
 
@@ -26,7 +26,7 @@ export class AddUserAction extends Action{
             (data : any) => {
                 if (data.length || data.length > 0){
                     console.log(data);
-                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Centro de trabalho já existe'));
+                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Causa de defeito já existe'));
                   return;
                 }else{
                     console.log(data);
