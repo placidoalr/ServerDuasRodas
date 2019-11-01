@@ -12,10 +12,10 @@ export class AddUserAction extends Action{
     }
 
     private generateSQL() : string {
-        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\';';
+        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\' AND TBUSUARIO.LOGIN = \'' + this.req.body.userId + '\';';
     }
     private insertUserSQL() : string{
-        return 'insert into TBUSUARIO (TBUSUARIO.CDUSUARIO ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CDPERMISSAO) values (\''+ this.req.body.userId+'\',\''+ this.req.body.userName +'\', \''+ this.req.body.password+'\', \''+ this.req.body.permissao+'\');';
+        return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CDPERM, TBUSUARIO.NOME) values (\''+ this.req.body.userId+'\',\''+ this.req.body.userName +'\', \''+ this.req.body.password+'\', \''+ this.req.body.permissao+'\', \''+ this.req.body.nome+'\');';
     }
 
     @Post('/addUser')
