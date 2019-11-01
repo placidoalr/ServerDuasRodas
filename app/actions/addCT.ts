@@ -8,17 +8,17 @@ import { MySQLFactory } from '../mysql/mysql_factory';
 export class AddUserAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o número do cracha, usuário e senha', this.req.body.userId == '' || this.req.body.userName == '' || this.req.body.password == '');
+        new KernelUtils().createExceptionApiError('1001', 'Informe o nome do Centro de Trabalho', this.req.body.name == '');
     }
 
     private generateSQL() : string {
-        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\' OR TBUSUARIO.userId = \'' + this.req.body.userId + '\';';
+        return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\';';
     }
     private insertUserSQL() : string{
-        return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CDPERM, TBUSUARIO.NOME) values (\''+ this.req.body.userId+'\',\''+ this.req.body.userName +'\', \''+ this.req.body.password+'\', \''+ this.req.body.permissao+'\', \''+ this.req.body.nome+'\');';
+        return 'insert into TBCT (TBCT.NOME ) values (\''+ this.req.body.name+'\');';
     }
 
-    @Post('/addUser')
+    @Post('/addCT')
     public Post(){
         this.validateData();
 
@@ -26,7 +26,7 @@ export class AddUserAction extends Action{
             (data : any) => {
                 if (data.length || data.length > 0){
                     console.log(data);
-                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
+                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Centro de trabalho já existe'));
                   return;
                 }else{
                     console.log(data);
