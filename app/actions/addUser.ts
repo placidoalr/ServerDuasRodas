@@ -12,7 +12,7 @@ export class AddUserAction extends Action{
     }
 
     private generateSQL() : string {
-        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\' AND TBUSUARIO.LOGIN = \'' + this.req.body.userId + '\';';
+        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\' OR TBUSUARIO.userId = \'' + this.req.body.userId + '\';';
     }
     private insertUserSQL() : string{
         return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CDPERM, TBUSUARIO.NOME) values (\''+ this.req.body.userId+'\',\''+ this.req.body.userName +'\', \''+ this.req.body.password+'\', \''+ this.req.body.permissao+'\', \''+ this.req.body.nome+'\');';
