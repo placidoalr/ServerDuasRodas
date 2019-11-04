@@ -18,7 +18,7 @@ export class AddUserAction extends Action{
         return 'insert into TBTIPO (TBTIPO.NOME ) values (\''+ this.req.body.name+'\');';
     }
 
-    @Post('/addTipo')
+    @Post('/AddTipo')
     public Post(){
         this.validateData();
 

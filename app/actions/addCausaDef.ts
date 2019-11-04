@@ -18,7 +18,7 @@ export class AddUserAction extends Action{
         return 'insert into TBCAUSADEF (TBCAUSADEF.DSCAUSA ) values (\''+ this.req.body.dscausa+'\');';
     }
 
-    @Post('/addCausaDef')
+    @Post('/AddCausaDef')
     public Post(){
         this.validateData();
 

@@ -18,7 +18,7 @@ export class AddUserAction extends Action{
         return 'insert into TBEQUIP (TBEQUIP.NOME ,TBEQUIP.SETOR_ATRIB) values (\''+ this.req.body.name+'\',\''+ this.req.body.setor +'\');';
     }
 
-    @Post('/addEquip')
+    @Post('/AddEquip')
     public Post(){
         this.validateData();
 

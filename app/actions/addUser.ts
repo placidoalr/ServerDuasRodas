@@ -18,7 +18,7 @@ export class AddUserAction extends Action{
         return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CDPERM, TBUSUARIO.NOME) values (\''+ this.req.body.userId+'\',\''+ this.req.body.userName +'\', \''+ this.req.body.password+'\', \''+ this.req.body.permissao+'\', \''+ this.req.body.nome+'\');';
     }
 
-    @Post('/addUser')
+    @Post('/AddUser')
     public Post(){
         this.validateData();
 

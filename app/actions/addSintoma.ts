@@ -18,7 +18,7 @@ export class AddUserAction extends Action{
         return 'insert into TBSINTOMA (TBSINTOMA.NOME ) values (\''+ this.req.body.name+'\');';
     }
 
-    @Post('/addSintoma')
+    @Post('/AddSintoma')
     public Post(){
         this.validateData();
 

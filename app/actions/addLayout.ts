@@ -18,7 +18,7 @@ export class AddUserAction extends Action{
         return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME ) values (\''+ this.req.body.name+'\');';
     }
 
-    @Post('/addLayout')
+    @Post('/AddLayout')
     public Post(){
         this.validateData();
 

@@ -18,7 +18,7 @@ export class AddUserAction extends Action{
         return 'insert into TBSETOR (TBSETOR.NOME ) values (\''+ this.req.body.name+'\');';
     }
 
-    @Post('/addSetor')
+    @Post('/AddSetor')
     public Post(){
         this.validateData();
 

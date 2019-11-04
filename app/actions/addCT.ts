@@ -18,7 +18,7 @@ export class AddUserAction extends Action{
         return 'insert into TBCT (TBCT.NOME ) values (\''+ this.req.body.name+'\');';
     }
 
-    @Post('/addCT')
+    @Post('/AddCT')
     public Post(){
         this.validateData();
 
