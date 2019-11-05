@@ -22,6 +22,7 @@ export class LogonAction extends Action{
 
         new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
             (data : any) => {
+                console.log('data', data);
                 if (!data.length || data.length != 1){
                   this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário e senha inválidos'));
                   return;
@@ -34,6 +35,7 @@ export class LogonAction extends Action{
                 });
             },
             (error : any) => {
+                console.log('Err', error);
                 this.sendError(error);
             }
         );
