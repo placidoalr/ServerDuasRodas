@@ -5,7 +5,7 @@ import {VPUtils} from '../utils/vputils';
 import {KernelUtils} from '../kernel/kernel-utils';
 import { MySQLFactory } from '../mysql/mysql_factory';
 
-export class AddUserAction extends Action{
+export class AddCausaDefAction extends Action{
 
     private validateData(){
         new KernelUtils().createExceptionApiError('1001', 'Informe a causa do defeito', this.req.body.dscausa == '');

@@ -5,7 +5,7 @@ import {VPUtils} from '../utils/vputils';
 import {KernelUtils} from '../kernel/kernel-utils';
 import { MySQLFactory } from '../mysql/mysql_factory';
 
-export class AddUserAction extends Action{
+export class AddEquipAction extends Action{
 
     private validateData(){
         new KernelUtils().createExceptionApiError('1001', 'Informe o nome e setor do Equipamento', this.req.body.name == '' || this.req.body.setor == '');

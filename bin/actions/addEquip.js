@@ -28,27 +28,27 @@ var route_types_1 = require("../kernel/route-types");
 var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
-var AddUserAction = /** @class */ (function (_super) {
-    __extends(AddUserAction, _super);
-    function AddUserAction() {
+var AddEquipAction = /** @class */ (function (_super) {
+    __extends(AddEquipAction, _super);
+    function AddEquipAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    AddUserAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o número do cracha, usuário e senha', this.req.body.userId == '' || this.req.body.userName == '' || this.req.body.password == '');
+    AddEquipAction.prototype.validateData = function () {
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o nome e setor do Equipamento', this.req.body.name == '' || this.req.body.setor == '');
     };
-    AddUserAction.prototype.generateSQL = function () {
-        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\' OR TBUSUARIO.userId = \'' + this.req.body.userId + '\';';
+    AddEquipAction.prototype.generateSQL = function () {
+        return 'select * from TBEQUIP where TBEQUIP.NOME = \'' + this.req.body.name + '\' AND TBEQUIP.SETOR_ATRIB = \'' + this.req.body.setor + '\';';
     };
-    AddUserAction.prototype.insertUserSQL = function () {
-        return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CDPERM, TBUSUARIO.NOME) values (\'' + this.req.body.userId + '\',\'' + this.req.body.userName + '\', \'' + this.req.body.password + '\', \'' + this.req.body.permissao + '\', \'' + this.req.body.nome + '\');';
+    AddEquipAction.prototype.insertUserSQL = function () {
+        return 'insert into TBEQUIP (TBEQUIP.NOME ,TBEQUIP.SETOR_ATRIB) values (\'' + this.req.body.name + '\',\'' + this.req.body.setor + '\');';
     };
-    AddUserAction.prototype.Post = function () {
+    AddEquipAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
                 console.log(data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Equipamento já existe'));
                 return;
             }
             else {
@@ -64,15 +64,15 @@ var AddUserAction = /** @class */ (function (_super) {
             _this.sendError(error);
         });
     };
-    AddUserAction.prototype.defineVisibility = function () {
+    AddEquipAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/AddUser'),
+        decorators_1.Post('/AddEquip'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], AddUserAction.prototype, "Post", null);
-    return AddUserAction;
+    ], AddEquipAction.prototype, "Post", null);
+    return AddEquipAction;
 }(action_1.Action));
-exports.AddUserAction = AddUserAction;
+exports.AddEquipAction = AddEquipAction;

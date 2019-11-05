@@ -28,27 +28,27 @@ var route_types_1 = require("../kernel/route-types");
 var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
-var AddUserAction = /** @class */ (function (_super) {
-    __extends(AddUserAction, _super);
-    function AddUserAction() {
+var AddLayoutAction = /** @class */ (function (_super) {
+    __extends(AddLayoutAction, _super);
+    function AddLayoutAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    AddUserAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o número do cracha, usuário e senha', this.req.body.userId == '' || this.req.body.userName == '' || this.req.body.password == '');
+    AddLayoutAction.prototype.validateData = function () {
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Layout', this.req.body.name == '');
     };
-    AddUserAction.prototype.generateSQL = function () {
-        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\' OR TBUSUARIO.userId = \'' + this.req.body.userId + '\';';
+    AddLayoutAction.prototype.generateSQL = function () {
+        return 'select * from TBLAYOUTOM where TBLAYOUTOM.NOME = \'' + this.req.body.name + '\';';
     };
-    AddUserAction.prototype.insertUserSQL = function () {
-        return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CDPERM, TBUSUARIO.NOME) values (\'' + this.req.body.userId + '\',\'' + this.req.body.userName + '\', \'' + this.req.body.password + '\', \'' + this.req.body.permissao + '\', \'' + this.req.body.nome + '\');';
+    AddLayoutAction.prototype.insertUserSQL = function () {
+        return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME ) values (\'' + this.req.body.name + '\');';
     };
-    AddUserAction.prototype.Post = function () {
+    AddLayoutAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
                 console.log(data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Layout já existe'));
                 return;
             }
             else {
@@ -64,15 +64,15 @@ var AddUserAction = /** @class */ (function (_super) {
             _this.sendError(error);
         });
     };
-    AddUserAction.prototype.defineVisibility = function () {
+    AddLayoutAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/AddUser'),
+        decorators_1.Post('/AddLayout'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], AddUserAction.prototype, "Post", null);
-    return AddUserAction;
+    ], AddLayoutAction.prototype, "Post", null);
+    return AddLayoutAction;
 }(action_1.Action));
-exports.AddUserAction = AddUserAction;
+exports.AddLayoutAction = AddLayoutAction;
