@@ -6,6 +6,6 @@ export class MySQLFactory {
     }
 
     public getConnection() : any{
-      return new MySQL('localhost', 'root', '', 'DR_DB');
+      return new MySQL('localhost', 'root', '', 'DRDB');
     }
 }

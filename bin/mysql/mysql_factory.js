@@ -5,7 +5,7 @@ var MySQLFactory = /** @class */ (function () {
     function MySQLFactory() {
     }
     MySQLFactory.prototype.getConnection = function () {
-        return new mysql_1.MySQL('localhost', 'root', '', 'DR_DB');
+        return new mysql_1.MySQL('localhost', 'root', '', 'DRDB');
     };
     return MySQLFactory;
 }());

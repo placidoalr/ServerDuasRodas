@@ -25,6 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var decorators_1 = require("../decorators");
 var action_1 = require("../kernel/action");
 var route_types_1 = require("../kernel/route-types");
+var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
 var LogonAction = /** @class */ (function (_super) {
@@ -48,6 +49,7 @@ var LogonAction = /** @class */ (function (_super) {
                 return;
             }
             _this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase(),
                 userName: _this.req.body.userName,
                 password: _this.req.body.password
             });
