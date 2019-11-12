@@ -9,7 +9,7 @@ import {MySQLFactory} from '../mysql/mysql_factory';
 export class LogonAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Usuário e senha inválidos', this.req.body.userName == '' || this.req.body.password == '');
+        new KernelUtils().createExceptionApiError('1001', 'Usuário e senha inválidos', this.req.body.userName == '' || this.req.body.password == '' || this.req.body.userName == undefined || this.req.body.password == undefined);
     }
 
     private generateSQL() : string {

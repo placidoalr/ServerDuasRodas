@@ -8,7 +8,7 @@ import { MySQLFactory } from '../mysql/mysql_factory';
 export class AddUserAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o número do cracha, usuário e senha', this.req.body.userId == '' || this.req.body.userName == '' || this.req.body.password == '');
+        new KernelUtils().createExceptionApiError('1001', 'Informe o número do cracha, usuário e senha', this.req.body.userId == '' || this.req.body.userName == '' || this.req.body.password == '' || this.req.body.userId == undefined || this.req.body.userName == undefined || this.req.body.password == undefined);
     }
 
     private generateSQL() : string {

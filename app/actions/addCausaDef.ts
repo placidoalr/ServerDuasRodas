@@ -8,14 +8,14 @@ import { MySQLFactory } from '../mysql/mysql_factory';
 export class AddCausaDefAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe a causa do defeito', this.req.body.dscausa == '');
+        new KernelUtils().createExceptionApiError('1001', 'Informe a causa do defeito', this.req.body.name == '' || this.req.body.name == undefined);
     }
 
     private generateSQL() : string {
-        return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.dscausa + '\';';
+        return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.name + '\';';
     }
     private insertUserSQL() : string{
-        return 'insert into TBCAUSADEF (TBCAUSADEF.DSCAUSA ) values (\''+ this.req.body.dscausa+'\');';
+        return 'insert into TBCAUSADEF (TBCAUSADEF.DSCAUSA ) values (\''+ this.req.body.name+'\');';
     }
 
     @Post('/AddCausaDef')

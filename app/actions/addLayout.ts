@@ -8,7 +8,7 @@ import { MySQLFactory } from '../mysql/mysql_factory';
 export class AddLayoutAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o Layout', this.req.body.name == '');
+        new KernelUtils().createExceptionApiError('1001', 'Informe o Layout', this.req.body.name == '' || this.req.body.name == undefined);
     }
 
     private generateSQL() : string {
