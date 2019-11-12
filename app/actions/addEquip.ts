@@ -8,14 +8,15 @@ import { MySQLFactory } from '../mysql/mysql_factory';
 export class AddEquipAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o nome e setor do Equipamento', this.req.body.name == '' || this.req.body.setor == '' || this.req.body.setor == undefined || this.req.body.name == undefined);
+        new KernelUtils().createExceptionApiError('1001', 'Informe o nome e setor do Equipamento', this.req.body.name == '' || this.req.body.setor == '' || this.req.body.setor == undefined || this.req.body.name == undefined 
+        || this.req.body.codEquip == '' || this.req.body.codEquip == undefined );
     }
 
     private generateSQL() : string {
-        return 'select * from TBEQUIP where TBEQUIP.NOME = \'' + this.req.body.name + '\' AND TBEQUIP.SETOR_ATRIB = \'' + this.req.body.setor + '\';';
+        return 'select * from TBEQUIP where TBEQUIP.NOME = \'' + this.req.body.name + '\' AND TBEQUIP.SETOR_ATRIB = \'' + this.req.body.setor + '\' AND TBEQUIP.CODEQUIP = \'' + this.req.body.codEquip + '\' ;';
     }
     private insertUserSQL() : string{
-        return 'insert into TBEQUIP (TBEQUIP.NOME ,TBEQUIP.SETOR_ATRIB) values (\''+ this.req.body.name+'\',\''+ this.req.body.setor +'\');';
+        return 'insert into TBEQUIP (TBEQUIP.NOME ,TBEQUIP.SETOR_ATRIB, TBEQUIP.CODEQUIP) values (\''+ this.req.body.name+'\',\''+ this.req.body.setor +'\',\''+ this.req.body.codEquip +'\');';
     }
 
     @Post('/AddEquip')
