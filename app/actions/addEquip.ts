@@ -8,7 +8,7 @@ import { MySQLFactory } from '../mysql/mysql_factory';
 export class AddEquipAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o nome e setor do Equipamento', this.req.body.name == '' || this.req.body.setor == '');
+        new KernelUtils().createExceptionApiError('1001', 'Informe o nome e setor do Equipamento', this.req.body.name == '' || this.req.body.setor == '' || this.req.body.setor == undefined);
     }
 
     private generateSQL() : string {
