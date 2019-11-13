@@ -34,13 +34,13 @@ var AddCausaDefAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     AddCausaDefAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe a causa do defeito', this.req.body.dscausa == '');
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe a causa do defeito', this.req.body.name == '' || this.req.body.name == undefined);
     };
     AddCausaDefAction.prototype.generateSQL = function () {
-        return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.dscausa + '\';';
+        return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.name + '\';';
     };
     AddCausaDefAction.prototype.insertUserSQL = function () {
-        return 'insert into TBCAUSADEF (TBCAUSADEF.DSCAUSA ) values (\'' + this.req.body.dscausa + '\');';
+        return 'insert into TBCAUSADEF (TBCAUSADEF.DSCAUSA ) values (\'' + this.req.body.name + '\');';
     };
     AddCausaDefAction.prototype.Post = function () {
         var _this = this;

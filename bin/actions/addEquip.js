@@ -34,13 +34,14 @@ var AddEquipAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     AddEquipAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o nome e setor do Equipamento', this.req.body.name == '' || this.req.body.setor == '' || this.req.body.setor == undefined);
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o nome e setor do Equipamento', this.req.body.name == '' || this.req.body.setor == '' || this.req.body.setor == undefined || this.req.body.name == undefined
+            || this.req.body.codEquip == '' || this.req.body.codEquip == undefined);
     };
     AddEquipAction.prototype.generateSQL = function () {
-        return 'select * from TBEQUIP where TBEQUIP.NOME = \'' + this.req.body.name + '\' AND TBEQUIP.SETOR_ATRIB = \'' + this.req.body.setor + '\';';
+        return 'select * from TBEQUIP where TBEQUIP.NOME = \'' + this.req.body.name + '\' AND TBEQUIP.SETOR_ATRIB = \'' + this.req.body.setor + '\' AND TBEQUIP.CODEQUIP = \'' + this.req.body.codEquip + '\' ;';
     };
     AddEquipAction.prototype.insertUserSQL = function () {
-        return 'insert into TBEQUIP (TBEQUIP.NOME ,TBEQUIP.SETOR_ATRIB) values (\'' + this.req.body.name + '\',\'' + this.req.body.setor + '\');';
+        return 'insert into TBEQUIP (TBEQUIP.NOME ,TBEQUIP.SETOR_ATRIB, TBEQUIP.CODEQUIP) values (\'' + this.req.body.name + '\',\'' + this.req.body.setor + '\',\'' + this.req.body.codEquip + '\');';
     };
     AddEquipAction.prototype.Post = function () {
         var _this = this;

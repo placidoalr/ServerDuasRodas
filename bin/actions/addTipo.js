@@ -34,7 +34,7 @@ var AddTipoAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     AddTipoAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Tipo', this.req.body.name == '');
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Tipo', this.req.body.name == '' || this.req.body.name == undefined);
     };
     AddTipoAction.prototype.generateSQL = function () {
         return 'select * from TBTIPO where TBTIPO.NOME = \'' + this.req.body.name + '\';';

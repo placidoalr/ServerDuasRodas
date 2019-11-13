@@ -11,6 +11,8 @@ import {AddLayoutAction} from './addLayout';
 import {AddSetorAction} from './addSetor';
 import {AddSintomaAction} from './addSintoma';
 import {AddTipoAction} from './addTipo';
+import {GetCTAction} from './getCT';
+
 
 export {AddUserAction};
 export {AddCTAction};
@@ -24,4 +26,5 @@ export {LogonAction};
 export {ListaOMAction};
 export {OMAction};
 export {AddMDescAction};
-export {ListaIMAction}
+export {ListaIMAction};
+export {GetCTAction};

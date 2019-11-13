@@ -26,3 +26,5 @@ var addSintoma_1 = require("./addSintoma");
 exports.AddSintomaAction = addSintoma_1.AddSintomaAction;
 var addTipo_1 = require("./addTipo");
 exports.AddTipoAction = addTipo_1.AddTipoAction;
+var getCT_1 = require("./getCT");
+exports.GetCTAction = getCT_1.GetCTAction;

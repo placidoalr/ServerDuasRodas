@@ -34,7 +34,7 @@ var AddUserAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     AddUserAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o número do cracha, usuário e senha', this.req.body.userId == '' || this.req.body.userName == '' || this.req.body.password == '');
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o número do cracha, usuário e senha', this.req.body.userId == '' || this.req.body.userName == '' || this.req.body.password == '' || this.req.body.userId == undefined || this.req.body.userName == undefined || this.req.body.password == undefined);
     };
     AddUserAction.prototype.generateSQL = function () {
         return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\' OR TBUSUARIO.userId = \'' + this.req.body.userId + '\';';

@@ -34,7 +34,7 @@ var AddLayoutAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     AddLayoutAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Layout', this.req.body.name == '');
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Layout', this.req.body.name == '' || this.req.body.name == undefined);
     };
     AddLayoutAction.prototype.generateSQL = function () {
         return 'select * from TBLAYOUTOM where TBLAYOUTOM.NOME = \'' + this.req.body.name + '\';';

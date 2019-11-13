@@ -22,57 +22,46 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var decorators_1 = require("../decorators");
-var action_1 = require("../kernel/action");
-var route_types_1 = require("../kernel/route-types");
-var vputils_1 = require("../utils/vputils");
-var kernel_utils_1 = require("../kernel/kernel-utils");
-var mysql_factory_1 = require("../mysql/mysql_factory");
-var AddSintomaAction = /** @class */ (function (_super) {
-    __extends(AddSintomaAction, _super);
-    function AddSintomaAction() {
+var decorators_1 = require("../../decorators");
+var action_1 = require("../../kernel/action");
+var route_types_1 = require("../../kernel/route-types");
+var kernel_utils_1 = require("../../kernel/kernel-utils");
+var mysql_factory_1 = require("../../mysql/mysql_factory");
+var GetCTAction = /** @class */ (function (_super) {
+    __extends(GetCTAction, _super);
+    function GetCTAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    AddSintomaAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Sintoma', this.req.body.name == '' || this.req.body.name == undefined);
+    GetCTAction.prototype.generateSQL = function () {
+        return 'select NOME from TBCT;';
     };
-    AddSintomaAction.prototype.generateSQL = function () {
-        return 'select * from TBSINTOMA where TBSINTOMA.NOME = \'' + this.req.body.name + '\';';
-    };
-    AddSintomaAction.prototype.insertUserSQL = function () {
-        return 'insert into TBSINTOMA (TBSINTOMA.NOME ) values (\'' + this.req.body.name + '\');';
-    };
-    AddSintomaAction.prototype.Post = function () {
+    GetCTAction.prototype.Post = function () {
         var _this = this;
-        this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
                 console.log(data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Sintoma já existe'));
-                return;
+                return data;
             }
             else {
                 console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertUserSQL()).subscribe(function (data) {
-                    console.log(data);
-                });
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Centro de trabalho já existe'));
             }
             _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+                list: data
             });
         }, function (error) {
             _this.sendError(error);
         });
     };
-    AddSintomaAction.prototype.defineVisibility = function () {
+    GetCTAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/AddSintoma'),
+        decorators_1.Post('/GetCT'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], AddSintomaAction.prototype, "Post", null);
-    return AddSintomaAction;
+    ], GetCTAction.prototype, "Post", null);
+    return GetCTAction;
 }(action_1.Action));
-exports.AddSintomaAction = AddSintomaAction;
+exports.GetCTAction = GetCTAction;

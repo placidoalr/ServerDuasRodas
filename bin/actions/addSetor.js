@@ -34,7 +34,7 @@ var AddSetorAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     AddSetorAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Setor', this.req.body.name == '');
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Setor', this.req.body.name == '' || this.req.body.name == undefined);
     };
     AddSetorAction.prototype.generateSQL = function () {
         return 'select * from TBSETOR where TBSETOR.NOME = \'' + this.req.body.name + '\';';

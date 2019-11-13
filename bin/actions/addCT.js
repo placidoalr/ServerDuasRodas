@@ -34,7 +34,7 @@ var AddCTAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     AddCTAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o nome do Centro de Trabalho', this.req.body.name == '');
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o nome do Centro de Trabalho', this.req.body.name == '' || this.req.body.name == undefined);
     };
     AddCTAction.prototype.generateSQL = function () {
         return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\';';
