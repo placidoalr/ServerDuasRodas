@@ -14,7 +14,7 @@ export class AddCausaDefAction extends Action{
     private generateSQL() : string {
         return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.name + '\';';
     }
-    private insertUserSQL() : string{
+    private insertSQL() : string{
         return 'insert into TBCAUSADEF (TBCAUSADEF.DSCAUSA ) values (\''+ this.req.body.name+'\');';
     }
 
@@ -30,7 +30,7 @@ export class AddCausaDefAction extends Action{
                   return;
                 }else{
                     console.log(data);
-                    new MySQLFactory().getConnection().select(this.insertUserSQL()).subscribe(
+                    new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                         (data : any) => {
                             console.log(data);
                         }

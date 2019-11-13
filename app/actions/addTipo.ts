@@ -14,7 +14,7 @@ export class AddTipoAction extends Action{
     private generateSQL() : string {
         return 'select * from TBTIPO where TBTIPO.NOME = \'' + this.req.body.name + '\';';
     }
-    private insertUserSQL() : string{
+    private insertSQL() : string{
         return 'insert into TBTIPO (TBTIPO.NOME ) values (\''+ this.req.body.name+'\');';
     }
 
@@ -30,7 +30,7 @@ export class AddTipoAction extends Action{
                   return;
                 }else{
                     console.log(data);
-                    new MySQLFactory().getConnection().select(this.insertUserSQL()).subscribe(
+                    new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                         (data : any) => {
                             console.log(data);
                         }

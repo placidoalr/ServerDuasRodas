@@ -15,7 +15,7 @@ export class AddEquipAction extends Action{
     private generateSQL() : string {
         return 'select * from TBEQUIP where TBEQUIP.NOME = \'' + this.req.body.name + '\' AND TBEQUIP.SETOR_ATRIB = \'' + this.req.body.setor + '\' AND TBEQUIP.CODEQUIP = \'' + this.req.body.codEquip + '\' ;';
     }
-    private insertUserSQL() : string{
+    private insertSQL() : string{
         return 'insert into TBEQUIP (TBEQUIP.NOME ,TBEQUIP.SETOR_ATRIB, TBEQUIP.CODEQUIP) values (\''+ this.req.body.name+'\',\''+ this.req.body.setor +'\',\''+ this.req.body.codEquip +'\');';
     }
 
@@ -31,7 +31,7 @@ export class AddEquipAction extends Action{
                   return;
                 }else{
                     console.log(data);
-                    new MySQLFactory().getConnection().select(this.insertUserSQL()).subscribe(
+                    new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                         (data : any) => {
                             console.log(data);
                         }

@@ -11,7 +11,7 @@ export class AddMDescAction extends Action{
         new KernelUtils().createExceptionApiError('1001', 'Informe o tempo levado', this.req.body.time == '' ||  this.req.body.desc == '' || this.req.body.time == undefined ||  this.req.body.desc == undefined);
     }
 
-    private insertUserSQL() : string{
+    private insertSQL() : string{
         return 'insert into TB_OM_DESC (TB_OM_DESC.IDOM ,TB_OM_DESC.DESC, TB_OM_DESC.TEMPO_UTIL) values (\''+ this.req.body.idom+'\',\''+ this.req.body.desc +'\', \''+ this.req.body.time+'\');';
     }
 
@@ -21,7 +21,7 @@ export class AddMDescAction extends Action{
         this.validateData();
 
         
-        new MySQLFactory().getConnection().select(this.insertUserSQL()).subscribe(
+        new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
         (data : any) => {
         console.log(data);
         }
