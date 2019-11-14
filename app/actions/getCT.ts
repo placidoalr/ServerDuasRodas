@@ -11,12 +11,12 @@ export class GetCTAction extends Action{
     
 
     private generateSQL() : string {
-        return 'select NOME from TBCT;';
+        return 'select NOME from TBCT where NOME != "";';
     }
     private deleteSQL() : string {
         console.log("Delete" +this.req.body.name);
-
-        return 'DELETE from TBCT WHERE NOME =  \'' + this.req.body.name + '\';';
+        
+        return 'UPDATE TBCT SET NOME = "" WHERE NOME =  \'' + this.req.body.name + '\';';
     }
     @Get('/GetCT')
     public GetCT(){
@@ -32,7 +32,7 @@ export class GetCTAction extends Action{
     }
 
     @Patch('/DelCT')
-    public PostCT(){
+    public PatchCT(){
         console.log("ENTROU"+this.req.body.name)
         new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
             (data : any) => {

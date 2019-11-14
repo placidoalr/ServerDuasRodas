@@ -32,11 +32,11 @@ var GetCTAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     GetCTAction.prototype.generateSQL = function () {
-        return 'select NOME from TBCT;';
+        return 'select NOME from TBCT where NOME != "";';
     };
     GetCTAction.prototype.deleteSQL = function () {
         console.log("Delete" + this.req.body.name);
-        return 'DELETE from TBCT WHERE NOME =  \'' + this.req.body.name + '\';';
+        return 'UPDATE TBCT SET NOME = "" WHERE NOME =  \'' + this.req.body.name + '\';';
     };
     GetCTAction.prototype.GetCT = function () {
         var _this = this;
@@ -46,7 +46,7 @@ var GetCTAction = /** @class */ (function (_super) {
             _this.sendError(error);
         });
     };
-    GetCTAction.prototype.PostCT = function () {
+    GetCTAction.prototype.PatchCT = function () {
         var _this = this;
         console.log("ENTROU" + this.req.body.name);
         new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
@@ -70,7 +70,7 @@ var GetCTAction = /** @class */ (function (_super) {
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], GetCTAction.prototype, "PostCT", null);
+    ], GetCTAction.prototype, "PatchCT", null);
     return GetCTAction;
 }(action_1.Action));
 exports.GetCTAction = GetCTAction;
