@@ -25,18 +25,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var decorators_1 = require("../decorators");
 var action_1 = require("../kernel/action");
 var route_types_1 = require("../kernel/route-types");
+var vputils_1 = require("../utils/vputils");
+var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
 var GetCTAction = /** @class */ (function (_super) {
     __extends(GetCTAction, _super);
     function GetCTAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    GetCTAction.prototype.validateData = function () {
+        return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\';';
+    };
     GetCTAction.prototype.generateSQL = function () {
         return 'select NOME from TBCT where NOME != "";';
     };
     GetCTAction.prototype.deleteSQL = function () {
-        console.log("Delete" + this.req.body.name);
         return 'UPDATE TBCT SET NOME = "" WHERE NOME =  \'' + this.req.body.name + '\';';
+    };
+    GetCTAction.prototype.editSQL = function () {
+        return 'UPDATE TBCT SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\';';
     };
     GetCTAction.prototype.GetCT = function () {
         var _this = this;
@@ -50,6 +57,34 @@ var GetCTAction = /** @class */ (function (_super) {
         var _this = this;
         console.log("ENTROU" + this.req.body.name);
         new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
+            console.log(data);
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    GetCTAction.prototype.EditCT = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.validateData()).subscribe(function (data) {
+            if (data.length || data.length > 0) {
+                console.log(data);
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Novo centro de trabalho já existe'));
+                return;
+            }
+            else {
+                console.log(data);
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
+                    console.log(data);
+                });
+            }
+            _this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }, function (error) {
+            _this.sendError(error);
+        });
+        console.log("ENTROU" + this.req.body.name);
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.editSQL()).subscribe(function (data) {
             console.log(data);
             _this.sendAnswer(data);
         }, function (error) {
@@ -71,6 +106,12 @@ var GetCTAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], GetCTAction.prototype, "PatchCT", null);
+    __decorate([
+        decorators_1.Post('/EditCT'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], GetCTAction.prototype, "EditCT", null);
     return GetCTAction;
 }(action_1.Action));
 exports.GetCTAction = GetCTAction;
