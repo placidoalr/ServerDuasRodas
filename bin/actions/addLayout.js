@@ -39,7 +39,7 @@ var AddLayoutAction = /** @class */ (function (_super) {
     AddLayoutAction.prototype.generateSQL = function () {
         return 'select * from TBLAYOUTOM where TBLAYOUTOM.NOME = \'' + this.req.body.name + '\';';
     };
-    AddLayoutAction.prototype.insertUserSQL = function () {
+    AddLayoutAction.prototype.insertSQL = function () {
         return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME ) values (\'' + this.req.body.name + '\');';
     };
     AddLayoutAction.prototype.Post = function () {
@@ -53,7 +53,7 @@ var AddLayoutAction = /** @class */ (function (_super) {
             }
             else {
                 console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertUserSQL()).subscribe(function (data) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
                     console.log(data);
                 });
             }

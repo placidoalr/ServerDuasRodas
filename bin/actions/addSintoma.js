@@ -39,7 +39,7 @@ var AddSintomaAction = /** @class */ (function (_super) {
     AddSintomaAction.prototype.generateSQL = function () {
         return 'select * from TBSINTOMA where TBSINTOMA.NOME = \'' + this.req.body.name + '\';';
     };
-    AddSintomaAction.prototype.insertUserSQL = function () {
+    AddSintomaAction.prototype.insertSQL = function () {
         return 'insert into TBSINTOMA (TBSINTOMA.NOME ) values (\'' + this.req.body.name + '\');';
     };
     AddSintomaAction.prototype.Post = function () {
@@ -53,7 +53,7 @@ var AddSintomaAction = /** @class */ (function (_super) {
             }
             else {
                 console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertUserSQL()).subscribe(function (data) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
                     console.log(data);
                 });
             }

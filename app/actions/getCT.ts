@@ -1,4 +1,4 @@
-import {Get} from '../decorators';
+import {Get, Patch, Post, Put} from '../decorators';
 import {Action} from '../kernel/action';
 import {ActionType} from '../kernel/route-types';
 import {VPUtils} from '../utils/vputils';
@@ -13,7 +13,11 @@ export class GetCTAction extends Action{
     private generateSQL() : string {
         return 'select NOME from TBCT;';
     }
+    private deleteSQL() : string {
+        console.log("Delete" +this.req.body.name);
 
+        return 'DELETE from TBCT WHERE NOME =  \'' + this.req.body.name + '\';';
+    }
     @Get('/GetCT')
     public GetCT(){
         
@@ -26,6 +30,20 @@ export class GetCTAction extends Action{
             }
         );
     }
+
+    @Patch('/DelCT')
+    public PostCT(){
+        console.log("ENTROU"+this.req.body.name)
+        new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
+            (data : any) => {
+                console.log(data);
+                this.sendAnswer(data);
+            },
+            (error : any) => {
+                this.sendError(error);
+            }
+        );
+}
 
     defineVisibility() {
         this.actionEscope = ActionType.atPublic;

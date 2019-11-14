@@ -39,7 +39,7 @@ var AddCTAction = /** @class */ (function (_super) {
     AddCTAction.prototype.generateSQL = function () {
         return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\';';
     };
-    AddCTAction.prototype.insertUserSQL = function () {
+    AddCTAction.prototype.insertSQL = function () {
         return 'insert into TBCT (TBCT.NOME ) values (\'' + this.req.body.name + '\');';
     };
     AddCTAction.prototype.Post = function () {
@@ -53,7 +53,7 @@ var AddCTAction = /** @class */ (function (_super) {
             }
             else {
                 console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertUserSQL()).subscribe(function (data) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
                     console.log(data);
                 });
             }

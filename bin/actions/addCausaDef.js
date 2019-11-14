@@ -39,7 +39,7 @@ var AddCausaDefAction = /** @class */ (function (_super) {
     AddCausaDefAction.prototype.generateSQL = function () {
         return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.name + '\';';
     };
-    AddCausaDefAction.prototype.insertUserSQL = function () {
+    AddCausaDefAction.prototype.insertSQL = function () {
         return 'insert into TBCAUSADEF (TBCAUSADEF.DSCAUSA ) values (\'' + this.req.body.name + '\');';
     };
     AddCausaDefAction.prototype.Post = function () {
@@ -53,7 +53,7 @@ var AddCausaDefAction = /** @class */ (function (_super) {
             }
             else {
                 console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertUserSQL()).subscribe(function (data) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
                     console.log(data);
                 });
             }

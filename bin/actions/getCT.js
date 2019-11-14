@@ -34,9 +34,23 @@ var GetCTAction = /** @class */ (function (_super) {
     GetCTAction.prototype.generateSQL = function () {
         return 'select NOME from TBCT;';
     };
+    GetCTAction.prototype.deleteSQL = function () {
+        console.log("Delete" + this.req.body.name);
+        return 'DELETE from TBCT WHERE NOME =  \'' + this.req.body.name + '\';';
+    };
     GetCTAction.prototype.GetCT = function () {
         var _this = this;
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    GetCTAction.prototype.PostCT = function () {
+        var _this = this;
+        console.log("ENTROU" + this.req.body.name);
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
+            console.log(data);
             _this.sendAnswer(data);
         }, function (error) {
             _this.sendError(error);
@@ -51,6 +65,12 @@ var GetCTAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], GetCTAction.prototype, "GetCT", null);
+    __decorate([
+        decorators_1.Patch('/DelCT'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], GetCTAction.prototype, "PostCT", null);
     return GetCTAction;
 }(action_1.Action));
 exports.GetCTAction = GetCTAction;

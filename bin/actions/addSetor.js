@@ -39,7 +39,7 @@ var AddSetorAction = /** @class */ (function (_super) {
     AddSetorAction.prototype.generateSQL = function () {
         return 'select * from TBSETOR where TBSETOR.NOME = \'' + this.req.body.name + '\';';
     };
-    AddSetorAction.prototype.insertUserSQL = function () {
+    AddSetorAction.prototype.insertSQL = function () {
         return 'insert into TBSETOR (TBSETOR.NOME ) values (\'' + this.req.body.name + '\');';
     };
     AddSetorAction.prototype.Post = function () {
@@ -53,7 +53,7 @@ var AddSetorAction = /** @class */ (function (_super) {
             }
             else {
                 console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertUserSQL()).subscribe(function (data) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
                     console.log(data);
                 });
             }

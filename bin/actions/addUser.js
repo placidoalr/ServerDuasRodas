@@ -39,7 +39,7 @@ var AddUserAction = /** @class */ (function (_super) {
     AddUserAction.prototype.generateSQL = function () {
         return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\' OR TBUSUARIO.userId = \'' + this.req.body.userId + '\';';
     };
-    AddUserAction.prototype.insertUserSQL = function () {
+    AddUserAction.prototype.insertSQL = function () {
         return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CDPERM, TBUSUARIO.NOME) values (\'' + this.req.body.userId + '\',\'' + this.req.body.userName + '\', \'' + this.req.body.password + '\', \'' + this.req.body.permissao + '\', \'' + this.req.body.nome + '\');';
     };
     AddUserAction.prototype.Post = function () {
@@ -53,7 +53,7 @@ var AddUserAction = /** @class */ (function (_super) {
             }
             else {
                 console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertUserSQL()).subscribe(function (data) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
                     console.log(data);
                 });
             }

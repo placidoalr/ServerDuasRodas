@@ -39,7 +39,7 @@ var AddTipoAction = /** @class */ (function (_super) {
     AddTipoAction.prototype.generateSQL = function () {
         return 'select * from TBTIPO where TBTIPO.NOME = \'' + this.req.body.name + '\';';
     };
-    AddTipoAction.prototype.insertUserSQL = function () {
+    AddTipoAction.prototype.insertSQL = function () {
         return 'insert into TBTIPO (TBTIPO.NOME ) values (\'' + this.req.body.name + '\');';
     };
     AddTipoAction.prototype.Post = function () {
@@ -53,7 +53,7 @@ var AddTipoAction = /** @class */ (function (_super) {
             }
             else {
                 console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertUserSQL()).subscribe(function (data) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
                     console.log(data);
                 });
             }

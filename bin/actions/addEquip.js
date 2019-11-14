@@ -40,7 +40,7 @@ var AddEquipAction = /** @class */ (function (_super) {
     AddEquipAction.prototype.generateSQL = function () {
         return 'select * from TBEQUIP where TBEQUIP.NOME = \'' + this.req.body.name + '\' AND TBEQUIP.SETOR_ATRIB = \'' + this.req.body.setor + '\' AND TBEQUIP.CODEQUIP = \'' + this.req.body.codEquip + '\' ;';
     };
-    AddEquipAction.prototype.insertUserSQL = function () {
+    AddEquipAction.prototype.insertSQL = function () {
         return 'insert into TBEQUIP (TBEQUIP.NOME ,TBEQUIP.SETOR_ATRIB, TBEQUIP.CODEQUIP) values (\'' + this.req.body.name + '\',\'' + this.req.body.setor + '\',\'' + this.req.body.codEquip + '\');';
     };
     AddEquipAction.prototype.Post = function () {
@@ -54,7 +54,7 @@ var AddEquipAction = /** @class */ (function (_super) {
             }
             else {
                 console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertUserSQL()).subscribe(function (data) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
                     console.log(data);
                 });
             }
