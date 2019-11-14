@@ -34,9 +34,12 @@ var GetCTAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     GetCTAction.prototype.validateData = function () {
-        return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\';';
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o nome do Centro de Trabalho', this.req.body.name == '' || this.req.body.name == undefined);
     };
     GetCTAction.prototype.generateSQL = function () {
+        return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\';';
+    };
+    GetCTAction.prototype.selectSQL = function () {
         return 'select NOME from TBCT where STATUS = 1;';
     };
     GetCTAction.prototype.deleteSQL = function () {
@@ -45,9 +48,34 @@ var GetCTAction = /** @class */ (function (_super) {
     GetCTAction.prototype.editSQL = function () {
         return 'UPDATE TBCT SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\';';
     };
+    GetCTAction.prototype.insertSQL = function () {
+        return 'insert into TBCT (TBCT.NOME ) values (\'' + this.req.body.name + '\');';
+    };
+    GetCTAction.prototype.Post = function () {
+        var _this = this;
+        this.validateData();
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+            if (data.length || data.length > 0) {
+                //console.log("Centro de trabalho já existe "+data);
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Centro de trabalho já existe'));
+                return;
+            }
+            else {
+                //console.log(data);
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
+                    //console.log("DEU CERTO ADD "+data);
+                });
+            }
+            _this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
     GetCTAction.prototype.GetCT = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
             _this.sendAnswer(data);
         }, function (error) {
             _this.sendError(error);
@@ -55,9 +83,9 @@ var GetCTAction = /** @class */ (function (_super) {
     };
     GetCTAction.prototype.PatchCT = function () {
         var _this = this;
-        console.log("ENTROU" + this.req.body.name);
+        //console.log("ENTROU"+this.req.body.name)
         new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
-            console.log(data);
+            //console.log(data);
             _this.sendAnswer(data);
         }, function (error) {
             _this.sendError(error);
@@ -65,16 +93,16 @@ var GetCTAction = /** @class */ (function (_super) {
     };
     GetCTAction.prototype.EditCT = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.validateData()).subscribe(function (data) {
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
-                console.log(data);
+                //console.log(data);
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Novo centro de trabalho já existe'));
                 return;
             }
             else {
-                console.log(data);
+                //console.log(data);
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
-                    console.log(data);
+                    //  console.log(data);
                 });
             }
             _this.sendAnswer({
@@ -87,6 +115,12 @@ var GetCTAction = /** @class */ (function (_super) {
     GetCTAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
+    __decorate([
+        decorators_1.Post('/AddCT'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], GetCTAction.prototype, "Post", null);
     __decorate([
         decorators_1.Get('/GetCT'),
         __metadata("design:type", Function),

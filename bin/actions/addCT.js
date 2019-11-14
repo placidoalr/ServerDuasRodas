@@ -12,67 +12,20 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var decorators_1 = require("../decorators");
 var action_1 = require("../kernel/action");
 var route_types_1 = require("../kernel/route-types");
-var vputils_1 = require("../utils/vputils");
-var kernel_utils_1 = require("../kernel/kernel-utils");
-var mysql_factory_1 = require("../mysql/mysql_factory");
 var AddCTAction = /** @class */ (function (_super) {
     __extends(AddCTAction, _super);
     function AddCTAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    AddCTAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o nome do Centro de Trabalho', this.req.body.name == '' || this.req.body.name == undefined);
-    };
     AddCTAction.prototype.generateSQL = function () {
         return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\';';
-    };
-    AddCTAction.prototype.insertSQL = function () {
-        return 'insert into TBCT (TBCT.NOME ) values (\'' + this.req.body.name + '\');';
-    };
-    AddCTAction.prototype.Post = function () {
-        var _this = this;
-        this.validateData();
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
-            if (data.length || data.length > 0) {
-                console.log(data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Centro de trabalho já existe'));
-                return;
-            }
-            else {
-                console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                    console.log(data);
-                });
-            }
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-            });
-        }, function (error) {
-            _this.sendError(error);
-        });
     };
     AddCTAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
-    __decorate([
-        decorators_1.Post('/AddCT'),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", []),
-        __metadata("design:returntype", void 0)
-    ], AddCTAction.prototype, "Post", null);
     return AddCTAction;
 }(action_1.Action));
 exports.AddCTAction = AddCTAction;
