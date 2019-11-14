@@ -78,16 +78,7 @@ export class GetCTAction extends Action{
 
 
 
-        console.log("ENTROU"+this.req.body.name)
-        new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
-            (data : any) => {
-                console.log(data);
-                this.sendAnswer(data);
-            },
-            (error : any) => {
-                this.sendError(error);
-            }
-        );
+        
 }
 
     defineVisibility() {

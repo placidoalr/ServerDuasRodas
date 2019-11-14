@@ -83,13 +83,6 @@ var GetCTAction = /** @class */ (function (_super) {
         }, function (error) {
             _this.sendError(error);
         });
-        console.log("ENTROU" + this.req.body.name);
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.editSQL()).subscribe(function (data) {
-            console.log(data);
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
     };
     GetCTAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
