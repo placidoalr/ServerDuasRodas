@@ -5,20 +5,20 @@ import {VPUtils} from '../utils/vputils';
 import {KernelUtils} from '../kernel/kernel-utils';
 import { MySQLFactory } from '../mysql/mysql_factory';
 
-export class AddSintomaAction extends Action{
+export class LayoutAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o Sintoma', this.req.body.name == '' || this.req.body.name == undefined);
+        new KernelUtils().createExceptionApiError('1001', 'Informe o Layout', this.req.body.name == '' || this.req.body.name == undefined);
     }
 
     private generateSQL() : string {
-        return 'select * from TBSINTOMA where TBSINTOMA.NOME = \'' + this.req.body.name + '\';';
+        return 'select * from TBLAYOUTOM where TBLAYOUTOM.NOME = \'' + this.req.body.name + '\';';
     }
     private insertSQL() : string{
-        return 'insert into TBSINTOMA (TBSINTOMA.NOME ) values (\''+ this.req.body.name+'\');';
+        return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME ) values (\''+ this.req.body.name+'\');';
     }
 
-    @Post('/AddSintoma')
+    @Post('/AddLayout')
     public Post(){
         this.validateData();
 
@@ -26,7 +26,7 @@ export class AddSintomaAction extends Action{
             (data : any) => {
                 if (data.length || data.length > 0){
                     console.log(data);
-                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Sintoma já existe'));
+                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Layout já existe'));
                   return;
                 }else{
                     console.log(data);

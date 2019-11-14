@@ -5,7 +5,7 @@ import {VPUtils} from '../utils/vputils';
 import {KernelUtils} from '../kernel/kernel-utils';
 import { MySQLFactory } from '../mysql/mysql_factory';
 
-export class AddUserAction extends Action{
+export class UserAction extends Action{
 
     private validateData(){
         new KernelUtils().createExceptionApiError('1001', 'Informe o número do cracha, usuário e senha', this.req.body.userId == '' || this.req.body.userName == '' || this.req.body.password == '' || this.req.body.userId == undefined || this.req.body.userName == undefined || this.req.body.password == undefined);

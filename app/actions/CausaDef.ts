@@ -5,20 +5,20 @@ import {VPUtils} from '../utils/vputils';
 import {KernelUtils} from '../kernel/kernel-utils';
 import { MySQLFactory } from '../mysql/mysql_factory';
 
-export class AddSetorAction extends Action{
+export class CausaDefAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o Setor', this.req.body.name == '' || this.req.body.name == undefined);
+        new KernelUtils().createExceptionApiError('1001', 'Informe a causa do defeito', this.req.body.name == '' || this.req.body.name == undefined);
     }
 
     private generateSQL() : string {
-        return 'select * from TBSETOR where TBSETOR.NOME = \'' + this.req.body.name + '\';';
+        return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.name + '\';';
     }
     private insertSQL() : string{
-        return 'insert into TBSETOR (TBSETOR.NOME ) values (\''+ this.req.body.name+'\');';
+        return 'insert into TBCAUSADEF (TBCAUSADEF.DSCAUSA ) values (\''+ this.req.body.name+'\');';
     }
 
-    @Post('/AddSetor')
+    @Post('/AddCausaDef')
     public Post(){
         this.validateData();
 
@@ -26,7 +26,7 @@ export class AddSetorAction extends Action{
             (data : any) => {
                 if (data.length || data.length > 0){
                     console.log(data);
-                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Setor já existe'));
+                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Causa de defeito já existe'));
                   return;
                 }else{
                     console.log(data);

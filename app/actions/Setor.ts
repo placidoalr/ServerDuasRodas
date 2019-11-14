@@ -5,20 +5,20 @@ import {VPUtils} from '../utils/vputils';
 import {KernelUtils} from '../kernel/kernel-utils';
 import { MySQLFactory } from '../mysql/mysql_factory';
 
-export class AddTipoAction extends Action{
+export class SetorAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o Tipo', this.req.body.name == '' || this.req.body.name == undefined);
+        new KernelUtils().createExceptionApiError('1001', 'Informe o Setor', this.req.body.name == '' || this.req.body.name == undefined);
     }
 
     private generateSQL() : string {
-        return 'select * from TBTIPO where TBTIPO.NOME = \'' + this.req.body.name + '\';';
+        return 'select * from TBSETOR where TBSETOR.NOME = \'' + this.req.body.name + '\';';
     }
     private insertSQL() : string{
-        return 'insert into TBTIPO (TBTIPO.NOME ) values (\''+ this.req.body.name+'\');';
+        return 'insert into TBSETOR (TBSETOR.NOME ) values (\''+ this.req.body.name+'\');';
     }
 
-    @Post('/AddTipo')
+    @Post('/AddSetor')
     public Post(){
         this.validateData();
 
@@ -26,7 +26,7 @@ export class AddTipoAction extends Action{
             (data : any) => {
                 if (data.length || data.length > 0){
                     console.log(data);
-                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Tipo já existe'));
+                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Setor já existe'));
                   return;
                 }else{
                     console.log(data);
