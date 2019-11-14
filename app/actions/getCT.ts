@@ -14,11 +14,11 @@ export class GetCTAction extends Action{
     }
 
     private generateSQL() : string {
-        return 'select NOME from TBCT where NOME != "";';
+        return 'select NOME from TBCT where STATUS = 1;';
     }
     private deleteSQL() : string {
         
-        return 'UPDATE TBCT SET NOME = "" WHERE NOME =  \'' + this.req.body.name + '\';';
+        return 'UPDATE TBCT SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';
     }
     private editSQL() : string {
         

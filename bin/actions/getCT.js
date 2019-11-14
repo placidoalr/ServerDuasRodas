@@ -37,10 +37,10 @@ var GetCTAction = /** @class */ (function (_super) {
         return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\';';
     };
     GetCTAction.prototype.generateSQL = function () {
-        return 'select NOME from TBCT where NOME != "";';
+        return 'select NOME from TBCT where STATUS = 1;';
     };
     GetCTAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBCT SET NOME = "" WHERE NOME =  \'' + this.req.body.name + '\';';
+        return 'UPDATE TBCT SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';
     };
     GetCTAction.prototype.editSQL = function () {
         return 'UPDATE TBCT SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\';';
