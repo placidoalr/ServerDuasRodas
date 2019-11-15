@@ -10,7 +10,7 @@ import {SetorAction} from './Setor';
 import {SintomaAction} from './Sintoma';
 import {TipoManAction} from './TipoMan';
 import {CausaDefAction} from './CausaDef';
-import {CTAction} from './getCT';
+import {CTAction} from './CT';
 
 
 export {LogonAction};
