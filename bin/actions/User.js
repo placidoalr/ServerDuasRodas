@@ -38,11 +38,15 @@ var UserAction = /** @class */ (function (_super) {
     };
     UserAction.prototype.generateSQL = function () {
 <<<<<<< HEAD
+<<<<<<< HEAD
         return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' AND \'' + this.req.body.login + '\' != \'' + this.req.body.loginlast + '\' ) \
         OR (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND TBUSUARIO.IDSAP = ' + this.req.body.idsap + ');';
     };
     UserAction.prototype.generateADDSQL = function () {
         return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ';';
+=======
+        return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ') AND TBUSUARIO.IDSAP != ' + this.req.body.idsaplast + ';';
+>>>>>>> parent of cf963a6... Usuário pronto
 =======
         return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ') AND TBUSUARIO.IDSAP != ' + this.req.body.idsaplast + ';';
 >>>>>>> parent of cf963a6... Usuário pronto

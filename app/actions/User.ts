@@ -13,11 +13,15 @@ export class UserAction extends Action{
 
     private generateSQL() : string {
 <<<<<<< HEAD
+<<<<<<< HEAD
         return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' AND \'' + this.req.body.login + '\' != \'' + this.req.body.loginlast + '\' ) \
         OR (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND TBUSUARIO.IDSAP = ' + this.req.body.idsap + ');';
     }
     private generateADDSQL() : string {
         return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ';';
+=======
+        return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ') AND (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND );';
+>>>>>>> parent of cf963a6... Usuário pronto
 =======
         return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ') AND (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND );';
 >>>>>>> parent of cf963a6... Usuário pronto
