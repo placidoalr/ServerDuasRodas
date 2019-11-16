@@ -12,10 +12,15 @@ export class UserAction extends Action{
     }
 
     private generateSQL() : string {
-        return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ') AND (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND );';
+        return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' AND \'' + this.req.body.login + '\' != \'' + this.req.body.loginlast + '\' ) \
+        OR (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND TBUSUARIO.IDSAP = ' + this.req.body.idsap + ');';
+    }
+    private generateADDSQL() : string {
+        return 'select ID from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ';';
     }
     private insertSQL() : string{
-        return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CARGO, TBUSUARIO.NOME, TBUSUARIO.CDCT) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.login +'\', \''+ this.req.body.password+'\', \''+ this.req.body.cargo+'\', \''+ this.req.body.name+'\', \''+ this.req.body.cdct+'\');';
+        return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CARGO, TBUSUARIO.NOME, TBUSUARIO.CDCT) \
+        values (\''+ this.req.body.idsap+'\',\''+ this.req.body.login +'\', \''+ this.req.body.password+'\', \''+ this.req.body.cargo+'\', \''+ this.req.body.name+'\', \''+ this.req.body.cdct+'\');';
     }
     private selectSQL() : string {
         return 'select IDSAP,NOME,LOGIN,SENHA,CARGO,CDCT from TBUSUARIO where STATUS = 1;';
@@ -33,11 +38,13 @@ export class UserAction extends Action{
         WHERE IDSAP =  \'' + this.req.body.idsaplast + '\';';
     }
 
-    @Post('/AddUSER')
+    @Post('/AddUser')
     public Post(){
+        this.req.body.idsaplast = "*";
+        this.req.body.loginlast = "*";
         this.validateData();
 
-        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+        new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
             (data : any) => {
                 if (data.length || data.length > 0){
                     console.log(data);
@@ -61,7 +68,7 @@ export class UserAction extends Action{
         );
     }
 
-    @Get('/GetUSER')
+    @Get('/GetUser')
     public Get(){
         
         new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
@@ -74,7 +81,7 @@ export class UserAction extends Action{
         );
     }
 
-    @Patch('/DelUSER')
+    @Patch('/DelUser')
     public Patch(){
         //console.log("ENTROU"+this.req.body.name)
         new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
@@ -87,7 +94,7 @@ export class UserAction extends Action{
             }
         );
 }
-@Post('/EditUSER')
+@Post('/EditUser')
     public Edit(){
 
         new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(

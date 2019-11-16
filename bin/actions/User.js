@@ -37,7 +37,11 @@ var UserAction = /** @class */ (function (_super) {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe todos os campos corretamente', this.req.body.idsap == null || this.req.body.name == '' || this.req.body.password == '' || this.req.body.idsap == undefined || this.req.body.name == undefined || this.req.body.password == undefined || this.req.body.cdct == undefined || this.req.body.cdct == null || this.req.body.cargo == undefined || this.req.body.cargo == null || this.req.body.login == undefined || this.req.body.login == '');
     };
     UserAction.prototype.generateSQL = function () {
-        return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ') AND TBUSUARIO.IDSAP != ' + this.req.body.idsaplast + ';';
+        return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' AND \'' + this.req.body.login + '\' != \'' + this.req.body.loginlast + '\' ) \
+        OR (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND TBUSUARIO.IDSAP = ' + this.req.body.idsap + ');';
+    };
+    UserAction.prototype.generateADDSQL = function () {
+        return 'select ID from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ';';
     };
     UserAction.prototype.insertSQL = function () {
         return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CARGO, TBUSUARIO.NOME, TBUSUARIO.CDCT) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.login + '\', \'' + this.req.body.password + '\', \'' + this.req.body.cargo + '\', \'' + this.req.body.name + '\', \'' + this.req.body.cdct + '\');';
@@ -56,8 +60,10 @@ var UserAction = /** @class */ (function (_super) {
     };
     UserAction.prototype.Post = function () {
         var _this = this;
+        this.req.body.idsaplast = "*";
+        this.req.body.loginlast = "*";
         this.validateData();
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
                 console.log(data);
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
@@ -99,7 +105,7 @@ var UserAction = /** @class */ (function (_super) {
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             if (data.length || data.length > 0 && _this.req.body.idsap != _this.req.body.idsaplast) {
                 //console.log(data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário de trabalho já existe'));
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
                 return;
             }
             else {
