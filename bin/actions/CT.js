@@ -51,24 +51,44 @@ var CTAction = /** @class */ (function (_super) {
     CTAction.prototype.insertSQL = function () {
         return 'insert into TBCT (TBCT.NOME ) values (\'' + this.req.body.name + '\');';
     };
+    CTAction.prototype.reativar = function () {
+        return 'UPDATE TBCT SET STATUS = 1 \
+        WHERE TBCT.NOME =  \'' + this.req.body.name + '\';';
+    };
     CTAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
+        var stt = true;
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
-                //console.log("Centro de trabalho já existe "+data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Centro de trabalho já existe'));
-                return;
+                if (data[0].STATUS == 1) {
+                    console.log(data[0].STATUS);
+                    _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Centro de trabalho já existe'));
+                    return;
+                    //Se n for igual a 1 vai executar o comando de reativar lá no final;
+                }
+                else {
+                    //COMANDO DE REATIVAR
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.reativar()).subscribe(function (data1) {
+                        _this.sendAnswer({
+                            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+                        });
+                        return;
+                    }, function (error) {
+                        _this.sendError(error);
+                    });
+                }
+                //COMANDO DE REATIVAR
             }
             else {
-                //console.log(data);
+                console.log(data);
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                    //console.log("DEU CERTO ADD "+data);
+                    console.log("DEU CERTO ADD " + data);
+                });
+                _this.sendAnswer({
+                    token: new vputils_1.VPUtils().generateGUID().toUpperCase()
                 });
             }
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-            });
         }, function (error) {
             _this.sendError(error);
         });

@@ -41,10 +41,11 @@ var UserAction = /** @class */ (function (_super) {
         OR (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND TBUSUARIO.IDSAP = ' + this.req.body.idsap + ');';
     };
     UserAction.prototype.generateADDSQL = function () {
-        return 'select ID from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ';';
+        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ';';
     };
     UserAction.prototype.insertSQL = function () {
-        return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CARGO, TBUSUARIO.NOME, TBUSUARIO.CDCT) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.login + '\', \'' + this.req.body.password + '\', \'' + this.req.body.cargo + '\', \'' + this.req.body.name + '\', \'' + this.req.body.cdct + '\');';
+        return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CARGO, TBUSUARIO.NOME, TBUSUARIO.CDCT) \
+        values (\'' + this.req.body.idsap + '\',\'' + this.req.body.login + '\', \'' + this.req.body.password + '\', \'' + this.req.body.cargo + '\', \'' + this.req.body.name + '\', \'' + this.req.body.cdct + '\');';
     };
     UserAction.prototype.selectSQL = function () {
         return 'select IDSAP,NOME,LOGIN,SENHA,CARGO,CDCT from TBUSUARIO where STATUS = 1;';
@@ -58,6 +59,10 @@ var UserAction = /** @class */ (function (_super) {
         , CDCT = \'' + this.req.body.cdct + '\' \
         WHERE IDSAP =  \'' + this.req.body.idsaplast + '\';';
     };
+    UserAction.prototype.reativar = function () {
+        return 'UPDATE TBUSUARIO SET STATUS = 1 \
+        WHERE IDSAP =  \'' + this.req.body.idsap + '\';';
+    };
     UserAction.prototype.Post = function () {
         var _this = this;
         this.req.body.idsaplast = "*";
@@ -65,6 +70,13 @@ var UserAction = /** @class */ (function (_super) {
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
+                if (data.STATUS == 0) {
+                    _this.reativar();
+                    _this.sendAnswer({
+                        token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+                    });
+                    return;
+                }
                 console.log(data);
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
                 return;
@@ -125,25 +137,25 @@ var UserAction = /** @class */ (function (_super) {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/AddUSER'),
+        decorators_1.Post('/AddUser'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], UserAction.prototype, "Post", null);
     __decorate([
-        decorators_1.Get('/GetUSER'),
+        decorators_1.Get('/GetUser'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], UserAction.prototype, "Get", null);
     __decorate([
-        decorators_1.Patch('/DelUSER'),
+        decorators_1.Patch('/DelUser'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], UserAction.prototype, "Patch", null);
     __decorate([
-        decorators_1.Post('/EditUSER'),
+        decorators_1.Post('/EditUser'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)

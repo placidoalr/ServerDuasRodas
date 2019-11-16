@@ -16,7 +16,7 @@ export class UserAction extends Action{
         OR (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND TBUSUARIO.IDSAP = ' + this.req.body.idsap + ');';
     }
     private generateADDSQL() : string {
-        return 'select ID from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ';';
+        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ';';
     }
     private insertSQL() : string{
         return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CARGO, TBUSUARIO.NOME, TBUSUARIO.CDCT) \
@@ -37,6 +37,11 @@ export class UserAction extends Action{
         , CDCT = \'' + this.req.body.cdct + '\' \
         WHERE IDSAP =  \'' + this.req.body.idsaplast + '\';';
     }
+    private reativar() : string {
+        
+        return 'UPDATE TBUSUARIO SET STATUS = 1 \
+        WHERE IDSAP =  \'' + this.req.body.idsap + '\';';
+    }
 
     @Post('/AddUser')
     public Post(){
@@ -47,6 +52,13 @@ export class UserAction extends Action{
         new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
             (data : any) => {
                 if (data.length || data.length > 0){
+                    if(data.STATUS == 0){
+                        this.reativar();
+                        this.sendAnswer({
+                            token    : new VPUtils().generateGUID().toUpperCase()
+                        });
+                        return;
+                    }
                     console.log(data);
                   this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
                   return;
