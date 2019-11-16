@@ -32,60 +32,33 @@ export class CTAction extends Action{
     private insertSQL() : string{
         return 'insert into TBCT (TBCT.NOME ) values (\''+ this.req.body.name+'\');';
     }
-    private reativar() : string {
-        return 'UPDATE TBCT SET STATUS = 1 \
-        WHERE TBCT.NOME =  \'' + this.req.body.name + '\';';
-    }
+
     @Post('/AddCT')
     public Post(){
         this.validateData();
-        
+
         new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
             (data : any) => {
                 if (data.length || data.length > 0){
-                    
-                    if(data[0].STATUS == 1){
-                        console.log(data[0].STATUS);
-                        this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Centro de trabalho já existe'));
-                        
-                        return;
-
-                        //Se n for igual a 1 vai executar o comando de reativar lá no final;
-                    }else{
-                        //COMANDO DE REATIVAR
-                        new MySQLFactory().getConnection().select(this.reativar()).subscribe(
-                            (data1 : any) => {
-                                this.sendAnswer({
-                                    token    : new VPUtils().generateGUID().toUpperCase()
-                                });
-                                return;
-                            },
-                            (error : any) => {
-                                this.sendError(error);
-                            }
-                        );
-                    }
-                    //COMANDO DE REATIVAR
-                  
+                    //console.log("Centro de trabalho já existe "+data);
+                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Centro de trabalho já existe'));
+                  return;
                 }else{
-                    console.log(data);
+                    //console.log(data);
                     new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                         (data : any) => {
-                            console.log("DEU CERTO ADD "+data);
+                            //console.log("DEU CERTO ADD "+data);
                         }
                     );
-                    this.sendAnswer({
-                        token    : new VPUtils().generateGUID().toUpperCase()
-                    });
                 }
-                
+                this.sendAnswer({
+                    token    : new VPUtils().generateGUID().toUpperCase()
+                });
             },
             (error : any) => {
                 this.sendError(error);
             }
         );
-
-        
     }
 
     @Get('/GetCT')

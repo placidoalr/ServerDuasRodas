@@ -37,23 +37,14 @@ var UserAction = /** @class */ (function (_super) {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe todos os campos corretamente', this.req.body.idsap == null || this.req.body.name == '' || this.req.body.password == '' || this.req.body.idsap == undefined || this.req.body.name == undefined || this.req.body.password == undefined || this.req.body.cdct == undefined || this.req.body.cdct == null || this.req.body.cargo == undefined || this.req.body.cargo == null || this.req.body.login == undefined || this.req.body.login == '');
     };
     UserAction.prototype.generateSQL = function () {
-<<<<<<< HEAD
-<<<<<<< HEAD
         return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' AND \'' + this.req.body.login + '\' != \'' + this.req.body.loginlast + '\' ) \
         OR (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND TBUSUARIO.IDSAP = ' + this.req.body.idsap + ');';
     };
     UserAction.prototype.generateADDSQL = function () {
         return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ';';
-=======
-        return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ') AND TBUSUARIO.IDSAP != ' + this.req.body.idsaplast + ';';
->>>>>>> parent of cf963a6... Usuário pronto
-=======
-        return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ') AND TBUSUARIO.IDSAP != ' + this.req.body.idsaplast + ';';
->>>>>>> parent of cf963a6... Usuário pronto
     };
     UserAction.prototype.insertSQL = function () {
-        return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CARGO, TBUSUARIO.NOME, TBUSUARIO.CDCT) \
-        values (\'' + this.req.body.idsap + '\',\'' + this.req.body.login + '\', \'' + this.req.body.password + '\', \'' + this.req.body.cargo + '\', \'' + this.req.body.name + '\', \'' + this.req.body.cdct + '\');';
+        return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CARGO, TBUSUARIO.NOME, TBUSUARIO.CDCT) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.login + '\', \'' + this.req.body.password + '\', \'' + this.req.body.cargo + '\', \'' + this.req.body.name + '\', \'' + this.req.body.cdct + '\');';
     };
     UserAction.prototype.selectSQL = function () {
         return 'select IDSAP,NOME,LOGIN,SENHA,CARGO,CDCT from TBUSUARIO where STATUS = 1;';
@@ -67,30 +58,16 @@ var UserAction = /** @class */ (function (_super) {
         , CDCT = \'' + this.req.body.cdct + '\' \
         WHERE IDSAP =  \'' + this.req.body.idsaplast + '\';';
     };
-    UserAction.prototype.reativar = function () {
-        return 'UPDATE TBUSUARIO SET STATUS = 1 \
-        WHERE IDSAP =  \'' + this.req.body.idsap + '\';';
-    };
     UserAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
-                if (data.STATUS == 0) {
-                    _this.reativar();
-                    _this.sendAnswer({
-                        token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-                    });
-                    return;
-                }
-                console.log(data);
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
                 return;
             }
             else {
-                console.log(data);
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                    console.log(data);
                 });
             }
             _this.sendAnswer({
@@ -123,7 +100,7 @@ var UserAction = /** @class */ (function (_super) {
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             if (data.length || data.length > 0 && _this.req.body.idsap != _this.req.body.idsaplast) {
                 //console.log(data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário de trabalho já existe'));
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
                 return;
             }
             else {
@@ -143,25 +120,25 @@ var UserAction = /** @class */ (function (_super) {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/AddUser'),
+        decorators_1.Post('/AddUSER'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], UserAction.prototype, "Post", null);
     __decorate([
-        decorators_1.Get('/GetUser'),
+        decorators_1.Get('/GetUSER'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], UserAction.prototype, "Get", null);
     __decorate([
-        decorators_1.Patch('/DelUser'),
+        decorators_1.Patch('/DelUSER'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], UserAction.prototype, "Patch", null);
     __decorate([
-        decorators_1.Post('/EditUser'),
+        decorators_1.Post('/EditUSER'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)

@@ -12,19 +12,12 @@ export class UserAction extends Action{
     }
 
     private generateSQL() : string {
-<<<<<<< HEAD
-<<<<<<< HEAD
         return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' AND \'' + this.req.body.login + '\' != \'' + this.req.body.loginlast + '\' ) \
         OR (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND TBUSUARIO.IDSAP = ' + this.req.body.idsap + ');';
     }
     private generateADDSQL() : string {
         return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ';';
-=======
-        return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ') AND (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND );';
->>>>>>> parent of cf963a6... Usuário pronto
-=======
-        return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ') AND (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND );';
->>>>>>> parent of cf963a6... Usuário pronto
+
     }
     private insertSQL() : string{
         return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CARGO, TBUSUARIO.NOME, TBUSUARIO.CDCT) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.login +'\', \''+ this.req.body.password+'\', \''+ this.req.body.cargo+'\', \''+ this.req.body.name+'\', \''+ this.req.body.cdct+'\');';
@@ -44,11 +37,7 @@ export class UserAction extends Action{
         , CDCT = \'' + this.req.body.cdct + '\' \
         WHERE IDSAP =  \'' + this.req.body.idsaplast + '\';';
     }
-    private reativar() : string {
-        
-        return 'UPDATE TBUSUARIO SET STATUS = 1 \
-        WHERE IDSAP =  \'' + this.req.body.idsap + '\';';
-    }
+    
 
     @Post('/AddUSER')
     public Post(){
@@ -57,21 +46,15 @@ export class UserAction extends Action{
         new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
             (data : any) => {
                 if (data.length || data.length > 0){
-                    if(data.STATUS == 0){
-                        this.reativar();
-                        this.sendAnswer({
-                            token    : new VPUtils().generateGUID().toUpperCase()
-                        });
-                        return;
-                    }
-                    console.log(data);
+                    
+                    
                   this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
                   return;
                 }else{
-                    console.log(data);
+                    
                     new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                         (data : any) => {
-                            console.log(data);
+                            
                         }
                     );
                 }
