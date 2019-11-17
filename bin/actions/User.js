@@ -61,7 +61,7 @@ var UserAction = /** @class */ (function (_super) {
     UserAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
                 return;
@@ -120,25 +120,25 @@ var UserAction = /** @class */ (function (_super) {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/AddUSER'),
+        decorators_1.Post('/AddUser'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], UserAction.prototype, "Post", null);
     __decorate([
-        decorators_1.Get('/GetUSER'),
+        decorators_1.Get('/GetUser'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], UserAction.prototype, "Get", null);
     __decorate([
-        decorators_1.Patch('/DelUSER'),
+        decorators_1.Patch('/DelUser'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], UserAction.prototype, "Patch", null);
     __decorate([
-        decorators_1.Post('/EditUSER'),
+        decorators_1.Post('/EditUser'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)

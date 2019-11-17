@@ -12,11 +12,11 @@ export class CTAction extends Action{
     }
 
     private generateSQL(){
-        return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\';';
+        return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
     }
 
     private selectSQL() : string {
-        return 'select NOME from TBCT where STATUS = 1;';
+        return 'select * from TBCT where STATUS = 1;';
     }
 
     private deleteSQL() : string {

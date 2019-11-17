@@ -39,11 +39,11 @@ export class UserAction extends Action{
     }
     
 
-    @Post('/AddUSER')
+    @Post('/AddUser')
     public Post(){
         this.validateData();
 
-        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+        new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
             (data : any) => {
                 if (data.length || data.length > 0){
                     
@@ -68,7 +68,7 @@ export class UserAction extends Action{
         );
     }
 
-    @Get('/GetUSER')
+    @Get('/GetUser')
     public Get(){
         
         new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
@@ -81,7 +81,7 @@ export class UserAction extends Action{
         );
     }
 
-    @Patch('/DelUSER')
+    @Patch('/DelUser')
     public Patch(){
         //console.log("ENTROU"+this.req.body.name)
         new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
@@ -94,7 +94,7 @@ export class UserAction extends Action{
             }
         );
 }
-@Post('/EditUSER')
+@Post('/EditUser')
     public Edit(){
 
         new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(

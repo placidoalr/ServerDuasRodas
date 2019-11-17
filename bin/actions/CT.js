@@ -37,10 +37,10 @@ var CTAction = /** @class */ (function (_super) {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o nome do Centro de Trabalho', this.req.body.name == '' || this.req.body.name == undefined);
     };
     CTAction.prototype.generateSQL = function () {
-        return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\';';
+        return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
     };
     CTAction.prototype.selectSQL = function () {
-        return 'select NOME from TBCT where STATUS = 1;';
+        return 'select * from TBCT where STATUS = 1;';
     };
     CTAction.prototype.deleteSQL = function () {
         return 'UPDATE TBCT SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';
