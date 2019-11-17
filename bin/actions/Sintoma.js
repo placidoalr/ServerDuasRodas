@@ -36,25 +36,70 @@ var SintomaAction = /** @class */ (function (_super) {
     SintomaAction.prototype.validateData = function () {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Sintoma', this.req.body.name == '' || this.req.body.name == undefined);
     };
-    SintomaAction.prototype.generateSQL = function () {
-        return 'select * from TBSINTOMA where TBSINTOMA.NOME = \'' + this.req.body.name + '\';';
-    };
     SintomaAction.prototype.insertSQL = function () {
         return 'insert into TBSINTOMA (TBSINTOMA.NOME ) values (\'' + this.req.body.name + '\');';
+    };
+    SintomaAction.prototype.generateSQL = function () {
+        return 'select * from TBSINTOMA where TBSINTOMA.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
+    };
+    SintomaAction.prototype.selectSQL = function () {
+        return 'select * from TBSINTOMA where STATUS = 1;';
+    };
+    SintomaAction.prototype.deleteSQL = function () {
+        return 'UPDATE TBSINTOMA SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';
+    };
+    SintomaAction.prototype.editSQL = function () {
+        return 'UPDATE TBSINTOMA SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\';';
     };
     SintomaAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
-                console.log(data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Sintoma já existe'));
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Causa já existe'));
                 return;
             }
             else {
-                console.log(data);
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                    console.log(data);
+                });
+            }
+            _this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    SintomaAction.prototype.Get = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    SintomaAction.prototype.Patch = function () {
+        var _this = this;
+        //console.log("ENTROU"+this.req.body.name)
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
+            //console.log(data);
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    SintomaAction.prototype.Edit = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+            if (data.length || data.length > 0) {
+                //console.log(data);
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Causa já existe'));
+                return;
+            }
+            else {
+                //console.log(data);
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
+                    //  console.log(data);
                 });
             }
             _this.sendAnswer({
@@ -68,11 +113,29 @@ var SintomaAction = /** @class */ (function (_super) {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/AddSintoma'),
+        decorators_1.Post('/AddSINTOMA'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], SintomaAction.prototype, "Post", null);
+    __decorate([
+        decorators_1.Get('/GetSINTOMA'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], SintomaAction.prototype, "Get", null);
+    __decorate([
+        decorators_1.Patch('/DelSINTOMA'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], SintomaAction.prototype, "Patch", null);
+    __decorate([
+        decorators_1.Post('/EditSINTOMA'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], SintomaAction.prototype, "Edit", null);
     return SintomaAction;
 }(action_1.Action));
 exports.SintomaAction = SintomaAction;

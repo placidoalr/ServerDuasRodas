@@ -1,4 +1,4 @@
-import {Post} from '../decorators';
+import {Get, Patch, Post, Put} from '../decorators';
 import {Action} from '../kernel/action';
 import {ActionType} from '../kernel/route-types';
 import {VPUtils} from '../utils/vputils';
@@ -11,42 +11,114 @@ export class SintomaAction extends Action{
         new KernelUtils().createExceptionApiError('1001', 'Informe o Sintoma', this.req.body.name == '' || this.req.body.name == undefined);
     }
 
-    private generateSQL() : string {
-        return 'select * from TBSINTOMA where TBSINTOMA.NOME = \'' + this.req.body.name + '\';';
-    }
-    private insertSQL() : string{
-        return 'insert into TBSINTOMA (TBSINTOMA.NOME ) values (\''+ this.req.body.name+'\');';
-    }
+       
+private insertSQL() : string{
+    return 'insert into TBSINTOMA (TBSINTOMA.NOME ) values (\''+ this.req.body.name+'\');';
+}
 
-    @Post('/AddSintoma')
-    public Post(){
-        this.validateData();
+private generateSQL(){
+    return 'select * from TBSINTOMA where TBSINTOMA.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
+}
+private selectSQL() : string {
+    return 'select * from TBSINTOMA where STATUS = 1;';
+}
 
-        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-            (data : any) => {
-                if (data.length || data.length > 0){
-                    console.log(data);
-                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Sintoma já existe'));
-                  return;
-                }else{
-                    console.log(data);
-                    new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
-                        (data : any) => {
-                            console.log(data);
-                        }
-                    );
-                }
-                this.sendAnswer({
-                    token    : new VPUtils().generateGUID().toUpperCase()
-                });
-            },
-            (error : any) => {
-                this.sendError(error);
+private deleteSQL() : string {
+    return 'UPDATE TBSINTOMA SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';
+}
+
+private editSQL() : string {
+    
+    return 'UPDATE TBSINTOMA SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\';';
+}
+
+    @Post('/AddSINTOMA')
+public Post(){
+    this.validateData();
+
+    new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+        (data : any) => {
+            if (data.length || data.length > 0){
+                
+                
+              this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Causa já existe'));
+              return;
+            }else{
+                
+                new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
+                    (data : any) => {
+                        
+                    }
+                );
             }
-        );
-    }
+            this.sendAnswer({
+                token    : new VPUtils().generateGUID().toUpperCase()
+            });
+        },
+        (error : any) => {
+            this.sendError(error);
+        }
+    );
+}
+
+@Get('/GetSINTOMA')
+public Get(){
+    
+    new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
+        (data : any) => {
+            this.sendAnswer(data);
+        },
+        (error : any) => {
+            this.sendError(error);
+        }
+    );
+}
+
+@Patch('/DelSINTOMA')
+public Patch(){
+    //console.log("ENTROU"+this.req.body.name)
+    new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
+        (data : any) => {
+            //console.log(data);
+            this.sendAnswer(data);
+        },
+        (error : any) => {
+            this.sendError(error);
+        }
+    );
+}
+@Post('/EditSINTOMA')
+public Edit(){
+
+    new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+        (data : any) => {
+            if (data.length || data.length > 0){
+                //console.log(data);
+              this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Causa já existe'));
+              return;
+            }else{
+                //console.log(data);
+                new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
+                    (data : any) => {
+                      //  console.log(data);
+                    }
+                );
+            }
+            this.sendAnswer({
+                token    : new VPUtils().generateGUID().toUpperCase()
+            });
+        },
+        (error : any) => {
+            this.sendError(error);
+        }
+    );
+}
 
     defineVisibility() {
         this.actionEscope = ActionType.atPublic;
     }
 }
+
+
+
+
