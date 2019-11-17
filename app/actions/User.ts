@@ -13,10 +13,10 @@ export class UserAction extends Action{
 
     private generateSQL() : string {
         return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' AND \'' + this.req.body.login + '\' != \'' + this.req.body.loginlast + '\' ) \
-        OR (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND TBUSUARIO.IDSAP = ' + this.req.body.idsap + ');';
+        OR (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND TBUSUARIO.IDSAP = ' + this.req.body.idsap + ') AND STATUS = 1;';
     }
     private generateADDSQL() : string {
-        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ';';
+        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ' AND STATUS = 1;';
 
     }
     private insertSQL() : string{

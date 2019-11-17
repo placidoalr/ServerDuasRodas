@@ -38,24 +38,74 @@ var EquipAction = /** @class */ (function (_super) {
             || this.req.body.codEquip == '' || this.req.body.codEquip == undefined);
     };
     EquipAction.prototype.generateSQL = function () {
-        return 'select * from TBEQUIP where TBEQUIP.NOME = \'' + this.req.body.name + '\' AND TBEQUIP.SETOR_ATRIB = \'' + this.req.body.setor + '\' AND TBEQUIP.CODEQUIP = \'' + this.req.body.codEquip + '\' ;';
+        return 'select * from TBEQUIP where (TBEQUIP.NOME = \'' + this.req.body.name + '\' ) \
+        OR (' + this.req.body.codigo + ' != ' + this.req.body.codigolast + ' AND TBEQUIP.CODEQUIP = ' + this.req.body.codigo + ') AND STATUS = 1;';
+    };
+    EquipAction.prototype.generateADDSQL = function () {
+        return 'select * from TBEQUIP where TBEQUIP.CODEQUIP = \'' + this.req.body.codigo + '\' OR TBEQUIP.NOME = ' + this.req.body.name + ' AND STATUS = 1;';
     };
     EquipAction.prototype.insertSQL = function () {
-        return 'insert into TBEQUIP (TBEQUIP.NOME ,TBEQUIP.SETOR_ATRIB, TBEQUIP.CODEQUIP) values (\'' + this.req.body.name + '\',\'' + this.req.body.setor + '\',\'' + this.req.body.codEquip + '\');';
+        return 'insert into TBEQUIP (TBEQUIP.CODEQUIP ,TBEQUIP.NOME, TBEQUIP.SETOR_ATRIB) values (\'' + this.req.body.codigo + '\',\'' + this.req.body.name + '\', \'' + this.req.body.setor + '\');';
+    };
+    EquipAction.prototype.selectSQL = function () {
+        return 'select * from TBEQUIP where STATUS = 1;';
+    };
+    EquipAction.prototype.deleteSQL = function () {
+        return 'UPDATE TBEQUIP SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\';';
+    };
+    EquipAction.prototype.editSQL = function () {
+        return 'UPDATE TBEQUIP SET NOME = \'' + this.req.body.name + '\', CODEQUIP = \'' + this.req.body.codigo + '\', \
+        SETOR_ATRIB = \'' + this.req.body.setor + '\' WHERE CODEQUIP =  \'' + this.req.body.codigolast + '\';';
     };
     EquipAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
-                console.log(data);
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Equipamento já existe'));
                 return;
             }
             else {
-                console.log(data);
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                    console.log(data);
+                });
+            }
+            _this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    EquipAction.prototype.Get = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    EquipAction.prototype.Patch = function () {
+        var _this = this;
+        //console.log("ENTROU"+this.req.body.name)
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
+            //console.log(data);
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    EquipAction.prototype.Edit = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+            if (data.length || data.length > 0) {
+                //console.log(data);
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Equipamento já existe'));
+                return;
+            }
+            else {
+                //console.log(data);
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
+                    //  console.log(data);
                 });
             }
             _this.sendAnswer({
@@ -74,6 +124,24 @@ var EquipAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], EquipAction.prototype, "Post", null);
+    __decorate([
+        decorators_1.Get('/GetEquip'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], EquipAction.prototype, "Get", null);
+    __decorate([
+        decorators_1.Patch('/DelEquip'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], EquipAction.prototype, "Patch", null);
+    __decorate([
+        decorators_1.Post('/EditEquip'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], EquipAction.prototype, "Edit", null);
     return EquipAction;
 }(action_1.Action));
 exports.EquipAction = EquipAction;
