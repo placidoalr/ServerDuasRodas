@@ -41,7 +41,7 @@ var SetorAction = /** @class */ (function (_super) {
         OR (TBSETOR.CODSETOR = ' + this.req.body.codigo + ' AND ' + this.req.body.codigo + ' != ' + this.req.body.codigolast + ' ) AND STATUS = 1;';
     };
     SetorAction.prototype.generateADDSQL = function () {
-        return 'select * from (TBSETOR where TBSETOR.NOME = \'' + this.req.body.name + '\' OR TBSETOR.CODSETOR = ' + this.req.body.codigo + ') AND STATUS = 1;';
+        return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' OR TBSETOR.CODSETOR = ' + this.req.body.codigo + ') AND STATUS = 1;';
     };
     SetorAction.prototype.selectSQL = function () {
         return 'select * from TBSETOR where STATUS = 1;';
@@ -53,7 +53,7 @@ var SetorAction = /** @class */ (function (_super) {
         return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', CODSETOR = ' + this.req.body.codigo + ' WHERE NOME =  \'' + this.req.body.namelast + '\' AND CODSETOR = ' + this.req.body.codigolast + ';';
     };
     SetorAction.prototype.insertSQL = function () {
-        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.CODSETOR ) values (\'' + this.req.body.name + '\',\'' + this.req.body.codigo + '\');';
+        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.CODSETOR ) values (\'' + this.req.body.name + '\',' + this.req.body.codigo + ');';
     };
     SetorAction.prototype.Post = function () {
         var _this = this;

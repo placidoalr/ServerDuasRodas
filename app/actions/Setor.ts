@@ -17,7 +17,7 @@ export class SetorAction extends Action{
         OR (TBSETOR.CODSETOR = ' + this.req.body.codigo + ' AND ' + this.req.body.codigo + ' != ' + this.req.body.codigolast + ' ) AND STATUS = 1;';
     }
     private generateADDSQL(){
-        return 'select * from (TBSETOR where TBSETOR.NOME = \'' + this.req.body.name + '\' OR TBSETOR.CODSETOR = ' + this.req.body.codigo + ') AND STATUS = 1;';
+        return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' OR TBSETOR.CODSETOR = ' + this.req.body.codigo + ') AND STATUS = 1;';
     }
 
     private selectSQL() : string {
@@ -35,7 +35,7 @@ export class SetorAction extends Action{
 
 
     private insertSQL() : string{
-        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.CODSETOR ) values (\''+ this.req.body.name+'\',\''+ this.req.body.codigo+'\');';
+        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.CODSETOR ) values (\''+ this.req.body.name+'\','+ this.req.body.codigo+');';
     }
 
 
