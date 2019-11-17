@@ -34,27 +34,80 @@ var SetorAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     SetorAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Setor', this.req.body.name == '' || this.req.body.name == undefined);
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Setor', this.req.body.name == '' || this.req.body.name == undefined || this.req.body.codigo == '' || this.req.body.codigo == undefined);
     };
     SetorAction.prototype.generateSQL = function () {
-        return 'select * from TBSETOR where TBSETOR.NOME = \'' + this.req.body.name + '\';';
+        return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' AND \'' + this.req.body.name + '\' != \'' + this.req.body.namelast + '\' ) \
+        OR (TBSETOR.CODSETOR = ' + this.req.body.codigo + ' AND ' + this.req.body.codigo + ' != ' + this.req.body.codigolast + ' ) AND STATUS = 1;';
+    };
+    SetorAction.prototype.generateADDSQL = function () {
+        return 'select * from (TBSETOR where TBSETOR.NOME = \'' + this.req.body.name + '\' OR TBSETOR.CODSETOR = ' + this.req.body.codigo + ') AND STATUS = 1;';
+    };
+    SetorAction.prototype.selectSQL = function () {
+        return 'select * from TBSETOR where STATUS = 1;';
+    };
+    SetorAction.prototype.deleteSQL = function () {
+        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE CODSETOR =  ' + this.req.body.codigo + ';';
+    };
+    SetorAction.prototype.editSQL = function () {
+        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', CODSETOR = ' + this.req.body.codigo + ' WHERE NOME =  \'' + this.req.body.namelast + '\' AND CODSETOR = ' + this.req.body.codigolast + ';';
     };
     SetorAction.prototype.insertSQL = function () {
-        return 'insert into TBSETOR (TBSETOR.NOME ) values (\'' + this.req.body.name + '\');';
+        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.CODSETOR ) values (\'' + this.req.body.name + '\',\'' + this.req.body.codigo + '\');';
     };
     SetorAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
+            console.log(data);
             if (data.length || data.length > 0) {
-                console.log(data);
+                //console.log("Centro de trabalho já existe "+data);
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Setor já existe'));
                 return;
             }
             else {
                 console.log(data);
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                    console.log(data);
+                    console.log("DEU CERTO ADD " + data);
+                });
+            }
+            _this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    SetorAction.prototype.GetSetor = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    SetorAction.prototype.PatchCT = function () {
+        var _this = this;
+        //console.log("ENTROU"+this.req.body.name)
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
+            //console.log(data);
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    SetorAction.prototype.EditSetor = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+            if (data.length || data.length > 0) {
+                //console.log(data);
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Novo Setor já existe'));
+                return;
+            }
+            else {
+                //console.log(data);
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
+                    //  console.log(data);
                 });
             }
             _this.sendAnswer({
@@ -68,11 +121,29 @@ var SetorAction = /** @class */ (function (_super) {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/AddSetor'),
+        decorators_1.Post('/AddSETOR'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], SetorAction.prototype, "Post", null);
+    __decorate([
+        decorators_1.Get('/GetSETOR'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], SetorAction.prototype, "GetSetor", null);
+    __decorate([
+        decorators_1.Patch('/DelSETOR'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], SetorAction.prototype, "PatchCT", null);
+    __decorate([
+        decorators_1.Post('/EditSETOR'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], SetorAction.prototype, "EditSetor", null);
     return SetorAction;
 }(action_1.Action));
 exports.SetorAction = SetorAction;
