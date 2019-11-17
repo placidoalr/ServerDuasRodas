@@ -36,25 +36,70 @@ var CausaDefAction = /** @class */ (function (_super) {
     CausaDefAction.prototype.validateData = function () {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe a causa do defeito', this.req.body.name == '' || this.req.body.name == undefined);
     };
-    CausaDefAction.prototype.generateSQL = function () {
-        return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.name + '\';';
-    };
     CausaDefAction.prototype.insertSQL = function () {
         return 'insert into TBCAUSADEF (TBCAUSADEF.DSCAUSA ) values (\'' + this.req.body.name + '\');';
+    };
+    CausaDefAction.prototype.generateSQL = function () {
+        return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.name + '\' AND STATUS = 1;';
+    };
+    CausaDefAction.prototype.selectSQL = function () {
+        return 'select * from TBCAUSADEF where STATUS = 1;';
+    };
+    CausaDefAction.prototype.deleteSQL = function () {
+        return 'UPDATE TBCAUSADEF SET STATUS = \'0\' WHERE DSCAUSA =  \'' + this.req.body.name + '\';';
+    };
+    CausaDefAction.prototype.editSQL = function () {
+        return 'UPDATE TBCAUSADEF SET DSCAUSA = \'' + this.req.body.name + '\' WHERE DSCAUSA =  \'' + this.req.body.namelast + '\';';
     };
     CausaDefAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
-                console.log(data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Causa de defeito já existe'));
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Causa já existe'));
                 return;
             }
             else {
-                console.log(data);
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                    console.log(data);
+                });
+            }
+            _this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    CausaDefAction.prototype.Get = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    CausaDefAction.prototype.Patch = function () {
+        var _this = this;
+        //console.log("ENTROU"+this.req.body.name)
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
+            //console.log(data);
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    CausaDefAction.prototype.Edit = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+            if (data.length || data.length > 0) {
+                //console.log(data);
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Causa já existe'));
+                return;
+            }
+            else {
+                //console.log(data);
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
+                    //  console.log(data);
                 });
             }
             _this.sendAnswer({
@@ -68,11 +113,29 @@ var CausaDefAction = /** @class */ (function (_super) {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/AddCausaDef'),
+        decorators_1.Post('/AddCAUSADEF'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], CausaDefAction.prototype, "Post", null);
+    __decorate([
+        decorators_1.Get('/GetCAUSADEF'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], CausaDefAction.prototype, "Get", null);
+    __decorate([
+        decorators_1.Patch('/DelCAUSADEF'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], CausaDefAction.prototype, "Patch", null);
+    __decorate([
+        decorators_1.Post('/EditCAUSADEF'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], CausaDefAction.prototype, "Edit", null);
     return CausaDefAction;
 }(action_1.Action));
 exports.CausaDefAction = CausaDefAction;
