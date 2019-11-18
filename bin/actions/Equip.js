@@ -38,8 +38,7 @@ var EquipAction = /** @class */ (function (_super) {
             || this.req.body.codigo == '' || this.req.body.codigo == undefined);
     };
     EquipAction.prototype.generateSQL = function () {
-        return 'select * from TBEQUIP where (TBEQUIP.NOME = \'' + this.req.body.name + '\' ) \
-        OR (' + this.req.body.codigo + ' != ' + this.req.body.codigolast + ' AND TBEQUIP.CODEQUIP = ' + this.req.body.codigo + ') AND STATUS = 1;';
+        return 'select * from TBEQUIP where (' + this.req.body.codigo + ' != ' + this.req.body.codigolast + ' AND TBEQUIP.CODEQUIP = ' + this.req.body.codigo + ') AND STATUS = 1;';
     };
     EquipAction.prototype.generateADDSQL = function () {
         return 'select * from TBEQUIP where (TBEQUIP.NOME = \'' + this.req.body.name + '\' OR TBEQUIP.CODEQUIP = ' + this.req.body.codigo + ') AND STATUS = 1;';
