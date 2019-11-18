@@ -37,15 +37,28 @@ var LayoutAction = /** @class */ (function (_super) {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Layout', this.req.body.name == '' || this.req.body.name == undefined);
     };
     LayoutAction.prototype.generateSQL = function () {
-        return 'select * from TBLAYOUTOM where TBLAYOUTOM.NOME = \'' + this.req.body.name + '\';';
+        return 'select ID from TBLAYOUTOM where (TBLAYOUTOM.NOME = \'' + this.req.body.name + '\' AND \'' + this.req.body.name + '\' != \'' + this.req.body.namelast + '\' ) \
+         AND STATUS = 1;';
+    };
+    LayoutAction.prototype.generateADDSQL = function () {
+        return 'select * from TBLAYOUTOM where TBLAYOUTOM.NOME = \'' + this.req.body.name + '\'  AND STATUS = 1;';
     };
     LayoutAction.prototype.insertSQL = function () {
-        return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME ) values (\'' + this.req.body.name + '\');';
+        return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME, TBLAYOUTOM.CDLAYOUT ) values (\'' + this.req.body.name + '\',' + this.req.body.layout + ');';
+    };
+    LayoutAction.prototype.selectSQL = function () {
+        return 'select NOME, CDLAYOUT from TBLAYOUTOM where status = 1';
+    };
+    LayoutAction.prototype.deleteSQL = function () {
+        return 'UPDATE TBLAYOUTOM SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';
+    };
+    LayoutAction.prototype.editSQL = function () {
+        return 'UPDATE TBLAYOUTOM SET NOME  = \'' + this.req.body.name + '\' WHERE NOME = \'' + this.req.body.namelast + '\' AND STATUS = 1 ;';
     };
     LayoutAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
                 console.log(data);
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Layout já existe'));
@@ -64,15 +77,73 @@ var LayoutAction = /** @class */ (function (_super) {
             _this.sendError(error);
         });
     };
+    LayoutAction.prototype.Get = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    LayoutAction.prototype.Patch = function () {
+        var _this = this;
+        //console.log("ENTROU"+this.req.body.name)
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
+            //console.log(data);
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    ;
+    LayoutAction.prototype.Edit = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+            if (data.length || data.length > 0 && _this.req.body.name != _this.req.body.namelast) {
+                //console.log(data);
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
+                return;
+            }
+            else {
+                //console.log(data);
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
+                    //  console.log(data);
+                });
+            }
+            _this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
     LayoutAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/AddLayout'),
+        decorators_1.Post('/AddLAYOUTOM'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], LayoutAction.prototype, "Post", null);
+    __decorate([
+        decorators_1.Get('/GetLAYOUTOM'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], LayoutAction.prototype, "Get", null);
+    __decorate([
+        decorators_1.Patch('/DelLAYOUTOM'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], LayoutAction.prototype, "Patch", null);
+    __decorate([
+        decorators_1.Post('/EditLAYOUTOM'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], LayoutAction.prototype, "Edit", null);
     return LayoutAction;
 }(action_1.Action));
 exports.LayoutAction = LayoutAction;
