@@ -8,8 +8,8 @@ import { MySQLFactory } from '../mysql/mysql_factory';
 export class EquipAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o nome e setor do Equipamento', this.req.body.name == '' || this.req.body.setor == '' || this.req.body.setor == undefined || this.req.body.name == undefined 
-        || this.req.body.codEquip == '' || this.req.body.codEquip == undefined );
+        new KernelUtils().createExceptionApiError('1001', 'Informe todos os campos corretamente', this.req.body.name == '' || this.req.body.setor == '' || this.req.body.setor == undefined || this.req.body.name == undefined 
+        || this.req.body.codigo == '' || this.req.body.codigo == undefined );
     }
 
 
@@ -18,7 +18,7 @@ export class EquipAction extends Action{
         OR (' + this.req.body.codigo + ' != ' + this.req.body.codigolast + ' AND TBEQUIP.CODEQUIP = ' + this.req.body.codigo + ') AND STATUS = 1;';
     }
     private generateADDSQL() : string {
-        return 'select * from TBEQUIP where TBEQUIP.CODEQUIP = \'' + this.req.body.codigo + '\' OR TBEQUIP.NOME = ' + this.req.body.name + ' AND STATUS = 1;';
+        return 'select * from TBEQUIP where (TBEQUIP.NOME = \'' + this.req.body.name + '\' OR TBEQUIP.CODEQUIP = ' + this.req.body.codigo + ') AND STATUS = 1;';
     
     }
     private insertSQL() : string{

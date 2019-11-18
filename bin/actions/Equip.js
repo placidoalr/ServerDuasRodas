@@ -34,15 +34,15 @@ var EquipAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     EquipAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o nome e setor do Equipamento', this.req.body.name == '' || this.req.body.setor == '' || this.req.body.setor == undefined || this.req.body.name == undefined
-            || this.req.body.codEquip == '' || this.req.body.codEquip == undefined);
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe todos os campos corretamente', this.req.body.name == '' || this.req.body.setor == '' || this.req.body.setor == undefined || this.req.body.name == undefined
+            || this.req.body.codigo == '' || this.req.body.codigo == undefined);
     };
     EquipAction.prototype.generateSQL = function () {
         return 'select * from TBEQUIP where (TBEQUIP.NOME = \'' + this.req.body.name + '\' ) \
         OR (' + this.req.body.codigo + ' != ' + this.req.body.codigolast + ' AND TBEQUIP.CODEQUIP = ' + this.req.body.codigo + ') AND STATUS = 1;';
     };
     EquipAction.prototype.generateADDSQL = function () {
-        return 'select * from TBEQUIP where TBEQUIP.CODEQUIP = \'' + this.req.body.codigo + '\' OR TBEQUIP.NOME = ' + this.req.body.name + ' AND STATUS = 1;';
+        return 'select * from TBEQUIP where (TBEQUIP.NOME = \'' + this.req.body.name + '\' OR TBEQUIP.CODEQUIP = ' + this.req.body.codigo + ') AND STATUS = 1;';
     };
     EquipAction.prototype.insertSQL = function () {
         return 'insert into TBEQUIP (TBEQUIP.CODEQUIP ,TBEQUIP.NOME, TBEQUIP.SETOR_ATRIB) values (\'' + this.req.body.codigo + '\',\'' + this.req.body.name + '\', \'' + this.req.body.setor + '\');';
