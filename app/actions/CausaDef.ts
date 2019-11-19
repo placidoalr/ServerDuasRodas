@@ -20,16 +20,16 @@ export class CausaDefAction extends Action{
         return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.name + '\' AND STATUS = 1;';
     }
     private selectSQL() : string {
-        return 'select * from TBCAUSADEF where STATUS = 1;';
+        return 'select ID,DSCAUSA from TBCAUSADEF where STATUS = 1;';
     }
 
     private deleteSQL() : string {
-        return 'UPDATE TBCAUSADEF SET STATUS = \'0\' WHERE DSCAUSA =  \'' + this.req.body.name + '\';';
+        return 'UPDATE TBCAUSADEF SET STATUS = \'0\' WHERE DSCAUSA =  \'' + this.req.body.name + '\' AND STATUS = 1;';
     }
 
     private editSQL() : string {
         
-        return 'UPDATE TBCAUSADEF SET DSCAUSA = \'' + this.req.body.name + '\' WHERE DSCAUSA =  \'' + this.req.body.namelast + '\';';
+        return 'UPDATE TBCAUSADEF SET DSCAUSA = \'' + this.req.body.name + '\' WHERE DSCAUSA =  \'' + this.req.body.namelast + '\' AND STATUS = 1;';
     }
 
     @Post('/AddCAUSADEF')

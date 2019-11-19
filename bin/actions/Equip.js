@@ -47,14 +47,14 @@ var EquipAction = /** @class */ (function (_super) {
         return 'insert into TBEQUIP (TBEQUIP.CODEQUIP ,TBEQUIP.NOME, TBEQUIP.SETOR_ATRIB) values (\'' + this.req.body.codigo + '\',\'' + this.req.body.name + '\', \'' + this.req.body.setor + '\');';
     };
     EquipAction.prototype.selectSQL = function () {
-        return 'select * from TBEQUIP where STATUS = 1;';
+        return 'select CODEQUIP,NOME,SETOR_ATRIB from TBEQUIP where STATUS = 1;';
     };
     EquipAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBEQUIP SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\';';
+        return 'UPDATE TBEQUIP SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\' AND STATUS = 1;';
     };
     EquipAction.prototype.editSQL = function () {
         return 'UPDATE TBEQUIP SET NOME = \'' + this.req.body.name + '\', CODEQUIP = \'' + this.req.body.codigo + '\', \
-        SETOR_ATRIB = \'' + this.req.body.setor + '\' WHERE CODEQUIP =  \'' + this.req.body.codigolast + '\';';
+        SETOR_ATRIB = \'' + this.req.body.setor + '\' WHERE CODEQUIP =  \'' + this.req.body.codigolast + '\' AND STATUS = 1;';
     };
     EquipAction.prototype.Post = function () {
         var _this = this;

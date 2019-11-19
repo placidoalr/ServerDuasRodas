@@ -27,7 +27,7 @@ export class UserAction extends Action{
     }
 
     private deleteSQL() : string {
-        return 'UPDATE TBUSUARIO SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\';';
+        return 'UPDATE TBUSUARIO SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\' AND STATUS = 1;';
     }
 
     private editSQL() : string {
@@ -43,8 +43,10 @@ export class UserAction extends Action{
     public Post(){
         this.validateData();
 
+        console.log("CHEGUEI")
         new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
             (data : any) => {
+                console.log("CHEGUEI")
                 if (data.length || data.length > 0){
                     
                     

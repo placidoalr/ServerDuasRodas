@@ -44,13 +44,13 @@ var SetorAction = /** @class */ (function (_super) {
         return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' OR TBSETOR.CODSETOR = ' + this.req.body.codigo + ') AND STATUS = 1;';
     };
     SetorAction.prototype.selectSQL = function () {
-        return 'select * from TBSETOR where STATUS = 1;';
+        return 'select CODSETOR,NOME from TBSETOR where STATUS = 1;';
     };
     SetorAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE CODSETOR =  ' + this.req.body.codigo + ';';
+        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE CODSETOR =  ' + this.req.body.codigo + ' AND STATUS = 1;';
     };
     SetorAction.prototype.editSQL = function () {
-        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', CODSETOR = ' + this.req.body.codigo + ' WHERE NOME =  \'' + this.req.body.namelast + '\' AND CODSETOR = ' + this.req.body.codigolast + ';';
+        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', CODSETOR = ' + this.req.body.codigo + ' WHERE NOME =  \'' + this.req.body.namelast + '\' AND CODSETOR = ' + this.req.body.codigolast + ' AND STATUS = 1;';
     };
     SetorAction.prototype.insertSQL = function () {
         return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.CODSETOR ) values (\'' + this.req.body.name + '\',' + this.req.body.codigo + ');';

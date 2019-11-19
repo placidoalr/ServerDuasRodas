@@ -12,20 +12,20 @@ export class TipoManAction extends Action{
     }
 
     private generateSQL(){
-        return 'select * from TBTIPOMAN where TBTIPOMAN.NOME = \'' + this.req.body.name + '\';';
+        return 'select * from TBTIPOMAN where TBTIPOMAN.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
     }
 
     private selectSQL() : string {
-        return 'select NOME from TBTIPOMAN where STATUS = 1;';
+        return 'select ID,NOME from TBTIPOMAN where STATUS = 1;';
     }
 
     private deleteSQL() : string {
-        return 'UPDATE TBTIPOMAN SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';
+        return 'UPDATE TBTIPOMAN SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\' AND STATUS = 1;';
     }
 
     private editSQL() : string {
         
-        return 'UPDATE TBTIPOMAN SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\';';
+        return 'UPDATE TBTIPOMAN SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND STATUS = 1;';
     }
 
 
