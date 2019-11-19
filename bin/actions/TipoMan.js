@@ -37,16 +37,16 @@ var TipoManAction = /** @class */ (function (_super) {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o nome do tipo de manutenção', this.req.body.name == '' || this.req.body.name == undefined);
     };
     TipoManAction.prototype.generateSQL = function () {
-        return 'select * from TBTIPOMAN where TBTIPOMAN.NOME = \'' + this.req.body.name + '\';';
+        return 'select * from TBTIPOMAN where TBTIPOMAN.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
     };
     TipoManAction.prototype.selectSQL = function () {
-        return 'select NOME from TBTIPOMAN where STATUS = 1;';
+        return 'select ID,NOME from TBTIPOMAN where STATUS = 1;';
     };
     TipoManAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBTIPOMAN SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';
+        return 'UPDATE TBTIPOMAN SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\' AND STATUS = 1;';
     };
     TipoManAction.prototype.editSQL = function () {
-        return 'UPDATE TBTIPOMAN SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\';';
+        return 'UPDATE TBTIPOMAN SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND STATUS = 1;';
     };
     TipoManAction.prototype.insertSQL = function () {
         return 'insert into TBTIPOMAN (TBTIPOMAN.NOME ) values (\'' + this.req.body.name + '\');';

@@ -15,16 +15,16 @@ export class CTAction extends Action{
         return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
     }
     private selectSQL() : string {
-        return 'select * from TBCT where STATUS = 1;';
+        return 'select ID,NOME from TBCT where STATUS = 1;';
     }
 
     private deleteSQL() : string {
-        return 'UPDATE TBCT SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';
+        return 'UPDATE TBCT SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\' AND STATUS = 1;';
     }
 
     private editSQL() : string {
         
-        return 'UPDATE TBCT SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\';';
+        return 'UPDATE TBCT SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND STATUS = 1;';
     }
 
 

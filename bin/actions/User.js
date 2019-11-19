@@ -50,7 +50,7 @@ var UserAction = /** @class */ (function (_super) {
         return 'select IDSAP,NOME,LOGIN,SENHA,CARGO,CDCT from TBUSUARIO where STATUS = 1;';
     };
     UserAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBUSUARIO SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\';';
+        return 'UPDATE TBUSUARIO SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\' AND STATUS = 1;';
     };
     UserAction.prototype.editSQL = function () {
         return 'UPDATE TBUSUARIO SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\', \
@@ -61,7 +61,9 @@ var UserAction = /** @class */ (function (_super) {
     UserAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
+        console.log("CHEGUEI");
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
+            console.log("CHEGUEI");
             if (data.length || data.length > 0) {
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
                 return;

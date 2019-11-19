@@ -21,16 +21,15 @@ export class SetorAction extends Action{
     }
 
     private selectSQL() : string {
-        return 'select * from TBSETOR where STATUS = 1;';
+        return 'select CODSETOR,NOME from TBSETOR where STATUS = 1;';
     }
 
     private deleteSQL() : string {
-        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE CODSETOR =  ' + this.req.body.codigo + ';';
+        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE CODSETOR =  ' + this.req.body.codigo + ' AND STATUS = 1;';
     }
 
     private editSQL() : string {
-        
-        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', CODSETOR = ' + this.req.body.codigo + ' WHERE NOME =  \'' + this.req.body.namelast + '\' AND CODSETOR = ' + this.req.body.codigolast + ';';
+        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', CODSETOR = ' + this.req.body.codigo + ' WHERE NOME =  \'' + this.req.body.namelast + '\' AND CODSETOR = ' + this.req.body.codigolast + ' AND STATUS = 1;';
     }
 
 

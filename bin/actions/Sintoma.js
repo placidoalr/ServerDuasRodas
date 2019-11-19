@@ -43,13 +43,13 @@ var SintomaAction = /** @class */ (function (_super) {
         return 'select * from TBSINTOMA where TBSINTOMA.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
     };
     SintomaAction.prototype.selectSQL = function () {
-        return 'select * from TBSINTOMA where STATUS = 1;';
+        return 'select ID,NOME from TBSINTOMA where STATUS = 1;';
     };
     SintomaAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBSINTOMA SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';
+        return 'UPDATE TBSINTOMA SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\' AND STATUS = 1;';
     };
     SintomaAction.prototype.editSQL = function () {
-        return 'UPDATE TBSINTOMA SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\';';
+        return 'UPDATE TBSINTOMA SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND STATUS = 1;';
     };
     SintomaAction.prototype.Post = function () {
         var _this = this;
