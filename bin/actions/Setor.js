@@ -44,7 +44,7 @@ var SetorAction = /** @class */ (function (_super) {
         return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' OR TBSETOR.CODSETOR = ' + this.req.body.codigo + ') AND STATUS = 1;';
     };
     SetorAction.prototype.selectSQL = function () {
-        return 'select CODSETOR,NOME from TBSETOR where STATUS = 1;';
+        return 'select ID,CODSETOR,NOME from TBSETOR where STATUS = 1;';
     };
     SetorAction.prototype.deleteSQL = function () {
         return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE CODSETOR =  ' + this.req.body.codigo + ' AND STATUS = 1;';
