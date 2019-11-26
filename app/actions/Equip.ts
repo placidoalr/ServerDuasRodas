@@ -14,10 +14,10 @@ export class EquipAction extends Action{
 
 
     private generateSQL() : string {
-        return 'select * from TBEQUIP where (' + this.req.body.codigo + ' != ' + this.req.body.codigolast + ' AND TBEQUIP.CODEQUIP = ' + this.req.body.codigo + ') AND STATUS = 1;';
+        return 'select * from TBEQUIP where (' + this.req.body.codigo + ' != \'' + this.req.body.codigolast + '\' AND TBEQUIP.CODEQUIP = \'' + this.req.body.codigo + '\') AND STATUS = 1;';
     }
     private generateADDSQL() : string {
-        return 'select * from TBEQUIP where (TBEQUIP.NOME = \'' + this.req.body.name + '\' OR TBEQUIP.CODEQUIP = ' + this.req.body.codigo + ') AND STATUS = 1;';
+        return 'select * from TBEQUIP where (TBEQUIP.NOME = \'' + this.req.body.name + '\' OR TBEQUIP.CODEQUIP = \'' + this.req.body.codigo + '\') AND STATUS = 1;';
     
     }
     private insertSQL() : string{
