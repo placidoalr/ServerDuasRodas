@@ -14,17 +14,17 @@ export class EquipAction extends Action{
 
 
     private generateSQL() : string {
-        return 'select * from TBEQUIP where (' + this.req.body.codigo + ' != \'' + this.req.body.codigolast + '\' AND TBEQUIP.CODEQUIP = \'' + this.req.body.codigo + '\') AND STATUS = 1;';
+        return 'select * from TBEQUIP where (' + this.req.body.codigo + ' != \'' + this.req.body.codigolast + '\' AND TBEQUIP.IDSAP = \'' + this.req.body.codigo + '\') AND STATUS = 1;';
     }
     private generateADDSQL() : string {
-        return 'select * from TBEQUIP where (TBEQUIP.NOME = \'' + this.req.body.name + '\' OR TBEQUIP.CODEQUIP = \'' + this.req.body.codigo + '\') AND STATUS = 1;';
+        return 'select * from TBEQUIP where (TBEQUIP.NOME = \'' + this.req.body.name + '\' OR TBEQUIP.IDSAP = \'' + this.req.body.codigo + '\') AND STATUS = 1;';
     
     }
     private insertSQL() : string{
-        return 'insert into TBEQUIP (TBEQUIP.CODEQUIP ,TBEQUIP.NOME, TBEQUIP.SETOR_ATRIB) values (\''+ this.req.body.codigo+'\',\''+ this.req.body.name +'\', \''+ this.req.body.setor+'\');';
+        return 'insert into TBEQUIP (TBEQUIP.IDSAP ,TBEQUIP.NOME, TBEQUIP.SETOR_ATRIB) values (\''+ this.req.body.codigo+'\',\''+ this.req.body.name +'\', \''+ this.req.body.setor+'\');';
     }
     private selectSQL() : string {
-        return 'select CODEQUIP,NOME,SETOR_ATRIB from TBEQUIP where STATUS = 1;';
+        return 'select IDSAP,NOME,SETOR_ATRIB from TBEQUIP where STATUS = 1;';
     }
     
     private deleteSQL() : string {
@@ -33,8 +33,8 @@ export class EquipAction extends Action{
     
     private editSQL() : string {
         
-        return 'UPDATE TBEQUIP SET NOME = \'' + this.req.body.name + '\', CODEQUIP = \'' + this.req.body.codigo + '\', \
-        SETOR_ATRIB = \'' + this.req.body.setor + '\' WHERE CODEQUIP =  \'' + this.req.body.codigolast + '\' AND STATUS = 1;';
+        return 'UPDATE TBEQUIP SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.codigo + '\', \
+        SETOR_ATRIB = \'' + this.req.body.setor + '\' WHERE IDSAP =  \'' + this.req.body.codigolast + '\' AND STATUS = 1;';
     }
     
     

@@ -11,7 +11,7 @@ export class OMAction extends Action{
     
 
     private generateSQL(idom:any) : string {
-        return 'select * from TBOM O WHERE O.IDOM ='+idom+';';
+        return 'select * from TBOM O WHERE O.ID ='+idom+';';
     }
 
     @Get('/om')
