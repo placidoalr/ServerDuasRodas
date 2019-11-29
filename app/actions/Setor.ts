@@ -14,27 +14,27 @@ export class SetorAction extends Action{
 
     private generateSQL(){
         return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' AND \'' + this.req.body.name + '\' != \'' + this.req.body.namelast + '\' ) \
-        OR (TBSETOR.CODSETOR = \'' + this.req.body.codigo + '\' AND \'' + this.req.body.codigo + '\' != \'' + this.req.body.codigolast + '\' ) AND STATUS = 1;';
+        OR (TBSETOR.IDSAP = \'' + this.req.body.codigo + '\' AND \'' + this.req.body.codigo + '\' != \'' + this.req.body.codigolast + '\' ) AND STATUS = 1;';
     }
     private generateADDSQL(){
-        return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' OR TBSETOR.CODSETOR = \'' + this.req.body.codigo + '\') AND STATUS = 1;';
+        return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' OR TBSETOR.IDSAP = \'' + this.req.body.codigo + '\') AND STATUS = 1;';
     }
 
     private selectSQL() : string {
-        return 'select ID,CODSETOR,NOME from TBSETOR where STATUS = 1;';
+        return 'select ID,IDSAP,NOME from TBSETOR where STATUS = 1;';
     }
 
     private deleteSQL() : string {
-        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE CODSETOR =  \'' + this.req.body.codigo + '\' AND STATUS = 1;';
+        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.codigo + '\' AND STATUS = 1;';
     }
 
     private editSQL() : string {
-        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', CODSETOR = \'' + this.req.body.codigo + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND CODSETOR = \'' + this.req.body.codigolast + '\' AND STATUS = 1;';
+        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.codigo + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND IDSAP = \'' + this.req.body.codigolast + '\' AND STATUS = 1;';
     }
 
 
     private insertSQL() : string{
-        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.CODSETOR ) values (\''+ this.req.body.name+'\',\''+ this.req.body.codigo+'\');';
+        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.IDSAP ) values (\''+ this.req.body.name+'\',\''+ this.req.body.codigo+'\');';
     }
 
 

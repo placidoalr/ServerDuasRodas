@@ -32,7 +32,7 @@ var OMAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     OMAction.prototype.generateSQL = function (idom) {
-        return 'select * from TBOM O WHERE O.IDOM =' + idom + ';';
+        return 'select * from TBOM O WHERE O.ID =' + idom + ';';
     };
     OMAction.prototype.GetOM = function () {
         var _this = this;

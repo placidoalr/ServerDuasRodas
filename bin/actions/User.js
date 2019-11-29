@@ -38,10 +38,10 @@ var UserAction = /** @class */ (function (_super) {
     };
     UserAction.prototype.generateSQL = function () {
         return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' AND \'' + this.req.body.login + '\' != \'' + this.req.body.loginlast + '\' ) \
-        OR (' + this.req.body.idsap + ' != ' + this.req.body.idsaplast + ' AND TBUSUARIO.IDSAP = ' + this.req.body.idsap + ') AND STATUS = 1;';
+        OR (\'' + this.req.body.idsap + '\' != \'' + this.req.body.idsaplast + '\' AND TBUSUARIO.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
     };
     UserAction.prototype.generateADDSQL = function () {
-        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = ' + this.req.body.idsap + ' AND STATUS = 1;';
+        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = \'' + this.req.body.idsap + '\' AND STATUS = 1;';
     };
     UserAction.prototype.insertSQL = function () {
         return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CARGO, TBUSUARIO.NOME, TBUSUARIO.CDCT) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.login + '\', \'' + this.req.body.password + '\', \'' + this.req.body.cargo + '\', \'' + this.req.body.name + '\', \'' + this.req.body.cdct + '\');';
