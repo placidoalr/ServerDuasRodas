@@ -47,6 +47,7 @@ var SetorAction = /** @class */ (function (_super) {
         return 'select ID,IDSAP,NOME from TBSETOR where STATUS = 1;';
     };
     SetorAction.prototype.deleteSQL = function () {
+
         return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.codigo + '\' AND STATUS = 1;';
     };
     SetorAction.prototype.editSQL = function () {
