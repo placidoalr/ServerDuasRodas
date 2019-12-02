@@ -6,10 +6,10 @@ export class MySQL {
     private host     : string = '';
     private port     : number = 0 ;
     private user     : string = '';
-    private password : string = '1234';
+    private password : string = '';
     private database : string = '';
 
-    constructor (host : string, user : string, password : string, database : string, port : number = 3306){
+    constructor (host : string, user : string, password : string, database : string, port : number = 3308){
         this.host     = host    ;
         this.port     = port    ;
         this.user     = user    ;

@@ -4,11 +4,11 @@ var rxjs_1 = require("rxjs");
 var mysql = require('mysql');
 var MySQL = /** @class */ (function () {
     function MySQL(host, user, password, database, port) {
-        if (port === void 0) { port = 3306; }
+        if (port === void 0) { port = 3308; }
         this.host = '';
         this.port = 0;
         this.user = '';
-        this.password = '1234';
+        this.password = '';
         this.database = '';
         this.host = host;
         this.port = port;
