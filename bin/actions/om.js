@@ -25,26 +25,111 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var decorators_1 = require("../decorators");
 var action_1 = require("../kernel/action");
 var route_types_1 = require("../kernel/route-types");
+var vputils_1 = require("../utils/vputils");
+var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
 var OMAction = /** @class */ (function (_super) {
     __extends(OMAction, _super);
     function OMAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OMAction.prototype.generateSQL = function (idom) {
-        return 'select * from TBOM O WHERE O.ID =' + idom + ';';
+    OMAction.prototype.validateData = function () {
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe a OM', this.req.body.idsap == '' || this.req.body.idsap == undefined);
     };
-    OMAction.prototype.GetOM = function () {
+    OMAction.prototype.validateDataEquipToOM = function () {
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe a OM', this.req.body.idequip == '' || this.req.body.idequip == undefined);
+    };
+    OMAction.prototype.insertSQL = function () {
+        var horaatual = Date.now();
+        return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB ) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.solicitante + '\',' + this.req.body.layout + ',' + this.req.body.ct + ',' + this.req.body.tipoManut + ',' + this.req.body.sintoma + ',' + this.req.body.causa + ',\'' + this.req.body.def + '\',\'' + horaatual + '\', \'' + this.req.body.obs + '\',' + this.req.body.prior + ', 1,' + this.req.body.li + ');';
+    };
+    OMAction.prototype.generateSQL = function () {
+        return 'select * from TBOM where TBOM.IDSAP = \'' + this.req.body.idsap + '\' AND STATUS = 1;';
+    };
+    OMAction.prototype.selectSQL = function () {
+        return 'select TBOM.*,TBSETOR.NOME as TBSETORNOME,TBCT.NOME as TBCTNOME,TBLAYOUTOM.NOME as TTBLAYOUTOMNOME,TBTIPOMAN.NOME as TBTIPOMANNOME,TBSINTOMA.NOME as TBSINTOMANOME,TBCAUSADEF.DSCAUSA as TBCAUSADEFNOME from TBOM INNER JOIN TBSETOR ON TBOM.SETOR_ATRIB = TBSETOR.ID inner join TBCT on TBOM.IDCT = TBCT.ID inner join TBLAYOUTOM on TBOM.IDLAYOUT = TBLAYOUTOM.ID INNER JOIN TBTIPOMAN ON TBOM.TPOM = TBTIPOMAN.ID INNER JOIN TBSINTOMA ON TBOM.SINTOMA = TBSINTOMA.ID INNER JOIN TBCAUSADEF ON TBOM.CAUSADEF = TBCAUSADEF.ID where TBOM.STATUS = 1;';
+    };
+    OMAction.prototype.deleteSQL = function () {
+        return 'UPDATE TBOM SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
+    };
+    OMAction.prototype.editSQL = function () {
+        return 'UPDATE TBOM SET IDSAP = \'' + this.req.body.idsap + '\' WHERE NOME =  \'' + this.req.body.idsaplast + '\' AND STATUS = 1;';
+    };
+    OMAction.prototype.Post = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL(this.req.query.idom)).subscribe(function (data) {
-            if (data.length == 0) {
-                _this.sendAnswer({});
+        this.validateData();
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+            if (data.length || data.length > 0) {
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'OM já existe'));
+                return;
             }
             else {
-                _this.sendAnswer(data[0]);
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
+                });
             }
+            _this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
         }, function (error) {
-            console.log(error);
+            _this.sendError(error);
+        });
+    };
+    OMAction.prototype.EquipToOM = function () {
+        var _this = this;
+        this.validateDataEquipToOM();
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+            if (data.length || data.length > 0) {
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'OM já existe'));
+                return;
+            }
+            else {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
+                });
+            }
+            _this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    OMAction.prototype.Get = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+            console.log(data);
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    OMAction.prototype.Patch = function () {
+        var _this = this;
+        //console.log("ENTROU"+this.req.body.name)
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
+            //console.log(data);
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    OMAction.prototype.Edit = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+            if (data.length || data.length > 0) {
+                //console.log(data);
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'OM já existe'));
+                return;
+            }
+            else {
+                //console.log(data);
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
+                    //  console.log(data);
+                });
+            }
+            _this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }, function (error) {
             _this.sendError(error);
         });
     };
@@ -52,11 +137,35 @@ var OMAction = /** @class */ (function (_super) {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Get('/om'),
+        decorators_1.Post('/AddOM'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], OMAction.prototype, "GetOM", null);
+    ], OMAction.prototype, "Post", null);
+    __decorate([
+        decorators_1.Post('/AddEquipToOM'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], OMAction.prototype, "EquipToOM", null);
+    __decorate([
+        decorators_1.Get('/GetOM'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], OMAction.prototype, "Get", null);
+    __decorate([
+        decorators_1.Patch('/DelOM'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], OMAction.prototype, "Patch", null);
+    __decorate([
+        decorators_1.Post('/EditOM'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], OMAction.prototype, "Edit", null);
     return OMAction;
 }(action_1.Action));
 exports.OMAction = OMAction;

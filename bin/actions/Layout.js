@@ -47,7 +47,7 @@ var LayoutAction = /** @class */ (function (_super) {
         return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME, TBLAYOUTOM.CDLAYOUT ) values (\'' + this.req.body.name + '\',' + this.req.body.layout + ');';
     };
     LayoutAction.prototype.selectSQL = function () {
-        return 'select NOME, CDLAYOUT from TBLAYOUTOM where status = 1';
+        return 'select * from TBLAYOUTOM where status = 1';
     };
     LayoutAction.prototype.deleteSQL = function () {
         return 'UPDATE TBLAYOUTOM SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';

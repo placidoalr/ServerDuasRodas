@@ -22,7 +22,7 @@ export class LayoutAction extends Action{
         return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME, TBLAYOUTOM.CDLAYOUT ) values (\''+ this.req.body.name+'\','+ this.req.body.layout+');';
     }
     private selectSQL() : string{
-        return 'select NOME, CDLAYOUT from TBLAYOUTOM where status = 1';
+        return 'select * from TBLAYOUTOM where status = 1';
     }
     private deleteSQL() : string {
         return 'UPDATE TBLAYOUTOM SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';

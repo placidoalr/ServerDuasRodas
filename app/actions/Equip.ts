@@ -24,7 +24,7 @@ export class EquipAction extends Action{
         return 'insert into TBEQUIP (TBEQUIP.IDSAP ,TBEQUIP.NOME, TBEQUIP.SETOR_ATRIB) values (\''+ this.req.body.codigo+'\',\''+ this.req.body.name +'\', \''+ this.req.body.setor+'\');';
     }
     private selectSQL() : string {
-        return 'select IDSAP,NOME,SETOR_ATRIB from TBEQUIP where STATUS = 1;';
+        return 'select * from TBEQUIP where STATUS = 1;';
     }
     
     private deleteSQL() : string {
