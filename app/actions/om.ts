@@ -1,38 +1,152 @@
-import {Get} from '../decorators';
+import {Get, Patch, Post, Put} from '../decorators';
 import {Action} from '../kernel/action';
 import {ActionType} from '../kernel/route-types';
 import {VPUtils} from '../utils/vputils';
 import {KernelUtils} from '../kernel/kernel-utils';
-import {MySQL} from '../mysql/mysql';
-import {MySQLFactory} from '../mysql/mysql_factory';
+import { MySQLFactory } from '../mysql/mysql_factory';
 
 export class OMAction extends Action{
-
-    
-
-    private generateSQL(idom:any) : string {
-        return 'select * from TBOM O WHERE O.ID ='+idom+';';
+    private validateData(){
+        new KernelUtils().createExceptionApiError('1001', 'Informe a OM', this.req.body.idsap == '' || this.req.body.idsap == undefined);
+    }
+    private validateDataEquipToOM(){
+        new KernelUtils().createExceptionApiError('1001', 'Informe a OM', this.req.body.idequip == '' || this.req.body.idequip == undefined);
     }
 
-    @Get('/om')
-    public GetOM(){
         
-        new MySQLFactory().getConnection().select(this.generateSQL(this.req.query.idom)).subscribe(
+    private insertSQL() : string{
+        let horaatual = Date.now();
+
+return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB ) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.solicitante+'\','+ this.req.body.layout+','+ this.req.body.ct+','+ this.req.body.tipoManut+','+ this.req.body.sintoma+','+ this.req.body.causa+',\''+ this.req.body.def+'\',\''+horaatual+'\', \''+ this.req.body.obs+'\','+this.req.body.prior+', 1,'+this.req.body.li+');';
+    }
+
+    private generateSQL(){
+        return 'select * from TBOM where TBOM.IDSAP = \'' + this.req.body.idsap + '\' AND STATUS = 1;';
+    }
+    private selectSQL() : string {
+        return 'select * from TBOM where STATUS = 1;';
+    }
+
+    private deleteSQL() : string {
+        return 'UPDATE TBOM SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
+    }
+
+    private editSQL() : string {
+        
+        return 'UPDATE TBOM SET IDSAP = \'' + this.req.body.idsap + '\' WHERE NOME =  \'' + this.req.body.idsaplast + '\' AND STATUS = 1;';
+    }
+
+    @Post('/AddOM')
+    public Post(){
+        this.validateData();
+
+        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
             (data : any) => {
-                if (data.length == 0){
-                    this.sendAnswer({});
-                } else {
-                    this.sendAnswer(data[0]);
-                }                
+                if (data.length || data.length > 0){
+                    
+                    
+                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'OM já existe'));
+                return;
+                }else{
+                    
+                    new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
+                        (data : any) => {
+                            
+                        }
+                    );
+                }
+                this.sendAnswer({
+                    token    : new VPUtils().generateGUID().toUpperCase()
+                });
             },
             (error : any) => {
-                console.log(error)
                 this.sendError(error);
             }
-        )
+        );
+    }
+    @Post('/AddEquipToOM')
+    public EquipToOM(){
+        this.validateDataEquipToOM();
+
+        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+            (data : any) => {
+                if (data.length || data.length > 0){
+                    
+                    
+                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'OM já existe'));
+                return;
+                }else{
+                    
+                    new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
+                        (data : any) => {
+                            
+                        }
+                    );
+                }
+                this.sendAnswer({
+                    token    : new VPUtils().generateGUID().toUpperCase()
+                });
+            },
+            (error : any) => {
+                this.sendError(error);
+            }
+        );
     }
 
+    @Get('/GetOM')
+    public Get(){
+        
+        new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
+            (data : any) => {
+                this.sendAnswer(data);
+            },
+            (error : any) => {
+                this.sendError(error);
+            }
+        );
+    }
+
+    @Patch('/DelOM')
+    public Patch(){
+        //console.log("ENTROU"+this.req.body.name)
+        new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
+            (data : any) => {
+                //console.log(data);
+                this.sendAnswer(data);
+            },
+            (error : any) => {
+                this.sendError(error);
+            }
+        );
+    }
+    @Post('/EditOM')
+    public Edit(){
+
+        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+            (data : any) => {
+                if (data.length || data.length > 0){
+                    //console.log(data);
+                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'OM já existe'));
+                return;
+                }else{
+                    //console.log(data);
+                    new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
+                        (data : any) => {
+                        //  console.log(data);
+                        }
+                    );
+                }
+                this.sendAnswer({
+                    token    : new VPUtils().generateGUID().toUpperCase()
+                });
+            },
+            (error : any) => {
+                this.sendError(error);
+            }
+        );
+    }
     defineVisibility() {
         this.actionEscope = ActionType.atPublic;
     }
 }
+

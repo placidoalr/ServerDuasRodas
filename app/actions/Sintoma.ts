@@ -41,7 +41,7 @@ public Post(){
             if (data.length || data.length > 0){
                 
                 
-              this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Causa já existe'));
+              this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Sintoma já existe'));
               return;
             }else{
                 
@@ -94,7 +94,7 @@ public Edit(){
         (data : any) => {
             if (data.length || data.length > 0){
                 //console.log(data);
-              this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Causa já existe'));
+              this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Sintoma já existe'));
               return;
             }else{
                 //console.log(data);

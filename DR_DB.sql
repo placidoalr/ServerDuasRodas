@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `DRDB`.`TBOM` ( /* cadastro da OM */
     FOREIGN KEY (`CAUSADEF`) REFERENCES `DRDB`.`TBCAUSADEF` (`ID`)
     );
 
-  CREATE TABLE IF NOT EXISTS `DRDB`.`T B_OM_DESC` (       /* Descrições que o manutentor irá colocar na OM */
+  CREATE TABLE IF NOT EXISTS `DRDB`.`TB_OM_DESC` (       /* Descrições que o manutentor irá colocar na OM */
   `ID` INT NOT NULL AUTO_INCREMENT,
   `IDOM` INT NOT NULL,
   `DESC` VARCHAR(500) NULL,
