@@ -34,26 +34,26 @@ var SetorAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     SetorAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Setor', this.req.body.name == '' || this.req.body.name == undefined || this.req.body.codigo == '' || this.req.body.codigo == undefined);
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Setor', this.req.body.name == '' || this.req.body.name == undefined || this.req.body.idsap == '' || this.req.body.idsap == undefined);
     };
     SetorAction.prototype.generateSQL = function () {
         return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' AND \'' + this.req.body.name + '\' != \'' + this.req.body.namelast + '\' ) \
-        OR (TBSETOR.IDSAP = \'' + this.req.body.codigo + '\' AND \'' + this.req.body.codigo + '\' != \'' + this.req.body.codigolast + '\' ) AND STATUS = 1;';
+        OR (TBSETOR.IDSAP = \'' + this.req.body.idsap + '\' AND \'' + this.req.body.idsap + '\' != \'' + this.req.body.idsaplast + '\' ) AND STATUS = 1;';
     };
     SetorAction.prototype.generateADDSQL = function () {
-        return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' OR TBSETOR.IDSAP = \'' + this.req.body.codigo + '\') AND STATUS = 1;';
+        return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' OR TBSETOR.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
     };
     SetorAction.prototype.selectSQL = function () {
         return 'select ID,IDSAP,NOME from TBSETOR where STATUS = 1;';
     };
     SetorAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.codigo + '\' AND STATUS = 1;';
+        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\' AND STATUS = 1;';
     };
     SetorAction.prototype.editSQL = function () {
-        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.codigo + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND IDSAP = \'' + this.req.body.codigolast + '\' AND STATUS = 1;';
+        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND IDSAP = \'' + this.req.body.idsaplast + '\' AND STATUS = 1;';
     };
     SetorAction.prototype.insertSQL = function () {
-        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.IDSAP ) values (\'' + this.req.body.name + '\',\'' + this.req.body.codigo + '\');';
+        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.IDSAP ) values (\'' + this.req.body.name + '\',\'' + this.req.body.idsap + '\');';
     };
     SetorAction.prototype.Post = function () {
         var _this = this;

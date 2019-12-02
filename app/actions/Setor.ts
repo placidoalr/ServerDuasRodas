@@ -9,15 +9,15 @@ import {MySQLFactory} from '../mysql/mysql_factory';
 export class SetorAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o Setor', this.req.body.name == '' || this.req.body.name == undefined || this.req.body.codigo == '' || this.req.body.codigo == undefined);
+        new KernelUtils().createExceptionApiError('1001', 'Informe o Setor', this.req.body.name == '' || this.req.body.name == undefined || this.req.body.idsap == '' || this.req.body.idsap == undefined);
     }
 
     private generateSQL(){
         return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' AND \'' + this.req.body.name + '\' != \'' + this.req.body.namelast + '\' ) \
-        OR (TBSETOR.IDSAP = \'' + this.req.body.codigo + '\' AND \'' + this.req.body.codigo + '\' != \'' + this.req.body.codigolast + '\' ) AND STATUS = 1;';
+        OR (TBSETOR.IDSAP = \'' + this.req.body.idsap + '\' AND \'' + this.req.body.idsap + '\' != \'' + this.req.body.idsaplast + '\' ) AND STATUS = 1;';
     }
     private generateADDSQL(){
-        return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' OR TBSETOR.IDSAP = \'' + this.req.body.codigo + '\') AND STATUS = 1;';
+        return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' OR TBSETOR.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
     }
 
     private selectSQL() : string {
@@ -25,16 +25,16 @@ export class SetorAction extends Action{
     }
 
     private deleteSQL() : string {
-        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.codigo + '\' AND STATUS = 1;';
+        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\' AND STATUS = 1;';
     }
 
     private editSQL() : string {
-        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.codigo + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND IDSAP = \'' + this.req.body.codigolast + '\' AND STATUS = 1;';
+        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND IDSAP = \'' + this.req.body.idsaplast + '\' AND STATUS = 1;';
     }
 
 
     private insertSQL() : string{
-        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.IDSAP ) values (\''+ this.req.body.name+'\',\''+ this.req.body.codigo+'\');';
+        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.IDSAP ) values (\''+ this.req.body.name+'\',\''+ this.req.body.idsap+'\');';
     }
 
 

@@ -9,19 +9,19 @@ export class EquipAction extends Action{
 
     private validateData(){
         new KernelUtils().createExceptionApiError('1001', 'Informe todos os campos corretamente', this.req.body.name == '' || this.req.body.setor == '' || this.req.body.setor == undefined || this.req.body.name == undefined 
-        || this.req.body.codigo == '' || this.req.body.codigo == undefined );
+        || this.req.body.idsap == '' || this.req.body.idsap == undefined );
     }
 
 
     private generateSQL() : string {
-        return 'select * from TBEQUIP where (' + this.req.body.codigo + ' != \'' + this.req.body.codigolast + '\' AND TBEQUIP.IDSAP = \'' + this.req.body.codigo + '\') AND STATUS = 1;';
+        return 'select * from TBEQUIP where (' + this.req.body.idsap + ' != \'' + this.req.body.idsaplast + '\' AND TBEQUIP.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
     }
     private generateADDSQL() : string {
-        return 'select * from TBEQUIP where (TBEQUIP.NOME = \'' + this.req.body.name + '\' OR TBEQUIP.IDSAP = \'' + this.req.body.codigo + '\') AND STATUS = 1;';
+        return 'select * from TBEQUIP where (TBEQUIP.NOME = \'' + this.req.body.name + '\' OR TBEQUIP.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
     
     }
     private insertSQL() : string{
-        return 'insert into TBEQUIP (TBEQUIP.IDSAP ,TBEQUIP.NOME, TBEQUIP.SETOR_ATRIB) values (\''+ this.req.body.codigo+'\',\''+ this.req.body.name +'\', \''+ this.req.body.setor+'\');';
+        return 'insert into TBEQUIP (TBEQUIP.IDSAP ,TBEQUIP.NOME, TBEQUIP.SETOR_ATRIB) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.name +'\', \''+ this.req.body.setor+'\');';
     }
     private selectSQL() : string {
         return 'select * from TBEQUIP where STATUS = 1;';
@@ -33,8 +33,8 @@ export class EquipAction extends Action{
     
     private editSQL() : string {
         
-        return 'UPDATE TBEQUIP SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.codigo + '\', \
-        SETOR_ATRIB = \'' + this.req.body.setor + '\' WHERE IDSAP =  \'' + this.req.body.codigolast + '\' AND STATUS = 1;';
+        return 'UPDATE TBEQUIP SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\', \
+        SETOR_ATRIB = \'' + this.req.body.setor + '\' WHERE IDSAP =  \'' + this.req.body.idsaplast + '\' AND STATUS = 1;';
     }
     
     
