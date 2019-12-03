@@ -47,9 +47,7 @@ var EquipAction = /** @class */ (function (_super) {
         return 'insert into TBEQUIP (TBEQUIP.IDSAP ,TBEQUIP.NOME, TBEQUIP.SETOR_ATRIB) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.name + '\', \'' + this.req.body.setor + '\');';
     };
     EquipAction.prototype.selectSQL = function () {
-
-        return 'select TBEQUIP.*,TBSETOR.NOME as TBSETORNOME from TBEQUIP INNER JOIN TBEQUIP.SETOR_ATRIB = TBSETOR.ID where TBEQUIP.STATUS = 1;';
-
+        return 'select TBEQUIP.*,TBSETOR.NOME as TBSETORNOME from TBEQUIP INNER JOIN TBSETOR ON TBEQUIP.SETOR_ATRIB = TBSETOR.ID where TBEQUIP.STATUS = 1;';
     };
     EquipAction.prototype.deleteSQL = function () {
         return 'UPDATE TBEQUIP SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\' AND STATUS = 1;';
