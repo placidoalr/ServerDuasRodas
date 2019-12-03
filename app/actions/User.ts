@@ -23,7 +23,7 @@ export class UserAction extends Action{
         return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CARGO, TBUSUARIO.NOME, TBUSUARIO.CDCT) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.login +'\', \''+ this.req.body.password+'\', \''+ this.req.body.cargo+'\', \''+ this.req.body.name+'\', \''+ this.req.body.cdct+'\');';
     }
     private selectSQL() : string {
-        return 'select IDSAP,NOME,LOGIN,SENHA,CARGO,CDCT from TBUSUARIO where STATUS = 1;';
+        return 'select TBUSUARIO.*, TBCT.NOME AS TBCTNOME, TBCARGO.NOME AS TBCARGONOME from TBUSUARIO INNER JOIN TBCT ON TBUSUARIO.CDCT = TBCT.ID INNER JOIN TBCARGO ON TBUSUARIO.CARGO = TBCARGO.ID where TBUSUARIO.STATUS = 1;';
     }
 
     private deleteSQL() : string {
