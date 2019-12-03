@@ -17,7 +17,7 @@ export class OMAction extends Action{
     private insertSQL() : string{
         let horaatual = Date.now();
 
-return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB,REQUERPARADA ) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.solicitante+'\','+ this.req.body.layout+','+ this.req.body.ct+','+ this.req.body.tipoManut+','+ this.req.body.sintoma+','+ this.req.body.causa+',\''+ this.req.body.def+'\',\''+horaatual+'\', \''+ this.req.body.obs+'\','+this.req.body.prior+', 1,'+this.req.body.li+',\''+this.req.body.requerparada+'\');';
+return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB,REQUERPARADA ) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.solicitante+'\','+ this.req.body.layout+','+ this.req.body.ct+','+ this.req.body.tipoManut+','+ this.req.body.sintoma+','+ this.req.body.causa+',\''+ this.req.body.def+'\',\''+horaatual+'\', \''+ this.req.body.obs+'\','+this.req.body.prior+', 1,'+this.req.body.li+',\''+this.req.body.requerParada+'\');';
     }
 
     private generateSQL(){
@@ -35,7 +35,6 @@ return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DT
         
         return 'UPDATE TBOM SET IDSAP = \'' + this.req.body.idsap + '\',SOLIC = \'' + this.req.body.solicitante + '\',IDLAYOUT = ' + this.req.body.layout + ' ,IDCT = ' + this.req.body.ct + ',TPOM = ' + this.req.body.tipoManut + ',SINTOMA = ' + this.req.body.sintoma + ',CAUSADEF = ' + this.req.body.causa + ',DEF = \'' + this.req.body.def + '\',,OBS = \'' + this.req.body.obs + '\',PRIORIDADE = ' + this.req.body.prior + ',SETOR_ATRIB = ' + this.req.body.li + ',REQUERPARADA = \'' + this.req.body.requerParada + '\' WHERE ID =  ' + this.req.body.id + ' AND STATUS = 1;';
     }
-
     @Post('/AddOM')
     public Post(){
         this.validateData();
@@ -98,7 +97,6 @@ return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DT
         
         new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
             (data : any) => {
-                console.log(data);
                 this.sendAnswer(data);
             },
             (error : any) => {
