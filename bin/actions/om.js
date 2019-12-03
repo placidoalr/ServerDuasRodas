@@ -41,19 +41,19 @@ var OMAction = /** @class */ (function (_super) {
     };
     OMAction.prototype.insertSQL = function () {
         var horaatual = Date.now();
-        return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB ) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.solicitante + '\',' + this.req.body.layout + ',' + this.req.body.ct + ',' + this.req.body.tipoManut + ',' + this.req.body.sintoma + ',' + this.req.body.causa + ',\'' + this.req.body.def + '\',\'' + horaatual + '\', \'' + this.req.body.obs + '\',' + this.req.body.prior + ', 1,' + this.req.body.li + ');';
+        return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB,REQUERPARADA ) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.solicitante + '\',' + this.req.body.layout + ',' + this.req.body.ct + ',' + this.req.body.tipoManut + ',' + this.req.body.sintoma + ',' + this.req.body.causa + ',\'' + this.req.body.def + '\',\'' + horaatual + '\', \'' + this.req.body.obs + '\',' + this.req.body.prior + ', 1,' + this.req.body.li + ',\'' + this.req.body.requerparada + '\');';
     };
     OMAction.prototype.generateSQL = function () {
         return 'select * from TBOM where TBOM.IDSAP = \'' + this.req.body.idsap + '\' AND STATUS = 1;';
     };
     OMAction.prototype.selectSQL = function () {
-        return 'select TBOM.*,TBSETOR.NOME as TBSETORNOME,TBCT.NOME as TBCTNOME,TBLAYOUTOM.NOME as TBLAYOUTOMNOME,TBTIPOMAN.NOME as TBTIPOMANNOME,TBSINTOMA.NOME as TBSINTOMANOME,TBCAUSADEF.DSCAUSA as TBCAUSADEFNOME from TBOM INNER JOIN TBSETOR ON TBOM.SETOR_ATRIB = TBSETOR.ID inner join TBCT on TBOM.IDCT = TBCT.ID inner join TBLAYOUTOM on TBOM.IDLAYOUT = TBLAYOUTOM.ID INNER JOIN TBTIPOMAN ON TBOM.TPOM = TBTIPOMAN.ID INNER JOIN TBSINTOMA ON TBOM.SINTOMA = TBSINTOMA.ID INNER JOIN TBCAUSADEF ON TBOM.CAUSADEF = TBCAUSADEF.ID where TBOM.STATUS = 1;';
+        return 'select TBOM.*,TBSETOR.NOME as TBSETORNOME,TBCT.NOME as TBCTNOME,TBLAYOUTOM.NOME as TBLAYOUTOMNOME,TBTIPOMAN.NOME as TBTIPOMANNOME,TBSINTOMA.NOME as TBSINTOMANOME,TBCAUSADEF.DSCAUSA as TBCAUSADEFNOME, TBPRIORIDADE.NOME as TBPRIORIDADENOME from TBOM INNER JOIN TBSETOR ON TBOM.SETOR_ATRIB = TBSETOR.ID inner join TBCT on TBOM.IDCT = TBCT.ID inner join TBLAYOUTOM on TBOM.IDLAYOUT = TBLAYOUTOM.ID INNER JOIN TBTIPOMAN ON TBOM.TPOM = TBTIPOMAN.ID INNER JOIN TBSINTOMA ON TBOM.SINTOMA = TBSINTOMA.ID INNER JOIN TBCAUSADEF ON TBOM.CAUSADEF = TBCAUSADEF.ID INNER JOIN TBPRIORIDADE ON TBOM.PRIORIDADE = TBPRIORIDADE.ID where TBOM.STATUS = 1;';
     };
     OMAction.prototype.deleteSQL = function () {
         return 'UPDATE TBOM SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     OMAction.prototype.editSQL = function () {
-        return 'UPDATE TBOM SET IDSAP = \'' + this.req.body.idsap + '\' WHERE NOME =  \'' + this.req.body.idsaplast + '\' AND STATUS = 1;';
+        return 'UPDATE TBOM SET IDSAP = \'' + this.req.body.idsap + '\',SOLIC = \'' + this.req.body.solicitante + '\',IDLAYOUT = ' + this.req.body.layout + ' ,IDCT = ' + this.req.body.ct + ',TPOM = ' + this.req.body.tipoManut + ',SINTOMA = ' + this.req.body.sintoma + ',CAUSADEF = ' + this.req.body.causa + ',DEF = \'' + this.req.body.def + '\',,OBS = \'' + this.req.body.obs + '\',PRIORIDADE = ' + this.req.body.prior + ',SETOR_ATRIB = ' + this.req.body.li + ',REQUERPARADA = \'' + this.req.body.requerParada + '\' WHERE ID =  ' + this.req.body.id + ' AND STATUS = 1;';
     };
     OMAction.prototype.Post = function () {
         var _this = this;
