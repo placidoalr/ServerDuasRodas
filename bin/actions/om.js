@@ -41,7 +41,7 @@ var OMAction = /** @class */ (function (_super) {
     };
     OMAction.prototype.insertSQL = function () {
         var horaatual = Date.now();
-        return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB,REQUERPARADA ) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.solicitante + '\',' + this.req.body.layout + ',' + this.req.body.ct + ',' + this.req.body.tipoManut + ',' + this.req.body.sintoma + ',' + this.req.body.causa + ',\'' + this.req.body.def + '\',\'' + horaatual + '\', \'' + this.req.body.obs + '\',' + this.req.body.prior + ', 1,' + this.req.body.li + ',\'' + this.req.body.requerparada + '\');';
+        return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB,REQUERPARADA ) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.solicitante + '\',' + this.req.body.layout + ',' + this.req.body.ct + ',' + this.req.body.tipoManut + ',' + this.req.body.sintoma + ',' + this.req.body.causa + ',\'' + this.req.body.def + '\',\'' + horaatual + '\', \'' + this.req.body.obs + '\',' + this.req.body.prior + ', 1,' + this.req.body.li + ',\'' + this.req.body.requerParada + '\');';
     };
     OMAction.prototype.generateSQL = function () {
         return 'select * from TBOM where TBOM.IDSAP = \'' + this.req.body.idsap + '\' AND STATUS = 1;';
@@ -96,7 +96,6 @@ var OMAction = /** @class */ (function (_super) {
     OMAction.prototype.Get = function () {
         var _this = this;
         new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
-            console.log(data);
             _this.sendAnswer(data);
         }, function (error) {
             _this.sendError(error);
