@@ -44,10 +44,10 @@ var LayoutAction = /** @class */ (function (_super) {
         return 'select * from TBLAYOUTOM where TBLAYOUTOM.NOME = \'' + this.req.body.name + '\'  AND STATUS = 1;';
     };
     LayoutAction.prototype.insertSQL = function () {
-        return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME, TBLAYOUTOM.CDLAYOUT ) values (\'' + this.req.body.name + '\',' + this.req.body.layout + ');';
+        return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME, TBLAYOUTOM.IDESTILO ) values (\'' + this.req.body.name + '\',' + this.req.body.layout + ');';
     };
     LayoutAction.prototype.selectSQL = function () {
-        return 'select TBLAYOUTOM.*,TBESTILOLAYOUT.NOME as ESTILONOME from TBLAYOUTOM INNER JOIN TBESTILOLAYOUT ON TBLAYOUT.CDLAYOUT = TBESTILOLAYOUT.ID  where status = 1';
+        return 'select TBLAYOUTOM.*,TBESTILOLAYOUT.NOME as ESTILONOME from TBLAYOUTOM INNER JOIN TBESTILOLAYOUT ON TBLAYOUTOM.IDESTILO = TBESTILOLAYOUT.ID  where status = 1';
     };
     LayoutAction.prototype.deleteSQL = function () {
         return 'UPDATE TBLAYOUTOM SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';

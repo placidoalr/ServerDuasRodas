@@ -19,10 +19,10 @@ export class LayoutAction extends Action{
         return 'select * from TBLAYOUTOM where TBLAYOUTOM.NOME = \'' + this.req.body.name + '\'  AND STATUS = 1;';
     }
     private insertSQL() : string{
-        return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME, TBLAYOUTOM.CDLAYOUT ) values (\''+ this.req.body.name+'\','+ this.req.body.layout+');';
+        return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME, TBLAYOUTOM.IDESTILO ) values (\''+ this.req.body.name+'\','+ this.req.body.layout+');';
     }
     private selectSQL() : string{
-        return 'select TBLAYOUTOM.*,TBESTILOLAYOUT.NOME as ESTILONOME from TBLAYOUTOM INNER JOIN TBESTILOLAYOUT ON TBLAYOUT.CDLAYOUT = TBESTILOLAYOUT.ID  where status = 1';
+        return 'select TBLAYOUTOM.*,TBESTILOLAYOUT.NOME as ESTILONOME from TBLAYOUTOM INNER JOIN TBESTILOLAYOUT ON TBLAYOUTOM.IDESTILO = TBESTILOLAYOUT.ID  where status = 1';
     }
     private deleteSQL() : string {
         return 'UPDATE TBLAYOUTOM SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';
