@@ -16,7 +16,7 @@ export class UserAction extends Action{
         OR (\'' + this.req.body.idsap + '\' != \'' + this.req.body.idsaplast + '\' AND TBUSUARIO.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
     }
     private generateADDSQL() : string {
-        return 'select * from TBUSUARIO where TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' OR TBUSUARIO.IDSAP = \'' + this.req.body.idsap + '\' AND STATUS = 1;';
+        return 'select * from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.ID + '\' OR TBUSUARIO.IDSAP = \'' + this.req.body.idsap + '\' AND STATUS = 1;';
 
     }
     private insertSQL() : string{

@@ -17,7 +17,7 @@ export class EquipAction extends Action{
         return 'select * from TBEQUIP where (' + this.req.body.idsap + ' != \'' + this.req.body.idsaplast + '\' AND TBEQUIP.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
     }
     private generateADDSQL() : string {
-        return 'select * from TBEQUIP where (TBEQUIP.NOME = \'' + this.req.body.name + '\' OR TBEQUIP.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
+        return 'select * from TBEQUIP where (TBEQUIP.ID = \'' + this.req.body.ID + '\' OR TBEQUIP.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
     
     }
     private insertSQL() : string{

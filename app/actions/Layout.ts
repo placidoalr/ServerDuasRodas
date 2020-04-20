@@ -16,7 +16,7 @@ export class LayoutAction extends Action{
          AND STATUS = 1;';
     }
     private generateADDSQL() : string {
-        return 'select * from TBLAYOUTOM where TBLAYOUTOM.NOME = \'' + this.req.body.name + '\'  AND STATUS = 1;';
+        return 'select * from TBLAYOUTOM where TBLAYOUTOM.ID = \'' + this.req.body.ID + '\'  AND STATUS = 1;';
     }
     private insertSQL() : string{
         return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME, TBLAYOUTOM.IDESTILO ) values (\''+ this.req.body.name+'\','+ this.req.body.layout+');';

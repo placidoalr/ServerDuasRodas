@@ -17,7 +17,7 @@ export class CausaDefAction extends Action{
     }
 
     private generateSQL(){
-        return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.name + '\' AND STATUS = 1;';
+        return 'select * from TBCAUSADEF where TBCAUSADEF.ID = \'' + this.req.body.ID + '\' AND STATUS = 1;';
     }
     private selectSQL() : string {
         return 'select ID,DSCAUSA from TBCAUSADEF where STATUS = 1;';

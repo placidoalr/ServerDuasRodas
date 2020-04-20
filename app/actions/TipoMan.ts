@@ -12,7 +12,7 @@ export class TipoManAction extends Action{
     }
 
     private generateSQL(){
-        return 'select * from TBTIPOMAN where TBTIPOMAN.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
+        return 'select * from TBTIPOMAN where TBTIPOMAN.ID = \'' + this.req.body.ID + '\' AND STATUS = 1;';
     }
 
     private selectSQL() : string {
