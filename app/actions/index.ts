@@ -11,6 +11,12 @@ import {SintomaAction} from './Sintoma';
 import {TipoManAction} from './TipoMan';
 import {CausaDefAction} from './CausaDef';
 import {CTAction} from './CT';
+import {PersonTierAction} from './personTier';
+import {OMUserAction} from './OM_USER';
+import {DelegateOMAction} from './delegateOM';
+import {InviteOMAction} from './InviteOM';
+import {DescOMAction} from './desc';
+import {EndOMAction} from './endOM';
 
 
 export {LogonAction};
@@ -26,3 +32,9 @@ export {SintomaAction};
 export {TipoManAction};
 export {CausaDefAction};
 export {CTAction};
+export {PersonTierAction}
+export {OMUserAction}
+export {DelegateOMAction}
+export {InviteOMAction}
+export {DescOMAction}
+export {EndOMAction}

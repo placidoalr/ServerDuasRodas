@@ -29,7 +29,7 @@ export class CTAction extends Action{
 
 
     private insertSQL() : string{
-        return 'insert into TBCT (TBCT.NOME ) values (\''+ this.req.body.name+'\');';
+        return 'insert into TBCT (TBCT.NOME) values (\''+ this.req.body.name+'\');';
     }
 
     @Post('/AddCT')
