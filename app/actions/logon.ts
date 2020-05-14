@@ -13,7 +13,7 @@ export class LogonAction extends Action{
     }
 
     private generateSQL() : string {
-        return 'select LOGIN, SENHA from TBUSUARIO  where LOGIN = \'' + this.req.body.userName + '\' and SENHA = \'' + this.req.body.password + '\';';
+        return 'select ID, LOGIN, SENHA from TBUSUARIO  where LOGIN = \'' + this.req.body.userName + '\' and SENHA = \'' + this.req.body.password + '\';';
     }
 
     @Post('/logon')
@@ -29,9 +29,9 @@ export class LogonAction extends Action{
                 }
                 
                 this.sendAnswer({
-                    token    : new VPUtils().generateGUID().toUpperCase(),
-                    userName : this.req.body.userName,
-                    password : this.req.body.password
+                    token       : new VPUtils().generateGUID().toUpperCase(),
+                    userName    : this.req.body.userName,
+                    id          : data.ID
                 });
             },
             (error : any) => {
