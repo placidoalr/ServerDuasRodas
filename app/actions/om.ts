@@ -21,7 +21,7 @@ return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DT
     }
 
     private generateADDSQL(){
-        return 'select * from TBOM where TBOM.IDSAP = \'' + this.req.body.idsap + '\' AND STATUS = 1;';
+        return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
     private generateSQL(){
         return 'select * from TBOM where TBOM.IDSAP = \'' + this.req.body.idsap + '\' AND \'' + this.req.body.idsap + '\' != \'' + this.req.body.idsaplast + '\' AND STATUS = 1;';
@@ -99,6 +99,19 @@ return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DT
     public Get(){
         
         new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
+            (data : any) => {
+                this.sendAnswer(data);
+            },
+            (error : any) => {
+                this.sendError(error);
+            }
+        );
+    }
+
+    @Get('/GetOMUnica')
+    public Get1(){
+        
+        new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
             (data : any) => {
                 this.sendAnswer(data);
             },

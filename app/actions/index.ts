@@ -17,6 +17,7 @@ import {DelegateOMAction} from './delegateOM';
 import {InviteOMAction} from './InviteOM';
 import {DescOMAction} from './desc';
 import {EndOMAction} from './endOM';
+import {selectManutsAction} from './selectManuts';
 
 
 export {LogonAction};
@@ -38,3 +39,4 @@ export {DelegateOMAction}
 export {InviteOMAction}
 export {DescOMAction}
 export {EndOMAction}
+export {selectManutsAction}
