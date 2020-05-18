@@ -13,6 +13,10 @@ export class EndOMAction extends Action{
     private insertSQL(estado : any) : string{
         return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\';';
     }
+    private historico() : string{
+        var desc = 'Usuário com id = '+this.req.body.idUser+' finalizou a OM com id = '+this.req.body.idOm;
+        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\',\''+ desc+'\',\''+ new Date().getDate().toString()+'\');';
+    }
     private generateSQL(){
         return 'select ESTADO from TBOM where  AND TBOM.ID = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
     }   
@@ -40,6 +44,11 @@ export class EndOMAction extends Action{
                                 }else{
                                     new MySQLFactory().getConnection().select(this.insertSQL(estado)).subscribe(
                                         (data : any) => {
+                                            new MySQLFactory().getConnection().select(this.historico()).subscribe(
+                                                (data : any) => {
+                                                    
+                                                }
+                                            );
                                             
                                         }
                                     );

@@ -14,6 +14,10 @@ export class OMUserAction extends Action{
     private insertSQL() : string{
         return 'insert into TBUSUARIO_WITH_TBOM (TBUSUARIO_WITH_TBOM.IDMANUT, TBUSUARIO_WITH_TBOM.IDOM) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\');';
     }
+    private historico() : string{
+        var desc = 'Usuário com id = '+this.req.body.idUser+' assumiu a OM com id = '+this.req.body.idOm;
+        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\',\''+ desc+'\',\''+ new Date().getDate().toString()+'\');';
+     }
     private generateSQL(){
         return 'select * from TBCT where TBCT.IDMANUT = \'' + this.req.body.idUser + '\' AND TBCT.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
     }
@@ -30,6 +34,11 @@ export class OMUserAction extends Action{
                 }else{
                     new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                         (data : any) => {
+                            new MySQLFactory().getConnection().select(this.historico()).subscribe(
+                                (data : any) => {
+                                    
+                                }
+                            );
                         }
                     );
                 }
