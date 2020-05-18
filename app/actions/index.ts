@@ -18,6 +18,7 @@ import {InviteOMAction} from './InviteOM';
 import {DescOMAction} from './desc';
 import {EndOMAction} from './endOM';
 import {selectManutsAction} from './selectManuts';
+import {HistoricoAction} from './historico';
 
 
 export {LogonAction};
@@ -40,3 +41,4 @@ export {InviteOMAction}
 export {DescOMAction}
 export {EndOMAction}
 export {selectManutsAction}
+export {HistoricoAction}
