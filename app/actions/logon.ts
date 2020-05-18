@@ -27,11 +27,11 @@ export class LogonAction extends Action{
                   this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário e senha inválidos'));
                   return;
                 }
-                
+                console.log(data);
                 this.sendAnswer({
                     token       : new VPUtils().generateGUID().toUpperCase(),
                     userName    : this.req.body.userName,
-                    id          : data.ID
+                    id          : data[0].ID
                 });
             },
             (error : any) => {

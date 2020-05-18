@@ -41,7 +41,7 @@ var SetorAction = /** @class */ (function (_super) {
         OR (TBSETOR.IDSAP = \'' + this.req.body.idsap + '\' AND \'' + this.req.body.idsap + '\' != \'' + this.req.body.idsaplast + '\' ) AND STATUS = 1;';
     };
     SetorAction.prototype.generateADDSQL = function () {
-        return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' OR TBSETOR.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
+        return 'select * from TBSETOR where (TBSETOR.ID = \'' + this.req.body.ID + '\' OR TBSETOR.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
     };
     SetorAction.prototype.selectSQL = function () {
         return 'select ID,IDSAP,NOME from TBSETOR where STATUS = 1;';

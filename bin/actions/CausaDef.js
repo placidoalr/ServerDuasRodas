@@ -40,7 +40,7 @@ var CausaDefAction = /** @class */ (function (_super) {
         return 'insert into TBCAUSADEF (TBCAUSADEF.DSCAUSA ) values (\'' + this.req.body.name + '\');';
     };
     CausaDefAction.prototype.generateSQL = function () {
-        return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.name + '\' AND STATUS = 1;';
+        return 'select * from TBCAUSADEF where TBCAUSADEF.ID = \'' + this.req.body.ID + '\' AND STATUS = 1;';
     };
     CausaDefAction.prototype.selectSQL = function () {
         return 'select ID,DSCAUSA from TBCAUSADEF where STATUS = 1;';

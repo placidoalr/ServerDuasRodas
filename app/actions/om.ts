@@ -108,9 +108,9 @@ return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DT
         );
     }
 
-    @Get('/GetOMUnica')
+    @Post('/GetOMUnica')
     public Get1(){
-        
+        console.log(this.req.body);
         new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
             (data : any) => {
                 this.sendAnswer(data);

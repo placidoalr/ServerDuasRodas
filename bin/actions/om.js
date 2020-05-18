@@ -44,7 +44,7 @@ var OMAction = /** @class */ (function (_super) {
         return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB,REQUERPARADA ) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.solicitante + '\',' + this.req.body.layout + ',' + this.req.body.ct + ',' + this.req.body.tipoManut + ',' + this.req.body.sintoma + ',' + this.req.body.causa + ',\'' + this.req.body.def + '\',\'' + horaatual + '\', \'' + this.req.body.obs + '\',' + this.req.body.prior + ', 1,' + this.req.body.li + ',\'' + this.req.body.requerParada + '\');';
     };
     OMAction.prototype.generateADDSQL = function () {
-        return 'select * from TBOM where TBOM.IDSAP = \'' + this.req.body.idsap + '\' AND STATUS = 1;';
+        return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     OMAction.prototype.generateSQL = function () {
         return 'select * from TBOM where TBOM.IDSAP = \'' + this.req.body.idsap + '\' AND \'' + this.req.body.idsap + '\' != \'' + this.req.body.idsaplast + '\' AND STATUS = 1;';
@@ -104,6 +104,15 @@ var OMAction = /** @class */ (function (_super) {
             _this.sendError(error);
         });
     };
+    OMAction.prototype.Get1 = function () {
+        var _this = this;
+        console.log(this.req.body);
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
     OMAction.prototype.Patch = function () {
         var _this = this;
         //console.log("ENTROU"+this.req.body.name)
@@ -156,6 +165,12 @@ var OMAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], OMAction.prototype, "Get", null);
+    __decorate([
+        decorators_1.Post('/GetOMUnica'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], OMAction.prototype, "Get1", null);
     __decorate([
         decorators_1.Patch('/DelOM'),
         __metadata("design:type", Function),

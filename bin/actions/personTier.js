@@ -25,49 +25,32 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var decorators_1 = require("../decorators");
 var action_1 = require("../kernel/action");
 var route_types_1 = require("../kernel/route-types");
-var vputils_1 = require("../utils/vputils");
-var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
-var LogonAction = /** @class */ (function (_super) {
-    __extends(LogonAction, _super);
-    function LogonAction() {
+var PersonTierAction = /** @class */ (function (_super) {
+    __extends(PersonTierAction, _super);
+    function PersonTierAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    LogonAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Usuário e senha inválidos', this.req.body.userName == '' || this.req.body.password == '' || this.req.body.userName == undefined || this.req.body.password == undefined);
+    PersonTierAction.prototype.selectSQL = function () {
+        return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.ID + '\';';
     };
-    LogonAction.prototype.generateSQL = function () {
-        return 'select ID, LOGIN, SENHA from TBUSUARIO  where LOGIN = \'' + this.req.body.userName + '\' and SENHA = \'' + this.req.body.password + '\';';
-    };
-    LogonAction.prototype.Post = function () {
+    PersonTierAction.prototype.Get = function () {
         var _this = this;
-        this.validateData();
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
-            console.log('data', data);
-            if (!data.length || data.length != 1) {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário e senha inválidos'));
-                return;
-            }
-            console.log(data);
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase(),
-                userName: _this.req.body.userName,
-                id: data[0].ID
-            });
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+            _this.sendAnswer(data);
         }, function (error) {
-            console.log('Err', error);
             _this.sendError(error);
         });
     };
-    LogonAction.prototype.defineVisibility = function () {
+    PersonTierAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/logon'),
+        decorators_1.Get('/GetPersonTier'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], LogonAction.prototype, "Post", null);
-    return LogonAction;
+    ], PersonTierAction.prototype, "Get", null);
+    return PersonTierAction;
 }(action_1.Action));
-exports.LogonAction = LogonAction;
+exports.PersonTierAction = PersonTierAction;

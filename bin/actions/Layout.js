@@ -41,7 +41,7 @@ var LayoutAction = /** @class */ (function (_super) {
          AND STATUS = 1;';
     };
     LayoutAction.prototype.generateADDSQL = function () {
-        return 'select * from TBLAYOUTOM where TBLAYOUTOM.NOME = \'' + this.req.body.name + '\'  AND STATUS = 1;';
+        return 'select * from TBLAYOUTOM where TBLAYOUTOM.ID = \'' + this.req.body.ID + '\'  AND STATUS = 1;';
     };
     LayoutAction.prototype.insertSQL = function () {
         return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME, TBLAYOUTOM.IDESTILO ) values (\'' + this.req.body.name + '\',' + this.req.body.layout + ');';

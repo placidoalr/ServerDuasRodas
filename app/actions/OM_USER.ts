@@ -14,8 +14,11 @@ export class OMUserAction extends Action{
     private insertSQL() : string{
         return 'insert into TBUSUARIO_WITH_TBOM (TBUSUARIO_WITH_TBOM.IDMANUT, TBUSUARIO_WITH_TBOM.IDOM) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\');';
     }
+    private updateOM() : string{
+        return 'update TBOM set ESTADO = 2 where TBOM.ID = \''+ this.req.body.idOm+'\';';
+    }
     private generateSQL(){
-        return 'select * from TBCT where TBCT.IDMANUT = \'' + this.req.body.idUser + '\' AND TBCT.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
+        return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' ;';
     }
     
     @Post('/AddOMUser')
@@ -30,6 +33,11 @@ export class OMUserAction extends Action{
                 }else{
                     new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                         (data : any) => {
+                            new MySQLFactory().getConnection().select(this.updateOM()).subscribe(
+                                (data : any) => {
+                                    
+                                }
+                            );
                         }
                     );
                 }
