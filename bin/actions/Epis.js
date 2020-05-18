@@ -28,39 +28,39 @@ var route_types_1 = require("../kernel/route-types");
 var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
-var OMUserAction = /** @class */ (function (_super) {
-    __extends(OMUserAction, _super);
-    function OMUserAction() {
+var EPIAction = /** @class */ (function (_super) {
+    __extends(EPIAction, _super);
+    function EPIAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OMUserAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o ID do Manutentor e ID da Ordem de manutenção', this.req.body.idUser == '' || this.req.body.idUser == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined);
+    EPIAction.prototype.validateData = function () {
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o nome do EPI de Trabalho', this.req.body.name == '' || this.req.body.name == undefined);
     };
-    OMUserAction.prototype.insertSQL = function () {
-        return 'insert into TBUSUARIO_WITH_TBOM (TBUSUARIO_WITH_TBOM.IDMANUT, TBUSUARIO_WITH_TBOM.IDOM) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\');';
+    EPIAction.prototype.generateSQL = function () {
+        return 'select * from TBEPI where TBEPI.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
     };
-    OMUserAction.prototype.updateOM = function () {
-        return 'update TBOM set ESTADO = 2 where TBOM.ID = \'' + this.req.body.idOm + '\';';
+    EPIAction.prototype.selectSQL = function () {
+        return 'select ID,NOME from TBEPI where STATUS = 1;';
     };
-    OMUserAction.prototype.historico = function () {
-        var desc = 'Usuário com id = ' + this.req.body.idUser + ' assumiu a OM com id = ' + this.req.body.idOm;
-        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
+    EPIAction.prototype.deleteSQL = function () {
+        return 'UPDATE TBEPI SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.ID + '\' AND STATUS = 1;';
     };
-    OMUserAction.prototype.generateSQL = function () {
-        return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' ;';
+    EPIAction.prototype.insertSQL = function () {
+        return 'insert into TBEPI (TBEPI.NOME,TBEPI.IDPADRAO) values (\'' + this.req.body.name + '\',\'' + this.req.body.idpadrao + '\');';
     };
-    OMUserAction.prototype.Post = function () {
+    EPIAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
+                //console.log("Centro de trabalho já existe "+data);
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'EPI já existe'));
                 return;
             }
             else {
+                //console.log(data);
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateOM()).subscribe(new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico()).subscribe(function (data) {
-                    }));
+                    //console.log("DEU CERTO ADD "+data);
                 });
             }
             _this.sendAnswer({
@@ -70,15 +70,45 @@ var OMUserAction = /** @class */ (function (_super) {
             _this.sendError(error);
         });
     };
-    OMUserAction.prototype.defineVisibility = function () {
+    EPIAction.prototype.GetCT = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    EPIAction.prototype.PatchCT = function () {
+        var _this = this;
+        //console.log("ENTROU"+this.req.body.name)
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
+            //console.log(data);
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    EPIAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/AddOMUser'),
+        decorators_1.Post('/AddEPI'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], OMUserAction.prototype, "Post", null);
-    return OMUserAction;
+    ], EPIAction.prototype, "Post", null);
+    __decorate([
+        decorators_1.Get('/GetEPIs'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], EPIAction.prototype, "GetCT", null);
+    __decorate([
+        decorators_1.Patch('/DelEPI'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], EPIAction.prototype, "PatchCT", null);
+    return EPIAction;
 }(action_1.Action));
-exports.OMUserAction = OMUserAction;
+exports.EPIAction = EPIAction;

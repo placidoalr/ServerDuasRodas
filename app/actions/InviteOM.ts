@@ -14,6 +14,10 @@ export class InviteOMAction extends Action{
     private insertSQL() : string{
         return 'insert into TBUSUARIO_WITH_TBOM (TBUSUARIO_WITH_TBOM.IDMANUT, TBUSUARIO_WITH_TBOM.IDOM) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\');';
     }
+    private historico() : string{
+        var desc = 'Usuário com id = '+this.req.body.idAdm+' convidou o usuário com id = '+this.req.body.idUser+' para a OM com id = '+this.req.body.idOm;
+        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\''+ this.req.body.idAdm+'\',\''+ this.req.body.idOm+'\',\''+ desc+'\',\''+ new Date().getDate().toString()+'\');';
+    }
     private generateSQL(){
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
     }
@@ -41,7 +45,11 @@ export class InviteOMAction extends Action{
                                 }else{
                                     new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                                         (data : any) => {
-                                            
+                                            new MySQLFactory().getConnection().select(this.historico()).subscribe(
+                                                (data : any) => {
+                                                    
+                                                }
+                                            );
                                         }
                                     );
                                 }

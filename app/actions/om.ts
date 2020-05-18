@@ -17,7 +17,7 @@ export class OMAction extends Action{
     private insertSQL() : string{
         let horaatual = Date.now();
 
-return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB,REQUERPARADA ) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.solicitante+'\','+ this.req.body.layout+','+ this.req.body.ct+','+ this.req.body.tipoManut+','+ this.req.body.sintoma+','+ this.req.body.causa+',\''+ this.req.body.def+'\',\''+horaatual+'\', \''+ this.req.body.obs+'\','+this.req.body.prior+', 1,'+this.req.body.li+',\''+this.req.body.requerParada+'\');';
+        return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB,REQUERPARADA ) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.solicitante+'\','+ this.req.body.layout+','+ this.req.body.ct+','+ this.req.body.tipoManut+','+ this.req.body.sintoma+','+ this.req.body.causa+',\''+ this.req.body.def+'\',\''+horaatual+'\', \''+ this.req.body.obs+'\','+this.req.body.prior+', 1,'+this.req.body.li+',\''+this.req.body.requerParada+'\');';
     }
 
     private generateADDSQL(){

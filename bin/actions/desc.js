@@ -38,6 +38,10 @@ var DescOMAction = /** @class */ (function (_super) {
     DescOMAction.prototype.insertSQL = function () {
         return 'insert into TB_OM_DESC (TB_OM_DESC.IDMANUT, TB_OM_DESC.IDOM, TB_OM_DESC.DESC, TB_OM_DESC.TEMPO_UTIL) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.desc + '\',\'' + this.req.body.time + '\');';
     };
+    DescOMAction.prototype.historico = function () {
+        var desc = 'Usuário com id = ' + this.req.body.idUser + ' adicionou um comentário para a OM com id = ' + this.req.body.idOm;
+        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
+    };
     DescOMAction.prototype.ADMonOM = function () {
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
     };
@@ -52,6 +56,8 @@ var DescOMAction = /** @class */ (function (_super) {
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
                     if (admon.length || admon.length > 0) {
                         new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico()).subscribe(function (data) {
+                            });
                         });
                     }
                     else {

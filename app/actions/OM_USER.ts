@@ -14,9 +14,16 @@ export class OMUserAction extends Action{
     private insertSQL() : string{
         return 'insert into TBUSUARIO_WITH_TBOM (TBUSUARIO_WITH_TBOM.IDMANUT, TBUSUARIO_WITH_TBOM.IDOM) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\');';
     }
+
     private updateOM() : string{
         return 'update TBOM set ESTADO = 2 where TBOM.ID = \''+ this.req.body.idOm+'\';';
     }
+
+    private historico() : string{
+        var desc = 'Usuário com id = '+this.req.body.idUser+' assumiu a OM com id = '+this.req.body.idOm;
+        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\',\''+ desc+'\',\''+ new Date().getDate().toString()+'\');';
+     }
+
     private generateSQL(){
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' ;';
     }
@@ -34,10 +41,12 @@ export class OMUserAction extends Action{
                     new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                         (data : any) => {
                             new MySQLFactory().getConnection().select(this.updateOM()).subscribe(
+
+                            new MySQLFactory().getConnection().select(this.historico()).subscribe(
                                 (data : any) => {
                                     
                                 }
-                            );
+                            ));
                         }
                     );
                 }

@@ -39,6 +39,10 @@ var InviteOMAction = /** @class */ (function (_super) {
     InviteOMAction.prototype.insertSQL = function () {
         return 'insert into TBUSUARIO_WITH_TBOM (TBUSUARIO_WITH_TBOM.IDMANUT, TBUSUARIO_WITH_TBOM.IDOM) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\');';
     };
+    InviteOMAction.prototype.historico = function () {
+        var desc = 'Usuário com id = ' + this.req.body.idAdm + ' convidou o usuário com id = ' + this.req.body.idUser + ' para a OM com id = ' + this.req.body.idOm;
+        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idAdm + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
+    };
     InviteOMAction.prototype.generateSQL = function () {
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
     };
@@ -62,6 +66,8 @@ var InviteOMAction = /** @class */ (function (_super) {
                             }
                             else {
                                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
+                                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico()).subscribe(function (data) {
+                                    });
                                 });
                             }
                             _this.sendAnswer({

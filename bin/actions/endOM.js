@@ -40,11 +40,15 @@ var EndOMAction = /** @class */ (function (_super) {
     EndOMAction.prototype.insertSQL = function (estado) {
         return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\';';
     };
+    EndOMAction.prototype.historico = function () {
+        var desc = 'Usuário com id = ' + this.req.body.idUser + ' finalizou a OM com id = ' + this.req.body.idOm;
+        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
+    };
     EndOMAction.prototype.generateSQL = function () {
         return 'select ESTADO from TBOM where  AND TBOM.ID = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
     };
     EndOMAction.prototype.ADMonOM = function () {
-        return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
+        return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\'';
     };
     EndOMAction.prototype.validateADM = function () {
         return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
@@ -63,6 +67,8 @@ var EndOMAction = /** @class */ (function (_super) {
                         }
                         else {
                             new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL(estado)).subscribe(function (data) {
+                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico()).subscribe(function (data) {
+                                });
                             });
                         }
                         _this.sendAnswer({

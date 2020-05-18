@@ -6,33 +6,28 @@ import {KernelUtils} from '../kernel/kernel-utils';
 import {MySQL} from '../mysql/mysql';
 import {MySQLFactory} from '../mysql/mysql_factory';
 
-export class CTAction extends Action{
+export class EPIAction extends Action{
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o nome do Centro de Trabalho', this.req.body.name == '' || this.req.body.name == undefined);
+        new KernelUtils().createExceptionApiError('1001', 'Informe o nome do EPI de Trabalho', this.req.body.name == '' || this.req.body.name == undefined);
     }
 
     private generateSQL(){
-        return 'select * from TBCT where TBCT.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
+        return 'select * from TBEPI where TBEPI.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
     }
     private selectSQL() : string {
-        return 'select ID,NOME from TBCT where STATUS = 1;';
+        return 'select ID,NOME from TBEPI where STATUS = 1;';
     }
 
     private deleteSQL() : string {
-        return 'UPDATE TBCT SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\' AND STATUS = 1;';
-    }
-
-    private editSQL() : string {
-        
-        return 'UPDATE TBCT SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND STATUS = 1;';
+        return 'UPDATE TBEPI SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.ID + '\' AND STATUS = 1;';
     }
 
 
     private insertSQL() : string{
-        return 'insert into TBCT (TBCT.NOME) values (\''+ this.req.body.name+'\');';
+        return 'insert into TBEPI (TBEPI.NOME,TBEPI.IDPADRAO) values (\''+ this.req.body.name+'\',\''+ this.req.body.idpadrao+'\');';
     }
 
-    @Post('/AddCT')
+    @Post('/AddEPI')
     public Post(){
         this.validateData();
 
@@ -40,7 +35,7 @@ export class CTAction extends Action{
             (data : any) => {
                 if (data.length || data.length > 0){
                     //console.log("Centro de trabalho já existe "+data);
-                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Centro de trabalho já existe'));
+                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'EPI já existe'));
                   return;
                 }else{
                     //console.log(data);
@@ -60,7 +55,7 @@ export class CTAction extends Action{
         );
     }
 
-    @Get('/GetCT')
+    @Get('/GetEPIs')
     public GetCT(){
         
         new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
@@ -73,7 +68,7 @@ export class CTAction extends Action{
         );
     }
 
-    @Patch('/DelCT')
+    @Patch('/DelEPI')
     public PatchCT(){
         //console.log("ENTROU"+this.req.body.name)
         new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
@@ -85,33 +80,6 @@ export class CTAction extends Action{
                 this.sendError(error);
             }
         );
-}
-@Post('/EditCT')
-    public EditCT(){
-
-        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-            (data : any) => {
-                if (data.length || data.length > 0){
-                    //console.log(data);
-                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Novo centro de trabalho já existe'));
-                  return;
-                }else{
-                    //console.log(data);
-                    new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
-                        (data : any) => {
-                          //  console.log(data);
-                        }
-                    );
-                }
-                this.sendAnswer({
-                    token    : new VPUtils().generateGUID().toUpperCase()
-                });
-            },
-            (error : any) => {
-                this.sendError(error);
-            }
-        );
-    
 }
 
     defineVisibility() {

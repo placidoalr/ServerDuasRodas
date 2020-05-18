@@ -28,28 +28,24 @@ var route_types_1 = require("../kernel/route-types");
 var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
-var OMUserAction = /** @class */ (function (_super) {
-    __extends(OMUserAction, _super);
-    function OMUserAction() {
+var OMEPIAction = /** @class */ (function (_super) {
+    __extends(OMEPIAction, _super);
+    function OMEPIAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    OMUserAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o ID do Manutentor e ID da Ordem de manutenção', this.req.body.idUser == '' || this.req.body.idUser == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined);
+    OMEPIAction.prototype.validateData = function () {
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o ID do Manutentor e ID da Ordem de manutenção', this.req.body.idEpi == '' || this.req.body.idEpi == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined);
     };
-    OMUserAction.prototype.insertSQL = function () {
-        return 'insert into TBUSUARIO_WITH_TBOM (TBUSUARIO_WITH_TBOM.IDMANUT, TBUSUARIO_WITH_TBOM.IDOM) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\');';
+    OMEPIAction.prototype.insertSQL = function () {
+        return 'insert into TBEPI_WITH_TBOM (TBEPI_WITH_TBOM.IDEPI, TBUSUARIO_WITH_TBOM.IDOM) values (\'' + this.req.body.idEpi + '\',\'' + this.req.body.idOm + '\');';
     };
-    OMUserAction.prototype.updateOM = function () {
-        return 'update TBOM set ESTADO = 2 where TBOM.ID = \'' + this.req.body.idOm + '\';';
+    OMEPIAction.prototype.generateSQL = function () {
+        return 'select * from TBEPI_WITH_TBOM where TBEPI_WITH_TBOM.IDEPI = \'' + this.req.body.idEpi + '\' AND TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
     };
-    OMUserAction.prototype.historico = function () {
-        var desc = 'Usuário com id = ' + this.req.body.idUser + ' assumiu a OM com id = ' + this.req.body.idOm;
-        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
+    OMEPIAction.prototype.selectSQL = function () {
+        return 'select TBEPI.ID,TBEPI.NOME from TBEPI INNER JOIN TBEPI_WITH_TBOM on TBEPI_WITH_TBOM.IDEPI = TBEPI.ID where TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
     };
-    OMUserAction.prototype.generateSQL = function () {
-        return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' ;';
-    };
-    OMUserAction.prototype.Post = function () {
+    OMEPIAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
@@ -59,8 +55,6 @@ var OMUserAction = /** @class */ (function (_super) {
             }
             else {
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateOM()).subscribe(new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico()).subscribe(function (data) {
-                    }));
                 });
             }
             _this.sendAnswer({
@@ -70,15 +64,29 @@ var OMUserAction = /** @class */ (function (_super) {
             _this.sendError(error);
         });
     };
-    OMUserAction.prototype.defineVisibility = function () {
+    OMEPIAction.prototype.Getone = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    OMEPIAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/AddOMUser'),
+        decorators_1.Post('/AddOMEPI'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], OMUserAction.prototype, "Post", null);
-    return OMUserAction;
+    ], OMEPIAction.prototype, "Post", null);
+    __decorate([
+        decorators_1.Post('/GetOMEPI'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], OMEPIAction.prototype, "Getone", null);
+    return OMEPIAction;
 }(action_1.Action));
-exports.OMUserAction = OMUserAction;
+exports.OMEPIAction = OMEPIAction;

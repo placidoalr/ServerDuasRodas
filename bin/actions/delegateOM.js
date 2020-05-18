@@ -39,6 +39,10 @@ var DelegateOMAction = /** @class */ (function (_super) {
     DelegateOMAction.prototype.insertSQL = function () {
         return 'insert into TBUSUARIO_WITH_TBOM (TBUSUARIO_WITH_TBOM.IDMANUT, TBUSUARIO_WITH_TBOM.IDOM) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\');';
     };
+    DelegateOMAction.prototype.historico = function () {
+        var desc = 'Usuário com id = ' + this.req.body.idAdm + ' delegou a OM com id = ' + this.req.body.idOm + ' para o usuário com id = ' + this.req.body.idUser;
+        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idAdm + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
+    };
     DelegateOMAction.prototype.generateSQL = function () {
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
     };
@@ -47,12 +51,9 @@ var DelegateOMAction = /** @class */ (function (_super) {
     };
     DelegateOMAction.prototype.Post = function () {
         var _this = this;
-        console.log(this.req.body.idUser);
-        console.log(this.req.body.idOm);
-        console.log(this.req.body.idAdm);
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
-            if (adm.CARGO > 1) {
+            if (adm.CARGO = 1) {
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL()).subscribe(function (data) {
                     if (data.length || data.length > 0) {
                         _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
@@ -60,6 +61,8 @@ var DelegateOMAction = /** @class */ (function (_super) {
                     }
                     else {
                         new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico()).subscribe(function (data) {
+                            });
                         });
                     }
                     _this.sendAnswer({
