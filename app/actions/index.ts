@@ -19,6 +19,8 @@ import {DescOMAction} from './desc';
 import {EndOMAction} from './endOM';
 import {selectManutsAction} from './selectManuts';
 import {HistoricoAction} from './historico';
+import {EPIAction} from './Epis';
+import {OMEPIAction} from './OM_EPI';
 
 
 export {LogonAction};
@@ -42,3 +44,5 @@ export {DescOMAction}
 export {EndOMAction}
 export {selectManutsAction}
 export {HistoricoAction}
+export {EPIAction}
+export {OMEPIAction}

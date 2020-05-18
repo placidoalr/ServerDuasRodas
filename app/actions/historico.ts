@@ -10,7 +10,7 @@ export class HistoricoAction extends Action{
 
 
     private selectAll() : string {
-        return 'select * from TBHISTORICO;';
+        return 'select * from TBHISTORICO ORDER BY DTALTER desc;';
     }
     private selectSQL() : string {
         return 'select * from TBHISTORICO where TBHISTORICO.ID = \'' + this.req.body.ID + '\';';

@@ -6,7 +6,7 @@ import {KernelUtils} from '../kernel/kernel-utils';
 import {MySQL} from '../mysql/mysql';
 import {MySQLFactory} from '../mysql/mysql_factory';
 
-export class CTAction extends Action{
+export class EPIAction extends Action{
     private validateData(){
         new KernelUtils().createExceptionApiError('1001', 'Informe o nome do EPI de Trabalho', this.req.body.name == '' || this.req.body.name == undefined);
     }
