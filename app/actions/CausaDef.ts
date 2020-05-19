@@ -24,12 +24,12 @@ export class CausaDefAction extends Action{
     }
 
     private deleteSQL() : string {
-        return 'UPDATE TBCAUSADEF SET STATUS = \'0\' WHERE DSCAUSA =  \'' + this.req.body.name + '\' AND STATUS = 1;';
+        return 'UPDATE TBCAUSADEF SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
 
     private editSQL() : string {
         
-        return 'UPDATE TBCAUSADEF SET DSCAUSA = \'' + this.req.body.name + '\' WHERE DSCAUSA =  \'' + this.req.body.namelast + '\' AND STATUS = 1;';
+        return 'UPDATE TBCAUSADEF SET DSCAUSA = \'' + this.req.body.name + '\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
 
     @Post('/AddCAUSADEF')

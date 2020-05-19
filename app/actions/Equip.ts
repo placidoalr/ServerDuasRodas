@@ -28,13 +28,13 @@ export class EquipAction extends Action{
     }
     
     private deleteSQL() : string {
-        return 'UPDATE TBEQUIP SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\' AND STATUS = 1;';
+        return 'UPDATE TBEQUIP SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
     
     private editSQL() : string {
         
         return 'UPDATE TBEQUIP SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\', \
-        SETOR_ATRIB = \'' + this.req.body.setor + '\' WHERE IDSAP =  \'' + this.req.body.idsaplast + '\' AND STATUS = 1;';
+        SETOR_ATRIB = \'' + this.req.body.setor + '\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
     
     

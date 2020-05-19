@@ -27,7 +27,7 @@ export class UserAction extends Action{
     }
 
     private deleteSQL() : string {
-        return 'UPDATE TBUSUARIO SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\' AND STATUS = 1;';
+        return 'UPDATE TBUSUARIO SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
 
     private editSQL() : string {
@@ -35,7 +35,7 @@ export class UserAction extends Action{
         return 'UPDATE TBUSUARIO SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\', \
         LOGIN = \'' + this.req.body.login + '\', SENHA = \'' + this.req.body.password + '\', CARGO = \'' + this.req.body.cargo + '\' \
         , CDCT = \'' + this.req.body.cdct + '\' \
-        WHERE IDSAP =  \'' + this.req.body.idsaplast + '\';';
+        WHERE ID =  \'' + this.req.body.id + '\';';
     }
     
 

@@ -17,7 +17,7 @@ export class SetorAction extends Action{
         OR (TBSETOR.IDSAP = \'' + this.req.body.idsap + '\' AND \'' + this.req.body.idsap + '\' != \'' + this.req.body.idsaplast + '\' ) AND STATUS = 1;';
     }
     private generateADDSQL(){
-        return 'select * from TBSETOR where (TBSETOR.ID = \'' + this.req.body.ID + '\' OR TBSETOR.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
+        return 'select * from TBSETOR where (TBSETOR.ID = \'' + this.req.body.ID + '\') AND STATUS = 1;';
     }
 
     private selectSQL() : string {
@@ -25,11 +25,11 @@ export class SetorAction extends Action{
     }
 
     private deleteSQL() : string {
-        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\' AND STATUS = 1;';
+        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
 
     private editSQL() : string {
-        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND IDSAP = \'' + this.req.body.idsaplast + '\' AND STATUS = 1;';
+        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
 
 
