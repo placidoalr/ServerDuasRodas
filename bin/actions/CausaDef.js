@@ -40,7 +40,7 @@ var CausaDefAction = /** @class */ (function (_super) {
         return 'insert into TBCAUSADEF (TBCAUSADEF.DSCAUSA ) values (\'' + this.req.body.name + '\');';
     };
     CausaDefAction.prototype.generateSQL = function () {
-        return 'select * from TBCAUSADEF where TBCAUSADEF.ID = \'' + this.req.body.ID + '\' AND STATUS = 1;';
+        return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.name + '\' AND STATUS = 1;';
     };
     CausaDefAction.prototype.selectSQL = function () {
         return 'select ID,DSCAUSA from TBCAUSADEF where STATUS = 1;';
@@ -53,6 +53,7 @@ var CausaDefAction = /** @class */ (function (_super) {
     };
     CausaDefAction.prototype.Post = function () {
         var _this = this;
+        console.log(this.req.body);
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
@@ -78,18 +79,19 @@ var CausaDefAction = /** @class */ (function (_super) {
             _this.sendError(error);
         });
     };
-    CausaDefAction.prototype.Patch = function () {
+    CausaDefAction.prototype.Del = function () {
         var _this = this;
         //console.log("ENTROU"+this.req.body.name)
+        console.log(this.req.body);
         new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
             //console.log(data);
-            _this.sendAnswer(data);
         }, function (error) {
             _this.sendError(error);
         });
     };
     CausaDefAction.prototype.Edit = function () {
         var _this = this;
+        console.log(this.req.body);
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             if (data.length || data.length > 0) {
                 //console.log(data);
@@ -125,11 +127,11 @@ var CausaDefAction = /** @class */ (function (_super) {
         __metadata("design:returntype", void 0)
     ], CausaDefAction.prototype, "Get", null);
     __decorate([
-        decorators_1.Patch('/DelCAUSADEF'),
+        decorators_1.Post('/DelCAUSADEF'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], CausaDefAction.prototype, "Patch", null);
+    ], CausaDefAction.prototype, "Del", null);
     __decorate([
         decorators_1.Post('/EditCAUSADEF'),
         __metadata("design:type", Function),

@@ -17,7 +17,7 @@ export class CausaDefAction extends Action{
     }
 
     private generateSQL(){
-        return 'select * from TBCAUSADEF where TBCAUSADEF.ID = \'' + this.req.body.ID + '\' AND STATUS = 1;';
+        return 'select * from TBCAUSADEF where TBCAUSADEF.DSCAUSA = \'' + this.req.body.name + '\' AND STATUS = 1;';
     }
     private selectSQL() : string {
         return 'select ID,DSCAUSA from TBCAUSADEF where STATUS = 1;';
@@ -34,6 +34,7 @@ export class CausaDefAction extends Action{
 
     @Post('/AddCAUSADEF')
     public Post(){
+        console.log(this.req.body)
         this.validateData();
     
         new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
@@ -74,13 +75,13 @@ export class CausaDefAction extends Action{
         );
     }
     
-    @Patch('/DelCAUSADEF')
-    public Patch(){
+    @Post('/DelCAUSADEF')
+    public Del(){
         //console.log("ENTROU"+this.req.body.name)
+        console.log(this.req.body)
         new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
             (data : any) => {
                 //console.log(data);
-                this.sendAnswer(data);
             },
             (error : any) => {
                 this.sendError(error);
@@ -89,7 +90,7 @@ export class CausaDefAction extends Action{
     }
     @Post('/EditCAUSADEF')
     public Edit(){
-    
+    console.log(this.req.body)
         new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
             (data : any) => {
                 if (data.length || data.length > 0){

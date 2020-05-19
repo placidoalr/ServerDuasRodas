@@ -81,7 +81,7 @@ public Get(){
     );
 }
 
-@Patch('/DelEquip')
+@Post('/DelEquip')
 public Patch(){
     //console.log("ENTROU"+this.req.body.name)
     new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
@@ -96,29 +96,29 @@ public Patch(){
 }
 @Post('/EditEquip')
 public Edit(){
-
-    new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-        (data : any) => {
-            if (data.length || data.length > 0 ){
-                //console.log(data);
-              this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Equipamento já existe'));
-              return;
-            }else{
+console.log(this.req.body)
+    // new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+    //     (data : any) => {
+    //         if (data.length || data.length > 0 ){
+    //             //console.log(data);
+    //           this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Equipamento já existe'));
+    //           return;
+    //         }else{
                 //console.log(data);
                 new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
                     (data : any) => {
                       //  console.log(data);
                     }
                 );
-            }
+            // }
             this.sendAnswer({
                 token    : new VPUtils().generateGUID().toUpperCase()
             });
-        },
-        (error : any) => {
-            this.sendError(error);
-        }
-    );
+    //     },
+    //     (error : any) => {
+    //         this.sendError(error);
+    //     }
+    // );
 }
 
     defineVisibility() {

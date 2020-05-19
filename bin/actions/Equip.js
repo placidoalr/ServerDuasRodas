@@ -94,25 +94,27 @@ var EquipAction = /** @class */ (function (_super) {
         });
     };
     EquipAction.prototype.Edit = function () {
-        var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
-            if (data.length || data.length > 0) {
-                //console.log(data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Equipamento já existe'));
-                return;
-            }
-            else {
-                //console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
-                    //  console.log(data);
-                });
-            }
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-            });
-        }, function (error) {
-            _this.sendError(error);
+        console.log(this.req.body);
+        // new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+        //     (data : any) => {
+        //         if (data.length || data.length > 0 ){
+        //             //console.log(data);
+        //           this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Equipamento já existe'));
+        //           return;
+        //         }else{
+        //console.log(data);
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.editSQL()).subscribe(function (data) {
+            //  console.log(data);
         });
+        // }
+        this.sendAnswer({
+            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+        });
+        //     },
+        //     (error : any) => {
+        //         this.sendError(error);
+        //     }
+        // );
     };
     EquipAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
@@ -130,7 +132,7 @@ var EquipAction = /** @class */ (function (_super) {
         __metadata("design:returntype", void 0)
     ], EquipAction.prototype, "Get", null);
     __decorate([
-        decorators_1.Patch('/DelEquip'),
+        decorators_1.Post('/DelEquip'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)

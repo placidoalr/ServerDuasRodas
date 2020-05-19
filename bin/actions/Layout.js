@@ -37,11 +37,11 @@ var LayoutAction = /** @class */ (function (_super) {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o Layout', this.req.body.name == '' || this.req.body.name == undefined || this.req.body.layout == '' || this.req.body.layout == undefined);
     };
     LayoutAction.prototype.generateSQL = function () {
-        return 'select ID from TBLAYOUTOM where (TBLAYOUTOM.NOME = \'' + this.req.body.name + '\' AND \'' + this.req.body.name + '\' != \'' + this.req.body.namelast + '\' ) \
+        return 'select ID from TBLAYOUTOM where (TBLAYOUTOM.NOME = \'' + this.req.body.name + '\') \
          AND STATUS = 1;';
     };
     LayoutAction.prototype.generateADDSQL = function () {
-        return 'select * from TBLAYOUTOM where TBLAYOUTOM.ID = \'' + this.req.body.ID + '\'  AND STATUS = 1;';
+        return 'select * from TBLAYOUTOM where TBLAYOUTOM.ID = \'' + this.req.body.id + '\'  AND STATUS = 1;';
     };
     LayoutAction.prototype.insertSQL = function () {
         return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME, TBLAYOUTOM.IDESTILO ) values (\'' + this.req.body.name + '\',' + this.req.body.layout + ');';
@@ -53,7 +53,7 @@ var LayoutAction = /** @class */ (function (_super) {
         return 'UPDATE TBLAYOUTOM SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\';';
     };
     LayoutAction.prototype.editSQL = function () {
-        return 'UPDATE TBLAYOUTOM SET NOME  = \'' + this.req.body.name + '\' WHERE ID = \'' + this.req.body.id + '\' AND STATUS = 1 ;';
+        return 'UPDATE TBLAYOUTOM SET NOME  = \'' + this.req.body.name + '\', IDESTILO  = \'' + this.req.body.layout + '\' WHERE ID = \'' + this.req.body.id + '\' AND STATUS = 1 ;';
     };
     LayoutAction.prototype.Post = function () {
         var _this = this;
@@ -97,25 +97,27 @@ var LayoutAction = /** @class */ (function (_super) {
     };
     ;
     LayoutAction.prototype.Edit = function () {
-        var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
-            if (data.length || data.length > 0 && _this.req.body.name != _this.req.body.namelast) {
-                //console.log(data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
-                return;
-            }
-            else {
-                //console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
-                    //  console.log(data);
-                });
-            }
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-            });
-        }, function (error) {
-            _this.sendError(error);
+        // new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+        //     (data : any) => {
+        //         if (data.length || data.length > 0 && this.req.body.name != this.req.body.namelast){
+        //             //console.log(data);
+        //           this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
+        //           return;
+        //         }else{
+        //console.log(data);
+        console.log(this.req.body);
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.editSQL()).subscribe(function (data) {
+            //  console.log(data);
         });
+        // }
+        this.sendAnswer({
+            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+        });
+        //     },
+        //     (error : any) => {
+        //         this.sendError(error);
+        //     }
+        // );
     };
     LayoutAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
@@ -133,7 +135,7 @@ var LayoutAction = /** @class */ (function (_super) {
         __metadata("design:returntype", void 0)
     ], LayoutAction.prototype, "Get", null);
     __decorate([
-        decorators_1.Patch('/DelLAYOUTOM'),
+        decorators_1.Post('/DelLAYOUTOM'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)

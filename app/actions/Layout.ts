@@ -12,11 +12,11 @@ export class LayoutAction extends Action{
     }
 
     private generateSQL() : string {
-        return 'select ID from TBLAYOUTOM where (TBLAYOUTOM.NOME = \'' + this.req.body.name + '\' AND \'' + this.req.body.name + '\' != \'' + this.req.body.namelast + '\' ) \
+        return 'select ID from TBLAYOUTOM where (TBLAYOUTOM.NOME = \'' + this.req.body.name + '\') \
          AND STATUS = 1;';
     }
     private generateADDSQL() : string {
-        return 'select * from TBLAYOUTOM where TBLAYOUTOM.ID = \'' + this.req.body.ID + '\'  AND STATUS = 1;';
+        return 'select * from TBLAYOUTOM where TBLAYOUTOM.ID = \'' + this.req.body.id + '\'  AND STATUS = 1;';
     }
     private insertSQL() : string{
         return 'insert into TBLAYOUTOM (TBLAYOUTOM.NOME, TBLAYOUTOM.IDESTILO ) values (\''+ this.req.body.name+'\','+ this.req.body.layout+');';
@@ -29,7 +29,7 @@ export class LayoutAction extends Action{
     }
     private editSQL() : string {
         
-        return 'UPDATE TBLAYOUTOM SET NOME  = \'' + this.req.body.name + '\' WHERE ID = \'' + this.req.body.id + '\' AND STATUS = 1 ;';
+        return 'UPDATE TBLAYOUTOM SET NOME  = \'' + this.req.body.name + '\', IDESTILO  = \'' + this.req.body.layout + '\' WHERE ID = \'' + this.req.body.id + '\' AND STATUS = 1 ;';
     }
 
 
@@ -72,7 +72,7 @@ export class LayoutAction extends Action{
             }
         );
     }
-    @Patch('/DelLAYOUTOM')
+    @Post('/DelLAYOUTOM')
     public Patch(){
         //console.log("ENTROU"+this.req.body.name)
         new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
@@ -87,28 +87,29 @@ export class LayoutAction extends Action{
         @Post('/EditLAYOUTOM')
         public Edit(){
     
-            new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-                (data : any) => {
-                    if (data.length || data.length > 0 && this.req.body.name != this.req.body.namelast){
+            // new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+            //     (data : any) => {
+            //         if (data.length || data.length > 0 && this.req.body.name != this.req.body.namelast){
+            //             //console.log(data);
+            //           this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
+            //           return;
+            //         }else{
                         //console.log(data);
-                      this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
-                      return;
-                    }else{
-                        //console.log(data);
+                        console.log(this.req.body)
                         new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
                             (data : any) => {
                               //  console.log(data);
                             }
                         );
-                    }
+                    // }
                     this.sendAnswer({
                         token    : new VPUtils().generateGUID().toUpperCase()
                     });
-                },
-                (error : any) => {
-                    this.sendError(error);
-                }
-            );
+            //     },
+            //     (error : any) => {
+            //         this.sendError(error);
+            //     }
+            // );
         }
 
     
