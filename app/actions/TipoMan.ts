@@ -75,7 +75,7 @@ export class TipoManAction extends Action{
         );
     }
 
-    @Patch('/DelTIPOMAN')
+    @Post('/DelTIPOMAN')
     public PatchTIPOMAN(){
         //console.log("ENTROU"+this.req.body.name)
         new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(

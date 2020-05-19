@@ -40,10 +40,10 @@ var EPIAction = /** @class */ (function (_super) {
         return 'select * from TBEPI where TBEPI.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
     };
     EPIAction.prototype.selectSQL = function () {
-        return 'select ID,NOME from TBEPI where STATUS = 1;';
+        return 'select ID,NOME,IDPADRAO from TBEPI where STATUS = 1;';
     };
     EPIAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBEPI SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.ID + '\' AND STATUS = 1;';
+        return 'UPDATE TBEPI SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     EPIAction.prototype.insertSQL = function () {
         return 'insert into TBEPI (TBEPI.NOME,TBEPI.IDPADRAO) values (\'' + this.req.body.name + '\',\'' + this.req.body.idpadrao + '\');';
@@ -104,7 +104,7 @@ var EPIAction = /** @class */ (function (_super) {
         __metadata("design:returntype", void 0)
     ], EPIAction.prototype, "GetCT", null);
     __decorate([
-        decorators_1.Patch('/DelEPI'),
+        decorators_1.Post('/DelEPI'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)

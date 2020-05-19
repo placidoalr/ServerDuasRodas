@@ -15,11 +15,11 @@ export class EPIAction extends Action{
         return 'select * from TBEPI where TBEPI.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
     }
     private selectSQL() : string {
-        return 'select ID,NOME from TBEPI where STATUS = 1;';
+        return 'select ID,NOME,IDPADRAO from TBEPI where STATUS = 1;';
     }
 
     private deleteSQL() : string {
-        return 'UPDATE TBEPI SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.ID + '\' AND STATUS = 1;';
+        return 'UPDATE TBEPI SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
 
 
@@ -68,7 +68,7 @@ export class EPIAction extends Action{
         );
     }
 
-    @Patch('/DelEPI')
+    @Post('/DelEPI')
     public PatchCT(){
         //console.log("ENTROU"+this.req.body.name)
         new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(

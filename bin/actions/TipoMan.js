@@ -128,7 +128,7 @@ var TipoManAction = /** @class */ (function (_super) {
         __metadata("design:returntype", void 0)
     ], TipoManAction.prototype, "GetTIPOMAN", null);
     __decorate([
-        decorators_1.Patch('/DelTIPOMAN'),
+        decorators_1.Post('/DelTIPOMAN'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
