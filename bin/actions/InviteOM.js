@@ -44,10 +44,10 @@ var InviteOMAction = /** @class */ (function (_super) {
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idAdm + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
     };
     InviteOMAction.prototype.generateSQL = function () {
-        return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
+        return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
     };
     InviteOMAction.prototype.ADMonOM = function () {
-        return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idAdm + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
+        return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idAdm + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
     };
     InviteOMAction.prototype.validateADM = function () {
         return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idAdm + '\' AND STATUS = 1;';
@@ -56,17 +56,22 @@ var InviteOMAction = /** @class */ (function (_super) {
         var _this = this;
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
-            if (adm.CARGO == 1) {
+            console.log(adm);
+            if (adm[0].CARGO == 1) {
+                console.log(_this.req.body);
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
+                    console.log(admon);
                     if (admon.length || admon.length > 0) {
                         new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL()).subscribe(function (data) {
+                            console.log(data);
                             if (data.length || data.length > 0) {
                                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
                                 return;
                             }
                             else {
-                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico()).subscribe(function (data) {
+                                console.log('ELSE');
+                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data1) {
+                                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico()).subscribe(function (data2) {
                                     });
                                 });
                             }

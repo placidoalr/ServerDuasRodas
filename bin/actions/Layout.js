@@ -50,10 +50,10 @@ var LayoutAction = /** @class */ (function (_super) {
         return 'select TBLAYOUTOM.*,TBESTILOLAYOUT.NOME as ESTILONOME from TBLAYOUTOM INNER JOIN TBESTILOLAYOUT ON TBLAYOUTOM.IDESTILO = TBESTILOLAYOUT.ID  where status = 1';
     };
     LayoutAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBLAYOUTOM SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';
+        return 'UPDATE TBLAYOUTOM SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\';';
     };
     LayoutAction.prototype.editSQL = function () {
-        return 'UPDATE TBLAYOUTOM SET NOME  = \'' + this.req.body.name + '\' WHERE NOME = \'' + this.req.body.namelast + '\' AND STATUS = 1 ;';
+        return 'UPDATE TBLAYOUTOM SET NOME  = \'' + this.req.body.name + '\' WHERE ID = \'' + this.req.body.id + '\' AND STATUS = 1 ;';
     };
     LayoutAction.prototype.Post = function () {
         var _this = this;

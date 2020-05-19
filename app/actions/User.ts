@@ -15,7 +15,7 @@ export class UserAction extends Action{
         return 'select ID from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
     private generateADDSQL() : string {
-        return 'select * from TBUSUARIO where TBUSUARIO.NOME = \'' + this.req.body.name + '\' OR TBUSUARIO.IDSAP = \'' + this.req.body.idsap + '\' AND STATUS = 1;';
+        return 'select * from TBUSUARIO where (TBUSUARIO.NOME = \'' + this.req.body.name + '\' OR TBUSUARIO.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
 
     }
     private insertSQL() : string{
@@ -40,14 +40,17 @@ export class UserAction extends Action{
 
     @Post('/AddUser')
     public Post(){
+        console.log(this.req.body)
         this.validateData();
+        console.log("validate")
         new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
             (data : any) => {
+                console.log(data)
                 if (data.length || data.length > 0){
                   this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
                   return;
                 }else{
-                    
+                    console.log("else")
                     new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                         (data : any) => {
                             

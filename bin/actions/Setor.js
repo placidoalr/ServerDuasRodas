@@ -41,16 +41,16 @@ var SetorAction = /** @class */ (function (_super) {
         OR (TBSETOR.IDSAP = \'' + this.req.body.idsap + '\' AND \'' + this.req.body.idsap + '\' != \'' + this.req.body.idsaplast + '\' ) AND STATUS = 1;';
     };
     SetorAction.prototype.generateADDSQL = function () {
-        return 'select * from TBSETOR where (TBSETOR.ID = \'' + this.req.body.ID + '\' OR TBSETOR.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
+        return 'select * from TBSETOR where (TBSETOR.ID = \'' + this.req.body.ID + '\') AND STATUS = 1;';
     };
     SetorAction.prototype.selectSQL = function () {
         return 'select ID,IDSAP,NOME from TBSETOR where STATUS = 1;';
     };
     SetorAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\' AND STATUS = 1;';
+        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     SetorAction.prototype.editSQL = function () {
-        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND IDSAP = \'' + this.req.body.idsaplast + '\' AND STATUS = 1;';
+        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     SetorAction.prototype.insertSQL = function () {
         return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.IDSAP ) values (\'' + this.req.body.name + '\',\'' + this.req.body.idsap + '\');';

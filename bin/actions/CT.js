@@ -43,10 +43,10 @@ var CTAction = /** @class */ (function (_super) {
         return 'select ID,NOME from TBCT where STATUS = 1;';
     };
     CTAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBCT SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\' AND STATUS = 1;';
+        return 'UPDATE TBCT SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     CTAction.prototype.editSQL = function () {
-        return 'UPDATE TBCT SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND STATUS = 1;';
+        return 'UPDATE TBCT SET NOME = \'' + this.req.body.name + '\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     CTAction.prototype.insertSQL = function () {
         return 'insert into TBCT (TBCT.NOME) values (\'' + this.req.body.name + '\');';

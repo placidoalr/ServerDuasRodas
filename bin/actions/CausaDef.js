@@ -46,10 +46,10 @@ var CausaDefAction = /** @class */ (function (_super) {
         return 'select ID,DSCAUSA from TBCAUSADEF where STATUS = 1;';
     };
     CausaDefAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBCAUSADEF SET STATUS = \'0\' WHERE DSCAUSA =  \'' + this.req.body.name + '\' AND STATUS = 1;';
+        return 'UPDATE TBCAUSADEF SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     CausaDefAction.prototype.editSQL = function () {
-        return 'UPDATE TBCAUSADEF SET DSCAUSA = \'' + this.req.body.name + '\' WHERE DSCAUSA =  \'' + this.req.body.namelast + '\' AND STATUS = 1;';
+        return 'UPDATE TBCAUSADEF SET DSCAUSA = \'' + this.req.body.name + '\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     CausaDefAction.prototype.Post = function () {
         var _this = this;

@@ -13,7 +13,7 @@ export class HistoricoAction extends Action{
         return 'select * from TBHISTORICO ORDER BY DTALTER desc;';
     }
     private selectSQL() : string {
-        return 'select * from TBHISTORICO where TBHISTORICO.ID = \'' + this.req.body.ID + '\';';
+        return 'select * from TBHISTORICO where TBHISTORICO.IDOM = \'' + this.req.body.ID + '\';';
     }
     @Get('/GetHistoricos')
     public Get(){

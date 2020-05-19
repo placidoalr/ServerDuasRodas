@@ -37,11 +37,10 @@ var UserAction = /** @class */ (function (_super) {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe todos os campos corretamente', this.req.body.idsap == null || this.req.body.name == '' || this.req.body.password == '' || this.req.body.idsap == undefined || this.req.body.name == undefined || this.req.body.password == undefined || this.req.body.cdct == undefined || this.req.body.cdct == null || this.req.body.cargo == undefined || this.req.body.cargo == null || this.req.body.login == undefined || this.req.body.login == '');
     };
     UserAction.prototype.generateSQL = function () {
-        return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' AND \'' + this.req.body.login + '\' != \'' + this.req.body.loginlast + '\' ) \
-        OR (\'' + this.req.body.idsap + '\' != \'' + this.req.body.idsaplast + '\' AND TBUSUARIO.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
+        return 'select ID from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     UserAction.prototype.generateADDSQL = function () {
-        return 'select * from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.ID + '\' OR TBUSUARIO.IDSAP = \'' + this.req.body.idsap + '\' AND STATUS = 1;';
+        return 'select * from TBUSUARIO where (TBUSUARIO.NOME = \'' + this.req.body.name + '\' OR TBUSUARIO.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
     };
     UserAction.prototype.insertSQL = function () {
         return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CARGO, TBUSUARIO.NOME, TBUSUARIO.CDCT) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.login + '\', \'' + this.req.body.password + '\', \'' + this.req.body.cargo + '\', \'' + this.req.body.name + '\', \'' + this.req.body.cdct + '\');';
@@ -50,25 +49,27 @@ var UserAction = /** @class */ (function (_super) {
         return 'select TBUSUARIO.*, TBCT.NOME AS TBCTNOME, TBCARGO.NOME AS TBCARGONOME from TBUSUARIO INNER JOIN TBCT ON TBUSUARIO.CDCT = TBCT.ID INNER JOIN TBCARGO ON TBUSUARIO.CARGO = TBCARGO.ID where TBUSUARIO.STATUS = 1;';
     };
     UserAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBUSUARIO SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\' AND STATUS = 1;';
+        return 'UPDATE TBUSUARIO SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     UserAction.prototype.editSQL = function () {
         return 'UPDATE TBUSUARIO SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\', \
         LOGIN = \'' + this.req.body.login + '\', SENHA = \'' + this.req.body.password + '\', CARGO = \'' + this.req.body.cargo + '\' \
         , CDCT = \'' + this.req.body.cdct + '\' \
-        WHERE IDSAP =  \'' + this.req.body.idsaplast + '\';';
+        WHERE ID =  \'' + this.req.body.id + '\';';
     };
     UserAction.prototype.Post = function () {
         var _this = this;
+        console.log(this.req.body);
         this.validateData();
-        console.log("CHEGUEI");
+        console.log("validate");
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
-            console.log("CHEGUEI");
+            console.log(data);
             if (data.length || data.length > 0) {
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
                 return;
             }
             else {
+                console.log("else");
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
                 });
             }

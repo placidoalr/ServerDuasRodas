@@ -43,10 +43,10 @@ var TipoManAction = /** @class */ (function (_super) {
         return 'select ID,NOME from TBTIPOMAN where STATUS = 1;';
     };
     TipoManAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBTIPOMAN SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\' AND STATUS = 1;';
+        return 'UPDATE TBTIPOMAN SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     TipoManAction.prototype.editSQL = function () {
-        return 'UPDATE TBTIPOMAN SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\' AND STATUS = 1;';
+        return 'UPDATE TBTIPOMAN SET NOME = \'' + this.req.body.name + '\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     TipoManAction.prototype.insertSQL = function () {
         return 'insert into TBTIPOMAN (TBTIPOMAN.NOME ) values (\'' + this.req.body.name + '\');';

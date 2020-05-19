@@ -35,7 +35,7 @@ var HistoricoAction = /** @class */ (function (_super) {
         return 'select * from TBHISTORICO ORDER BY DTALTER desc;';
     };
     HistoricoAction.prototype.selectSQL = function () {
-        return 'select * from TBHISTORICO where TBHISTORICO.ID = \'' + this.req.body.ID + '\';';
+        return 'select * from TBHISTORICO where TBHISTORICO.IDOM = \'' + this.req.body.ID + '\';';
     };
     HistoricoAction.prototype.Get = function () {
         var _this = this;

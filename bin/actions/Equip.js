@@ -50,11 +50,11 @@ var EquipAction = /** @class */ (function (_super) {
         return 'select TBEQUIP.*,TBSETOR.NOME as TBSETORNOME from TBEQUIP INNER JOIN TBSETOR ON TBEQUIP.SETOR_ATRIB = TBSETOR.ID where TBEQUIP.STATUS = 1;';
     };
     EquipAction.prototype.deleteSQL = function () {
-        return 'UPDATE TBEQUIP SET STATUS = \'0\' WHERE IDSAP =  \'' + this.req.body.idsap + '\' AND STATUS = 1;';
+        return 'UPDATE TBEQUIP SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     EquipAction.prototype.editSQL = function () {
         return 'UPDATE TBEQUIP SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\', \
-        SETOR_ATRIB = \'' + this.req.body.setor + '\' WHERE IDSAP =  \'' + this.req.body.idsaplast + '\' AND STATUS = 1;';
+        SETOR_ATRIB = \'' + this.req.body.setor + '\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     EquipAction.prototype.Post = function () {
         var _this = this;
