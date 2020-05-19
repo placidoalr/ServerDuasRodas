@@ -97,25 +97,26 @@ var SetorAction = /** @class */ (function (_super) {
         });
     };
     SetorAction.prototype.EditSetor = function () {
-        var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
-            if (data.length || data.length > 0) {
-                //console.log(data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Novo Setor já existe'));
-                return;
-            }
-            else {
-                //console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
-                    //  console.log(data);
-                });
-            }
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-            });
-        }, function (error) {
-            _this.sendError(error);
+        // new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+        //     (data : any) => {
+        //         if (data.length || data.length > 0){
+        //             //console.log(data);
+        //           this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Novo Setor já existe'));
+        //           return;
+        //         }else{
+        //console.log(data);
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.editSQL()).subscribe(function (data) {
+            //  console.log(data);
         });
+        //}
+        this.sendAnswer({
+            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+        });
+        //     },
+        //     (error : any) => {
+        //         this.sendError(error);
+        //     }
+        // );
     };
     SetorAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
@@ -133,7 +134,7 @@ var SetorAction = /** @class */ (function (_super) {
         __metadata("design:returntype", void 0)
     ], SetorAction.prototype, "GetSetor", null);
     __decorate([
-        decorators_1.Patch('/DelSETOR'),
+        decorators_1.Post('/DelSETOR'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)

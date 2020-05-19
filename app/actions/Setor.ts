@@ -81,7 +81,7 @@ export class SetorAction extends Action{
         );
     }
 
-    @Patch('/DelSETOR')
+    @Post('/DelSETOR')
     public PatchCT(){
         //console.log("ENTROU"+this.req.body.name)
         new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
@@ -97,28 +97,28 @@ export class SetorAction extends Action{
 @Post('/EditSETOR')
     public EditSetor(){
 
-        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-            (data : any) => {
-                if (data.length || data.length > 0){
-                    //console.log(data);
-                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Novo Setor já existe'));
-                  return;
-                }else{
+        // new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+        //     (data : any) => {
+        //         if (data.length || data.length > 0){
+        //             //console.log(data);
+        //           this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Novo Setor já existe'));
+        //           return;
+        //         }else{
                     //console.log(data);
                     new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
                         (data : any) => {
                           //  console.log(data);
                         }
                     );
-                }
+                //}
                 this.sendAnswer({
                     token    : new VPUtils().generateGUID().toUpperCase()
                 });
-            },
-            (error : any) => {
-                this.sendError(error);
-            }
-        );
+        //     },
+        //     (error : any) => {
+        //         this.sendError(error);
+        //     }
+        // );
     }
     defineVisibility() {
         this.actionEscope = ActionType.atPublic;
