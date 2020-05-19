@@ -12,11 +12,10 @@ export class UserAction extends Action{
     }
 
     private generateSQL() : string {
-        return 'select ID from TBUSUARIO where (TBUSUARIO.LOGIN = \'' + this.req.body.login + '\' AND \'' + this.req.body.login + '\' != \'' + this.req.body.loginlast + '\' ) \
-        OR (\'' + this.req.body.idsap + '\' != \'' + this.req.body.idsaplast + '\' AND TBUSUARIO.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
+        return 'select ID from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
     private generateADDSQL() : string {
-        return 'select * from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.ID + '\' OR TBUSUARIO.IDSAP = \'' + this.req.body.idsap + '\' AND STATUS = 1;';
+        return 'select * from TBUSUARIO where TBUSUARIO.NOME = \'' + this.req.body.name + '\' OR TBUSUARIO.IDSAP = \'' + this.req.body.idsap + '\' AND STATUS = 1;';
 
     }
     private insertSQL() : string{
@@ -42,14 +41,9 @@ export class UserAction extends Action{
     @Post('/AddUser')
     public Post(){
         this.validateData();
-
-        console.log("CHEGUEI")
         new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
             (data : any) => {
-                console.log("CHEGUEI")
                 if (data.length || data.length > 0){
-                    
-                    
                   this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
                   return;
                 }else{
