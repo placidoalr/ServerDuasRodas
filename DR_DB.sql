@@ -153,6 +153,7 @@
     `ID` INT NOT NULL AUTO_INCREMENT,
     `IDOM` INT NOT NULL,
     `IDEQUIP` INT NOT NULL,
+    `OPER` VARCHAR(250) DEFAULT NULL, /* Operação que deverá ser realizada sobre o equipamento */
     PRIMARY KEY(`ID`),
     FOREIGN KEY (`IDEQUIP`) REFERENCES `DRDB`.`TBEQUIP` (`ID`),
     FOREIGN KEY (`IDOM`) REFERENCES `DRDB`.`TBOM` (`ID`)
