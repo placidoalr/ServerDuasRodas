@@ -34,7 +34,7 @@ export class SetorAction extends Action{
 
 
     private insertSQL() : string{
-        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.IDSAP ) values (\''+ this.req.body.name+'\',\''+ this.req.body.idsap+'\');';
+        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.IDSAP, TBSETOR.IDLIDER ) values (\''+ this.req.body.name+'\',\''+ this.req.body.idsap+'\',\''+ this.req.body.idsap+'\');';
     }
 
 

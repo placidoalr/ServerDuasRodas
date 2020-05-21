@@ -24,7 +24,9 @@ export class UserAction extends Action{
     private selectSQL() : string {
         return 'select TBUSUARIO.*, TBCT.NOME AS TBCTNOME, TBCARGO.NOME AS TBCARGONOME from TBUSUARIO INNER JOIN TBCT ON TBUSUARIO.CDCT = TBCT.ID INNER JOIN TBCARGO ON TBUSUARIO.CARGO = TBCARGO.ID where TBUSUARIO.STATUS = 1;';
     }
-
+    private selectLideres() : string {
+        return 'select TBUSUARIO.ID, TBUSUARIO.NOME from TBUSUARIO where TBUSUARIO.STATUS = 1 AND TBUSUARIO.CARGO = 2;';
+    }
     private deleteSQL() : string {
         return 'UPDATE TBUSUARIO SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
@@ -79,7 +81,18 @@ export class UserAction extends Action{
             }
         );
     }
-
+    @Get('/GetLeads')
+    public GetLeads(){
+        
+        new MySQLFactory().getConnection().select(this.selectLideres()).subscribe(
+            (data : any) => {
+                this.sendAnswer(data);
+            },
+            (error : any) => {
+                this.sendError(error);
+            }
+        );
+    }
     @Patch('/DelUser')
     public Patch(){
         //console.log("ENTROU"+this.req.body.name)

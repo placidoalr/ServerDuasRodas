@@ -48,6 +48,9 @@ var UserAction = /** @class */ (function (_super) {
     UserAction.prototype.selectSQL = function () {
         return 'select TBUSUARIO.*, TBCT.NOME AS TBCTNOME, TBCARGO.NOME AS TBCARGONOME from TBUSUARIO INNER JOIN TBCT ON TBUSUARIO.CDCT = TBCT.ID INNER JOIN TBCARGO ON TBUSUARIO.CARGO = TBCARGO.ID where TBUSUARIO.STATUS = 1;';
     };
+    UserAction.prototype.selectLideres = function () {
+        return 'select TBUSUARIO.ID, TBUSUARIO.NOME from TBUSUARIO where TBUSUARIO.STATUS = 1 AND TBUSUARIO.CARGO = 2;';
+    };
     UserAction.prototype.deleteSQL = function () {
         return 'UPDATE TBUSUARIO SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
@@ -83,6 +86,14 @@ var UserAction = /** @class */ (function (_super) {
     UserAction.prototype.Get = function () {
         var _this = this;
         new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    UserAction.prototype.GetLeads = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectLideres()).subscribe(function (data) {
             _this.sendAnswer(data);
         }, function (error) {
             _this.sendError(error);
@@ -134,6 +145,12 @@ var UserAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], UserAction.prototype, "Get", null);
+    __decorate([
+        decorators_1.Get('/GetLeads'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], UserAction.prototype, "GetLeads", null);
     __decorate([
         decorators_1.Patch('/DelUser'),
         __metadata("design:type", Function),

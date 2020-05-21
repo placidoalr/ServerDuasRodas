@@ -19,9 +19,16 @@ export class OMAction extends Action{
 
         return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB,REQUERPARADA ) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.solicitante+'\','+ this.req.body.layout+','+ this.req.body.ct+','+ this.req.body.tipoManut+','+ this.req.body.sintoma+','+ this.req.body.causa+',\''+ this.req.body.def+'\',\''+horaatual+'\', \''+ this.req.body.obs+'\','+this.req.body.prior+', 1,'+this.req.body.li+',\''+this.req.body.requerParada+'\');';
     }
+    private insertEQUIPSQL() : string{
+
+        return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP) values (@ID,\''+ this.req.body.equip+'\');';
+    }
 
     private generateADDSQL(){
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
+    }
+    private selectIDInsert(){
+        return 'SELECT LAST_INSERT_ID() INTO @ID;';
     }
     private generateSQL(){
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\'  AND STATUS = 1;';
@@ -53,7 +60,13 @@ export class OMAction extends Action{
                     
                     new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                         (data : any) => {
-                            
+                            new MySQLFactory().getConnection().select(this.selectIDInsert()).subscribe(
+                                (data : any) => {
+                                    new MySQLFactory().getConnection().select(this.insertEQUIPSQL()).subscribe(
+                                        (data : any) => {
+                                    
+                                });
+                        });
                         }
                     );
                 }
