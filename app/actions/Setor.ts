@@ -21,7 +21,7 @@ export class SetorAction extends Action{
     }
 
     private selectSQL() : string {
-        return 'select ID,IDSAP,NOME from TBSETOR where STATUS = 1;';
+        return 'select S.ID,S.IDSAP,S.NOME, U.NOME as LIDER from TBSETOR as S inner join TBUSUARIO as U on U.ID = S.IDLIDER where S.STATUS = 1;';
     }
 
     private deleteSQL() : string {
@@ -29,12 +29,12 @@ export class SetorAction extends Action{
     }
 
     private editSQL() : string {
-        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
+        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\', IDLIDER = \'' + this.req.body.idlider + '\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
 
 
     private insertSQL() : string{
-        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.IDSAP, TBSETOR.IDLIDER ) values (\''+ this.req.body.name+'\',\''+ this.req.body.idsap+'\',\''+ this.req.body.idsap+'\');';
+        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.IDSAP, TBSETOR.IDLIDER) values (\''+ this.req.body.name+'\',\''+ this.req.body.idsap+'\',\''+ this.req.body.idlider+'\');';
     }
 
 
