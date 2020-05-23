@@ -17,24 +17,23 @@ export class OMAction extends Action{
     private insertSQL() : string{
         let horaatual = Date.now();
 
-        return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,SINTOMA,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB,REQUERPARADA ) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.solicitante+'\','+ this.req.body.layout+','+ this.req.body.ct+','+ this.req.body.tipoManut+','+ this.req.body.sintoma+','+ this.req.body.causa+',\''+ this.req.body.def+'\',\''+horaatual+'\', \''+ this.req.body.obs+'\','+this.req.body.prior+', 1,'+this.req.body.li+',\''+this.req.body.requerParada+'\');';
+        return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB,REQUERPARADA,DT_INI_PLAN,DT_INI_PROG,DT_FIM_PLAN,DT_FIM_PROG ) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.solicitante+'\','+ this.req.body.layout+','+ this.req.body.ct+','+ this.req.body.tipoManut+','+ this.req.body.causa+',\''+ this.req.body.def+'\',\''+horaatual+'\', \''+ this.req.body.obs+'\','+this.req.body.prior+', 1,'+this.req.body.setor+',\''+this.req.body.requerParada+'\',\''+this.req.body.dtIniPlan+'\',\''+this.req.body.dtIniProg+'\',\''+this.req.body.dtFimPlan+'\',\''+this.req.body.dtFimProg+'\',);';
     }
-    private insertEQUIPSQL() : string{
-
-        return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP) values (@ID,\''+ this.req.body.equip+'\');';
+    private insertEQUIPSQL(equip : any){
+        return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER) values ((SELECT LAST_INSERT_ID() INTO @TBOM),\''+ equip.id+'\',\''+ equip.oper+'\');';
     }
 
     private generateADDSQL(){
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
-    private selectIDInsert(){
-        return 'SELECT LAST_INSERT_ID() INTO @ID;';
+    private selectEquipWOM(){
+        return 'SELECT TBEQUIP.NOME EQUIPNOME, TBEQUIP_WITH_TBOM.OPER from TBEQUIP_WITH_TBOM INNER JOIN TBEQUIP ON TBEQUIP_WITH_TBOM.IDEQUIP = TBEQUIP.ID where TBEQUIP_WITH_TBOM.IDOM = \'' + this.req.body.idom + '\';';
     }
     private generateSQL(){
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\'  AND STATUS = 1;';
     }
     private selectSQL() : string {
-        return 'select TBOM.*,TBSETOR.NOME as TBSETORNOME,TBCT.NOME as TBCTNOME,TBLAYOUTOM.NOME as TBLAYOUTOMNOME,TBTIPOMAN.NOME as TBTIPOMANNOME,TBSINTOMA.NOME as TBSINTOMANOME,TBCAUSADEF.DSCAUSA as TBCAUSADEFNOME, TBPRIORIDADE.NOME as TBPRIORIDADENOME from TBOM INNER JOIN TBSETOR ON TBOM.SETOR_ATRIB = TBSETOR.ID inner join TBCT on TBOM.IDCT = TBCT.ID inner join TBLAYOUTOM on TBOM.IDLAYOUT = TBLAYOUTOM.ID INNER JOIN TBTIPOMAN ON TBOM.TPOM = TBTIPOMAN.ID INNER JOIN TBSINTOMA ON TBOM.SINTOMA = TBSINTOMA.ID INNER JOIN TBCAUSADEF ON TBOM.CAUSADEF = TBCAUSADEF.ID INNER JOIN TBPRIORIDADE ON TBOM.PRIORIDADE = TBPRIORIDADE.ID where TBOM.STATUS = 1;';
+        return 'select TBOM.*,TBSETOR.NOME as TBSETORNOME,TBCT.NOME as TBCTNOME,TBLAYOUTOM.NOME as TBLAYOUTOMNOME,TBTIPOMAN.NOME as TBTIPOMANNOME, TBCAUSADEF.DSCAUSA as TBCAUSADEFNOME, TBPRIORIDADE.NOME as TBPRIORIDADENOME from TBOM INNER JOIN TBSETOR ON TBOM.SETOR_ATRIB = TBSETOR.ID inner join TBCT on TBOM.IDCT = TBCT.ID inner join TBLAYOUTOM on TBOM.IDLAYOUT = TBLAYOUTOM.ID INNER JOIN TBTIPOMAN ON TBOM.TPOM = TBTIPOMAN.ID INNER JOIN TBCAUSADEF ON TBOM.CAUSADEF = TBCAUSADEF.ID INNER JOIN TBPRIORIDADE ON TBOM.PRIORIDADE = TBPRIORIDADE.ID where TBOM.STATUS = 1;';
     }
 
     private deleteSQL() : string {
@@ -43,7 +42,7 @@ export class OMAction extends Action{
 
     private editSQL() : string {
         
-        return 'UPDATE TBOM SET IDSAP = \'' + this.req.body.idsap + '\',SOLIC = \'' + this.req.body.solicitante + '\',IDLAYOUT = ' + this.req.body.layout + ' ,IDCT = ' + this.req.body.ct + ',TPOM = ' + this.req.body.tipoManut + ',SINTOMA = ' + this.req.body.sintoma + ',CAUSADEF = ' + this.req.body.causa + ',DEF = \'' + this.req.body.def + '\',OBS = \'' + this.req.body.obs + '\',PRIORIDADE = ' + this.req.body.prior + ',SETOR_ATRIB = ' + this.req.body.li + ',REQUERPARADA = \'' + this.req.body.requerParada + '\' WHERE ID =  ' + this.req.body.id + ' AND STATUS = 1;';
+        return 'UPDATE TBOM SET IDSAP = \'' + this.req.body.idsap + '\',SOLIC = \'' + this.req.body.solicitante + '\',IDLAYOUT = ' + this.req.body.layout + ' ,IDCT = ' + this.req.body.ct + ',TPOM = ' + this.req.body.tipoManut + ',CAUSADEF = ' + this.req.body.causa + ',DEF = \'' + this.req.body.def + '\',OBS = \'' + this.req.body.obs + '\',PRIORIDADE = ' + this.req.body.prior + ',SETOR_ATRIB = ' + this.req.body.setor + ',REQUERPARADA = \'' + this.req.body.requerParada + '\' WHERE ID =  ' + this.req.body.id + ' AND STATUS = 1;';
     }
     @Post('/AddOM')
     public Post(){
@@ -60,13 +59,13 @@ export class OMAction extends Action{
                     
                     new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                         (data : any) => {
-                            new MySQLFactory().getConnection().select(this.selectIDInsert()).subscribe(
-                                (data : any) => {
-                                    new MySQLFactory().getConnection().select(this.insertEQUIPSQL()).subscribe(
-                                        (data : any) => {
-                                    
-                                });
-                        });
+                            this.req.body.equips.array.forEach(equip => {
+                                new MySQLFactory().getConnection().select(this.insertEQUIPSQL(equip)).subscribe(
+                                    (data : any) => {
+                                
+                            });
+                            });
+                                   
                         }
                     );
                 }
@@ -79,28 +78,12 @@ export class OMAction extends Action{
             }
         );
     }
-    @Post('/AddEquipToOM')
-    public EquipToOM(){
-        this.validateDataEquipToOM();
+    @Post('/GetEquipWOM')
+    public EquipWOM(){
 
-        new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
+        new MySQLFactory().getConnection().select(this.selectEquipWOM()).subscribe(
             (data : any) => {
-                if (data.length || data.length > 0){
-                    
-                    
-                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'OM já existe'));
-                return;
-                }else{
-                    
-                    new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
-                        (data : any) => {
-                            
-                        }
-                    );
-                }
-                this.sendAnswer({
-                    token    : new VPUtils().generateGUID().toUpperCase()
-                });
+                this.sendAnswer(data);
             },
             (error : any) => {
                 this.sendError(error);
