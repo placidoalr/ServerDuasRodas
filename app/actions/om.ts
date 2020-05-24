@@ -117,7 +117,7 @@ export class OMAction extends Action{
             }
         );
     }
-    @Get('/GetOMsAndamentoLider')
+    @Post('/GetOMsAndamentoLider')
     public getOMsAndamentoLider(){
         
         new MySQLFactory().getConnection().select(this.selectOMsAndamentoLider()).subscribe(
@@ -129,7 +129,7 @@ export class OMAction extends Action{
             }
         );
     }
-    @Get('/GetOMsBySetor')
+    @Post('/GetOMsBySetor')
     public getOMsBySetor(){
         
         new MySQLFactory().getConnection().select(this.selectOMsBySetor()).subscribe(
@@ -141,7 +141,7 @@ export class OMAction extends Action{
             }
         );
     }
-    @Get('/GetOMsFinalizadaLider')
+    @Post('/GetOMsFinalizadaLider')
     public getOMsFinalizadaLider(){
         
         new MySQLFactory().getConnection().select(this.selectOMsFinalizadaLider()).subscribe(

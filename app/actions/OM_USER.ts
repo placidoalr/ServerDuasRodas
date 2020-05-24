@@ -67,7 +67,7 @@ export class OMUserAction extends Action{
         );
     }
 
-    @Get('/GetOMByUserIDAtribuida')
+    @Post('/GetOMByUserIDAtribuida')
     public Get(){
         
         new MySQLFactory().getConnection().select(this.selectAtribuida()).subscribe(
@@ -80,7 +80,7 @@ export class OMUserAction extends Action{
         );
     }
     
-    @Get('/GetOMByUserIDFinalizada')
+    @Post('/GetOMByUserIDFinalizada')
     public Get1(){
         
         new MySQLFactory().getConnection().select(this.selectFinalizada()).subscribe(
