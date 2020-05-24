@@ -11,7 +11,15 @@ export class EndOMAction extends Action{
         new KernelUtils().createExceptionApiError('1001', 'Informe o ID do Manutentor do Convidado e ID  da Ordem de manutenção', this.req.body.idUser == '' || this.req.body.idUser == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined );
     }
     private insertSQL(estado : any) : string{
-        return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\';';
+        
+        let horaatual = Date.now();
+        if(estado == 3){
+            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_MANUT = \''+ horaatual+'\' WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
+        }else if(estado == 4){
+            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_SETOR = \''+ horaatual+'\' WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
+        }else {
+            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_ADMIN = \''+ horaatual+'\' WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
+        }
     }
     private historico() : string{
         var desc = 'Usuário com id = '+this.req.body.idUser+' finalizou a OM com id = '+this.req.body.idOm;
@@ -35,7 +43,7 @@ export class EndOMAction extends Action{
             var estado = adm.CARGO +2;
                 new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
                 (admon : any) => {
-                    if (admon.length || admon.length > 0){
+                    if (admon.length || admon.length > 0 || adm.CARGO > 1){
                         new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
                             (data : any) => {
                                 if (data.ESTADO > estado){
