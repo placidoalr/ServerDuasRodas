@@ -37,7 +37,7 @@ var LogonAction = /** @class */ (function (_super) {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Usuário e senha inválidos', this.req.body.userName == '' || this.req.body.password == '' || this.req.body.userName == undefined || this.req.body.password == undefined);
     };
     LogonAction.prototype.generateSQL = function () {
-        return 'select ID, LOGIN, SENHA, CARGO from TBUSUARIO  where LOGIN = \'' + this.req.body.userName + '\' and SENHA = \'' + this.req.body.password + '\';';
+        return 'select TBUSUARIO.ID, TBUSUARIO.CARGO, TBCARGO.NOME as CARGONOME from TBUSUARIO INNER JOIN TBCARGO ON TBUSUARIO.CARGO = TBCARGO.NOME  where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\' and TBUSUARIO.SENHA = \'' + this.req.body.password + '\';';
     };
     LogonAction.prototype.Post = function () {
         var _this = this;
@@ -53,7 +53,8 @@ var LogonAction = /** @class */ (function (_super) {
                 token: new vputils_1.VPUtils().generateGUID().toUpperCase(),
                 userName: _this.req.body.userName,
                 id: data[0].ID,
-                cargo: data[0].CARGO
+                cargoId: data[0].CARGO,
+                cargoNome: data[0].CARGONOME
             });
         }, function (error) {
             console.log('Err', error);

@@ -37,13 +37,13 @@ var OMEPIAction = /** @class */ (function (_super) {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o ID do Manutentor e ID da Ordem de manutenção', this.req.body.idEpi == '' || this.req.body.idEpi == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined);
     };
     OMEPIAction.prototype.insertSQL = function () {
-        return 'insert into TBEPI_WITH_TBOM (TBEPI_WITH_TBOM.IDEPI, TBUSUARIO_WITH_TBOM.IDOM) values (\'' + this.req.body.idEpi + '\',\'' + this.req.body.idOm + '\');';
+        return 'insert into TBEPI_WITH_TBOM (TBEPI_WITH_TBOM.IDEPI, TBUSUARIO_WITH_TBOM.IDOM, TBUSUARIO_WITH_TBOM.IDMANUT) values (\'' + this.req.body.idEpi + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.idUser + '\');';
     };
     OMEPIAction.prototype.generateSQL = function () {
-        return 'select * from TBEPI_WITH_TBOM where TBEPI_WITH_TBOM.IDEPI = \'' + this.req.body.idEpi + '\' AND TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
+        return 'select * from TBEPI_WITH_TBOM where TBEPI_WITH_TBOM.IDEPI = \'' + this.req.body.idEpi + '\' AND TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND TBEPI_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
     };
     OMEPIAction.prototype.selectSQL = function () {
-        return 'select TBEPI.ID,TBEPI.NOME from TBEPI INNER JOIN TBEPI_WITH_TBOM on TBEPI_WITH_TBOM.IDEPI = TBEPI.ID where TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
+        return 'select TBEPI.ID,TBEPI.NOME as EPINOME, TBUSUARIO.NOME as USERNAME, TBEPI.IDOM from TBEPI INNER JOIN TBEPI_WITH_TBOM on TBEPI_WITH_TBOM.IDEPI = TBEPI.ID INNER JOIN TBUSUARIO on  TBEPI_WITH_TBOM.IDMANUT = TBUSUARIO.ID where TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
     };
     OMEPIAction.prototype.Post = function () {
         var _this = this;

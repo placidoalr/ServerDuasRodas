@@ -49,6 +49,12 @@ var OMUserAction = /** @class */ (function (_super) {
     OMUserAction.prototype.generateSQL = function () {
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' ;';
     };
+    OMUserAction.prototype.selectAtribuida = function () {
+        return 'select TBOM.*,TBSETOR.NOME as TBSETORNOME,TBCT.NOME as TBCTNOME,TBLAYOUTOM.NOME as TBLAYOUTOMNOME,TBTIPOMAN.NOME as TBTIPOMANNOME, TBCAUSADEF.DSCAUSA as TBCAUSADEFNOME, TBPRIORIDADE.NOME as TBPRIORIDADENOME from TBOM INNER JOIN TBSETOR ON TBOM.SETOR_ATRIB = TBSETOR.ID inner join TBCT on TBOM.IDCT = TBCT.ID inner join TBLAYOUTOM on TBOM.IDLAYOUT = TBLAYOUTOM.ID INNER JOIN TBTIPOMAN ON TBOM.TPOM = TBTIPOMAN.ID INNER JOIN TBCAUSADEF ON TBOM.CAUSADEF = TBCAUSADEF.ID INNER JOIN TBPRIORIDADE ON TBOM.PRIORIDADE = TBPRIORIDADE.ID INNER JOIN TBUSUARIO_WITH_TBOM ON TBOM.ID = TBUSUARIO_WITH_TBOM.IDOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBOM.ESTADO = 2 AND  TBOM.STATUS = 1;';
+    };
+    OMUserAction.prototype.selectFinalizada = function () {
+        return 'select TBOM.*,TBSETOR.NOME as TBSETORNOME,TBCT.NOME as TBCTNOME,TBLAYOUTOM.NOME as TBLAYOUTOMNOME,TBTIPOMAN.NOME as TBTIPOMANNOME, TBCAUSADEF.DSCAUSA as TBCAUSADEFNOME, TBPRIORIDADE.NOME as TBPRIORIDADENOME from TBOM INNER JOIN TBSETOR ON TBOM.SETOR_ATRIB = TBSETOR.ID inner join TBCT on TBOM.IDCT = TBCT.ID inner join TBLAYOUTOM on TBOM.IDLAYOUT = TBLAYOUTOM.ID INNER JOIN TBTIPOMAN ON TBOM.TPOM = TBTIPOMAN.ID INNER JOIN TBCAUSADEF ON TBOM.CAUSADEF = TBCAUSADEF.ID INNER JOIN TBPRIORIDADE ON TBOM.PRIORIDADE = TBPRIORIDADE.ID INNER JOIN TBUSUARIO_WITH_TBOM ON TBOM.ID = TBUSUARIO_WITH_TBOM.IDOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBOM.ESTADO = 3 AND  TBOM.STATUS = 1;';
+    };
     OMUserAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
@@ -70,6 +76,22 @@ var OMUserAction = /** @class */ (function (_super) {
             _this.sendError(error);
         });
     };
+    OMUserAction.prototype.Get = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectAtribuida()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    OMUserAction.prototype.Get1 = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectFinalizada()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
     OMUserAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
@@ -79,6 +101,18 @@ var OMUserAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], OMUserAction.prototype, "Post", null);
+    __decorate([
+        decorators_1.Get('/GetOMByUserIDAtribuida'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], OMUserAction.prototype, "Get", null);
+    __decorate([
+        decorators_1.Get('/GetOMByUserIDFinalizada'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], OMUserAction.prototype, "Get1", null);
     return OMUserAction;
 }(action_1.Action));
 exports.OMUserAction = OMUserAction;
