@@ -205,19 +205,19 @@ var OMAction = /** @class */ (function (_super) {
         __metadata("design:returntype", void 0)
     ], OMAction.prototype, "Get", null);
     __decorate([
-        decorators_1.Get('/GetOMsAndamentoLider'),
+        decorators_1.Post('/GetOMsAndamentoLider'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], OMAction.prototype, "getOMsAndamentoLider", null);
     __decorate([
-        decorators_1.Get('/GetOMsBySetor'),
+        decorators_1.Post('/GetOMsBySetor'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], OMAction.prototype, "getOMsBySetor", null);
     __decorate([
-        decorators_1.Get('/GetOMsFinalizadaLider'),
+        decorators_1.Post('/GetOMsFinalizadaLider'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)

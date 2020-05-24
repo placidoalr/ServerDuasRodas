@@ -102,13 +102,13 @@ var OMUserAction = /** @class */ (function (_super) {
         __metadata("design:returntype", void 0)
     ], OMUserAction.prototype, "Post", null);
     __decorate([
-        decorators_1.Get('/GetOMByUserIDAtribuida'),
+        decorators_1.Post('/GetOMByUserIDAtribuida'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], OMUserAction.prototype, "Get", null);
     __decorate([
-        decorators_1.Get('/GetOMByUserIDFinalizada'),
+        decorators_1.Post('/GetOMByUserIDFinalizada'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
