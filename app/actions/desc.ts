@@ -13,10 +13,6 @@ export class DescOMAction extends Action{
     private insertSQL() : string{
         return 'insert into TB_OM_DESC (TB_OM_DESC.IDMANUT, TB_OM_DESC.IDOM, TB_OM_DESC.DESC, TB_OM_DESC.TEMPO_UTIL) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\',\''+ this.req.body.desc+'\',\''+ this.req.body.time+'\');';
     }
-    private historico() : string{
-        var desc = 'Usuário com id = '+this.req.body.idUser+' adicionou um comentário para a OM com id = '+this.req.body.idOm;
-        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\',\''+ desc+'\',\''+ new Date().getDate().toString()+'\');';
-    }
     private ADMonOM(){
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
     }
@@ -29,18 +25,13 @@ export class DescOMAction extends Action{
         this.validateData();
         new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
         (adm : any) => {
-            if (adm.CARGO == 1){
+            if (adm[0].CARGO == 1){
                 new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
                 (admon : any) => {
                     if (admon.length || admon.length > 0){
                         
                                     new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                                         (data : any) => {
-                                            new MySQLFactory().getConnection().select(this.historico()).subscribe(
-                                                (data : any) => {
-                                                    
-                                                }
-                                            );
                                         }
                                     );
                                
