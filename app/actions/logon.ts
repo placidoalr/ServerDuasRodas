@@ -13,7 +13,7 @@ export class LogonAction extends Action{
     }
 
     private generateSQL() : string {
-        return 'select ID, LOGIN, SENHA, CARGO from TBUSUARIO  where LOGIN = \'' + this.req.body.userName + '\' and SENHA = \'' + this.req.body.password + '\';';
+        return 'select TBUSUARIO.ID, TBUSUARIO.CARGO, TBCARGO.NOME as CARGONOME from TBUSUARIO INNER JOIN TBCARGO ON TBUSUARIO.CARGO = TBCARGO.NOME  where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\' and TBUSUARIO.SENHA = \'' + this.req.body.password + '\';';
     }
 
     @Post('/logon')
@@ -32,7 +32,9 @@ export class LogonAction extends Action{
                     token       : new VPUtils().generateGUID().toUpperCase(),
                     userName    : this.req.body.userName,
                     id          : data[0].ID,
-                    cargo       : data[0].CARGO
+                    cargoId       : data[0].CARGO,
+                    cargoNome   : data[0].CARGONOME
+
                 });
             },
             (error : any) => {
