@@ -13,13 +13,13 @@ export class LogonAction extends Action{
     }
 
     private generateSQL() : string {
-        return 'select TBUSUARIO.ID, TBUSUARIO.CARGO, TBCARGO.NOME as CARGONOME from TBUSUARIO INNER JOIN TBCARGO ON TBUSUARIO.CARGO = TBCARGO.NOME  where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\' and TBUSUARIO.SENHA = \'' + this.req.body.password + '\';';
+        return 'select TBUSUARIO.ID, TBUSUARIO.CARGO, TBCARGO.NOME as CARGONOME from TBUSUARIO INNER JOIN TBCARGO ON TBUSUARIO.CARGO = TBCARGO.ID  where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\' and TBUSUARIO.SENHA = \'' + this.req.body.password + '\';';
     }
 
     @Post('/logon')
     public Post(){
         this.validateData();
-
+console.log(this.req.body)
         new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
             (data : any) => {
                 console.log('data', data);
@@ -27,7 +27,7 @@ export class LogonAction extends Action{
                   this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário e senha inválidos'));
                   return;
                 }
-                console.log(data);
+                console.log(data[0]);
                 this.sendAnswer({
                     token       : new VPUtils().generateGUID().toUpperCase(),
                     userName    : this.req.body.userName,
