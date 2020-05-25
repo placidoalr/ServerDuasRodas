@@ -42,7 +42,9 @@ export class UserAction extends Action{
 
     @Post('/AddUser')
     public Post(){
+        console.log(this.req.body)
         this.validateData();
+        console.log("validate")
         new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
             (data : any) => {
                 console.log(data)
