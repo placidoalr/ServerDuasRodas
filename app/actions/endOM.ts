@@ -21,13 +21,8 @@ export class EndOMAction extends Action{
             return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_ADMIN = \''+ horaatual+'\' WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
         }
     }
-    private historico(nome : any,estado : any) : string{
-        var desc = 'Manutentor '+nome+' assinou a OM';
-        if(estado == 4){
-            desc = 'Líder '+nome+' assinou a OM';            
-        }else if(estado == 5){
-            desc = 'Administrador '+nome+' assinou a OM';    
-        }
+    private historico() : string{
+        var desc = 'Usuário com id = '+this.req.body.idUser+' finalizou a OM com id = '+this.req.body.idOm;
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\',\''+ desc+'\',\''+ new Date().getDate().toString()+'\');';
     }
     private generateSQL(){
@@ -37,7 +32,7 @@ export class EndOMAction extends Action{
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\'';
     }
     private validateADM(){
-        return 'select CARGO,NOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
+        return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
     }
     
     @Post('/EndOM')
@@ -45,19 +40,19 @@ export class EndOMAction extends Action{
         this.validateData();
         new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
         (adm : any) => {
-            var estado = adm[0].CARGO +2;
+            var estado = adm.CARGO +2;
                 new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
                 (admon : any) => {
-                    if (admon.length || admon.length > 0 || adm[0].CARGO > 1){
+                    if (admon.length || admon.length > 0 || adm.CARGO > 1){
                         new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
                             (data : any) => {
-                                if (data[0].ESTADO > estado){
+                                if (data.ESTADO > estado){
                                         this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Estado setado é menor que o atual.'));
                                     return;
                                 }else{
                                     new MySQLFactory().getConnection().select(this.insertSQL(estado)).subscribe(
                                         (data : any) => {
-                                            new MySQLFactory().getConnection().select(this.historico(adm[0].NOME, estado)).subscribe(
+                                            new MySQLFactory().getConnection().select(this.historico()).subscribe(
                                                 (data : any) => {
                                                     
                                                 }

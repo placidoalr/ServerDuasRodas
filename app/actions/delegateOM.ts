@@ -14,28 +14,23 @@ export class DelegateOMAction extends Action{
     private insertSQL() : string{
         return 'insert into TBUSUARIO_WITH_TBOM (TBUSUARIO_WITH_TBOM.IDMANUT, TBUSUARIO_WITH_TBOM.IDOM) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\');';
     }
-    private historico(nomeADM : any, manutNome : any) : string{
-        var desc = 'Lider '+nomeADM+' delegou a OM para o manutentor '+ manutNome;
+    private historico() : string{
+        var desc = 'Usuário com id = '+this.req.body.idAdm+' delegou a OM com id = '+this.req.body.idOm+' para o usuário com id = '+this.req.body.idUser;
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\''+ this.req.body.idAdm+'\',\''+ this.req.body.idOm+'\',\''+ desc+'\',\''+ new Date().getDate().toString()+'\');';
     }
     private generateSQL(){
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
     }
     private validateADM(){
-        return 'select CARGO,NOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idAdm + '\' AND STATUS = 1;';
-    }
-    private validateManut(){
-        return 'select CARGO,NOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
+        return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idAdm + '\' AND STATUS = 1;';
     }
     @Post('/DelegateOM')
     public Post(){
         this.validateData();
         new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
             (adm : any) => {
-                if (adm[0].CARGO != 1){
-                    new MySQLFactory().getConnection().select(this.validateManut()).subscribe(
-                        (manut : any) => {
-                            if (manut[0].CARGO == 1){
+                
+                if (adm.CARGO = 1){
             new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
                 (data : any) => {
                     if (data.length || data.length > 0){
@@ -44,7 +39,7 @@ export class DelegateOMAction extends Action{
                     }else{
                         new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                             (data : any) => {
-                                new MySQLFactory().getConnection().select(this.historico(adm[0].NOME,manut[0].NOME)).subscribe(
+                                new MySQLFactory().getConnection().select(this.historico()).subscribe(
                                     (data : any) => {
                                         
                                     }
@@ -60,10 +55,6 @@ export class DelegateOMAction extends Action{
                     this.sendError(error);
                 }
             );
-        }else{
-                    
-                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário não é um manutentor'));
-            }})
                 }else{
                     
                     this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
