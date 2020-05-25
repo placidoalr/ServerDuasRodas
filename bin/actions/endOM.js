@@ -38,7 +38,16 @@ var EndOMAction = /** @class */ (function (_super) {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o ID do Manutentor do Convidado e ID  da Ordem de manutenção', this.req.body.idUser == '' || this.req.body.idUser == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined);
     };
     EndOMAction.prototype.insertSQL = function (estado) {
-        return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\';';
+        var horaatual = Date.now();
+        if (estado == 3) {
+            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', TBOM.DTBAIXA_MANUT = \'' + horaatual + '\' WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
+        }
+        else if (estado == 4) {
+            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', TBOM.DTBAIXA_SETOR = \'' + horaatual + '\' WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
+        }
+        else {
+            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', TBOM.DTBAIXA_ADMIN = \'' + horaatual + '\' WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
+        }
     };
     EndOMAction.prototype.historico = function () {
         var desc = 'Usuário com id = ' + this.req.body.idUser + ' finalizou a OM com id = ' + this.req.body.idOm;
@@ -59,7 +68,7 @@ var EndOMAction = /** @class */ (function (_super) {
         new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
             var estado = adm.CARGO + 2;
             new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
-                if (admon.length || admon.length > 0) {
+                if (admon.length || admon.length > 0 || adm.CARGO > 1) {
                     new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL()).subscribe(function (data) {
                         if (data.ESTADO > estado) {
                             _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Estado setado é menor que o atual.'));

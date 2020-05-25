@@ -37,18 +37,19 @@ var LogonAction = /** @class */ (function (_super) {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Usuário e senha inválidos', this.req.body.userName == '' || this.req.body.password == '' || this.req.body.userName == undefined || this.req.body.password == undefined);
     };
     LogonAction.prototype.generateSQL = function () {
-        return 'select TBUSUARIO.ID, TBUSUARIO.CARGO, TBCARGO.NOME as CARGONOME from TBUSUARIO INNER JOIN TBCARGO ON TBUSUARIO.CARGO = TBCARGO.NOME  where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\' and TBUSUARIO.SENHA = \'' + this.req.body.password + '\';';
+        return 'select TBUSUARIO.ID, TBUSUARIO.CARGO, TBCARGO.NOME as CARGONOME from TBUSUARIO INNER JOIN TBCARGO ON TBUSUARIO.CARGO = TBCARGO.ID  where TBUSUARIO.LOGIN = \'' + this.req.body.userName + '\' and TBUSUARIO.SENHA = \'' + this.req.body.password + '\';';
     };
     LogonAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
+        console.log(this.req.body);
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             console.log('data', data);
             if (!data.length || data.length != 1) {
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário e senha inválidos'));
                 return;
             }
-            console.log(data);
+            console.log(data[0]);
             _this.sendAnswer({
                 token: new vputils_1.VPUtils().generateGUID().toUpperCase(),
                 userName: _this.req.body.userName,
