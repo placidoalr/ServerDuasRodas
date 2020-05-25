@@ -19,8 +19,8 @@ export class OMUserAction extends Action{
         return 'update TBOM set ESTADO = 2 where TBOM.ID = \''+ this.req.body.idOm+'\';';
     }
 
-    private historico() : string{
-        var desc = 'Usuário com id = '+this.req.body.idUser+' assumiu a OM com id = '+this.req.body.idOm;
+    private historico(nome:any) : string{
+        var desc = 'Manutentor '+nome+' assumiu a OM';
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\',\''+ desc+'\',\''+ new Date().getDate().toString()+'\');';
      }
 
@@ -43,36 +43,44 @@ export class OMUserAction extends Action{
         }
     }
     
+    private validateADM(){
+        return 'select CARGO,NOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
+    }
+    
     @Post('/AddOMUser')
     public Post(){
         this.validateData();
-
-        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-            (data : any) => {
-                if (data.length || data.length > 0){
-                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
-                  return;
-                }else{
-                    new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
+        new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
+            (adm : any) => {
+                if(adm[0].CARGO == 1){
+                    new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
                         (data : any) => {
-                            new MySQLFactory().getConnection().select(this.updateOM()).subscribe(
-
-                            new MySQLFactory().getConnection().select(this.historico()).subscribe(
-                                (data : any) => {
-                                    
-                                }
-                            ));
+                            if (data.length || data.length > 0){
+                            this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
+                            return;
+                            }else{
+                                new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
+                                    (data : any) => {
+                                        new MySQLFactory().getConnection().select(this.updateOM()).subscribe(
+                                            (data : any) => {
+                                        new MySQLFactory().getConnection().select(this.historico(adm[0].NOME)).subscribe(
+                                            (data : any) => {
+                                                
+                                            }
+                                        )});
+                                    }
+                                );
+                            }
+                            this.sendAnswer({
+                                token    : new VPUtils().generateGUID().toUpperCase()
+                            });
+                        },
+                        (error : any) => {
+                            this.sendError(error);
                         }
                     );
                 }
-                this.sendAnswer({
-                    token    : new VPUtils().generateGUID().toUpperCase()
-                });
-            },
-            (error : any) => {
-                this.sendError(error);
-            }
-        );
+            });
     }
 
     @Post('/GetOMByUserIDAtribuida')

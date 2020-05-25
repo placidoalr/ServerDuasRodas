@@ -25,18 +25,13 @@ export class DescOMAction extends Action{
         this.validateData();
         new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
         (adm : any) => {
-            if (adm.CARGO == 1){
+            if (adm[0].CARGO == 1){
                 new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
                 (admon : any) => {
                     if (admon.length || admon.length > 0){
                         
                                     new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                                         (data : any) => {
-                                            new MySQLFactory().getConnection().select(this.historico()).subscribe(
-                                                (data : any) => {
-                                                    
-                                                }
-                                            );
                                         }
                                     );
                                
