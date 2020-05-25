@@ -25,7 +25,7 @@ export class DescOMAction extends Action{
     }
     
     private updateEQUIPSQL( id : any){
-        return 'update TBEQUIP_WITH_TBOM set OPER_REALIZADA = 1 where IDEQUIP = '+ id+';';
+        return 'update TBEQUIP_WITH_TBOM set OPER_REALIZADA = 1 where IDEQUIP = '+ id+' and IDOM = '+this.req.body.idOm+';';
     }
     
     @Post('/DescOM')
