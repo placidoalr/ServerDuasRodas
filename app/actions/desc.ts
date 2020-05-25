@@ -13,11 +13,19 @@ export class DescOMAction extends Action{
     private insertSQL() : string{
         return 'insert into TB_OM_DESC (TB_OM_DESC.IDMANUT, TB_OM_DESC.IDOM, TB_OM_DESC.DESC, TB_OM_DESC.TEMPO_UTIL) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\',\''+ this.req.body.desc+'\',\''+ this.req.body.time+'\');';
     }
+    
+    private insertRota() : string{
+        return 'insert into TB_OM_DESC_ROTA (TB_OM_DESC_ROTA.IDMANUT, TB_OM_DESC_ROTA.IDOM, TB_OM_DESC_ROTA.DESC, TB_OM_DESC_ROTA.TEMPO_UTIL, TB_OM_DESC_ROTA.IDEQUIP) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\',\''+ this.req.body.desc+'\',\''+ this.req.body.time+'\',\''+ this.req.body.idequip+'\');';
+    }
     private ADMonOM(){
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
     }
     private validateADM(){
         return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
+    }
+    
+    private updateEQUIPSQL( id : any){
+        return 'update TBEQUIP_WITH_TBOM set OPER_REALIZADA = 1 where IDEQUIP = '+ id+';';
     }
     
     @Post('/DescOM')
@@ -46,7 +54,60 @@ export class DescOMAction extends Action{
             }
         });
     }
-    
+    @Post('/DescOMRota')
+    public PostRota(){
+        this.validateData();
+        new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
+        (adm : any) => {
+            if (adm[0].CARGO == 1){
+                new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
+                (admon : any) => {
+                    if (admon.length || admon.length > 0){
+                        
+                                    new MySQLFactory().getConnection().select(this.insertRota()).subscribe(
+                                        (data : any) => {
+                                        }
+                                    );
+                               
+                        
+                    }else{ 
+                        this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                    }
+                });
+            }else{
+                            
+                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
+            }
+        });
+    }
+    @Post('/DescOMLista')
+    public PostLista(){
+        this.validateData();
+        new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
+        (adm : any) => {
+            if (adm[0].CARGO == 1){
+                new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
+                (admon : any) => {
+                    if (admon.length || admon.length > 0){
+
+                        this.req.body.equips.forEach((equip: any) => {
+                            new MySQLFactory().getConnection().select(this.updateEQUIPSQL(equip.id)).subscribe(
+                                (data1 : any) => {
+                            
+                            });
+                        });
+                               
+                        
+                    }else{ 
+                        this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                    }
+                });
+            }else{
+                            
+                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
+            }
+        });
+    }
     defineVisibility() {
         this.actionEscope = ActionType.atPublic;
     }
