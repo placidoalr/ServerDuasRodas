@@ -13,11 +13,11 @@ export class EndOMAction extends Action{
     private insertSQL(estado : any) : string{
         
         if(estado == 3){
-            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_MANUT = \'DATE(CURRENT_TIMESTAMP)\' WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
+            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_MANUT = NOW() WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
         }else if(estado == 4){
-            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_SETOR = \'DATE(CURRENT_TIMESTAMP)\' WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
+            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_SETOR = NOW() WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
         }else {
-            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_ADMIN = \'DATE(CURRENT_TIMESTAMP)\' WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
+            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_ADMIN = NOW() WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
         }
     }
     private historico(nome : any,estado : any) : string{

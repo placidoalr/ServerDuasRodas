@@ -17,7 +17,7 @@ export class OMAction extends Action{
     private insertSQL() : string{
         let horaatual = Date.now();
 
-        return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB,REQUERPARADA,DT_INI_PLAN,DT_INI_PROG,DT_FIM_PLAN,DT_FIM_PROG ) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.solicitante+'\','+ this.req.body.layout+','+ this.req.body.ct+','+ this.req.body.tipoManut+','+ this.req.body.causa+',\''+ this.req.body.def+'\',\'DATE(CURRENT_TIMESTAMP)\', \''+ this.req.body.obs+'\','+this.req.body.prior+', 1,'+this.req.body.setor+',\''+this.req.body.requerParada+'\',\''+this.req.body.dtIniPlan+'\',\''+this.req.body.dtIniProg+'\',\''+this.req.body.dtFimPlan+'\',\''+this.req.body.dtFimProg+'\');';
+        return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,SETOR_ATRIB,REQUERPARADA,DT_INI_PLAN,DT_INI_PROG,DT_FIM_PLAN,DT_FIM_PROG ) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.solicitante+'\','+ this.req.body.layout+','+ this.req.body.ct+','+ this.req.body.tipoManut+','+ this.req.body.causa+',\''+ this.req.body.def+'\',NOW(), \''+ this.req.body.obs+'\','+this.req.body.prior+', 1,'+this.req.body.setor+',\''+this.req.body.requerParada+'\',\''+this.req.body.dtIniPlan+'\',\''+this.req.body.dtIniProg+'\',\''+this.req.body.dtFimPlan+'\',\''+this.req.body.dtFimProg+'\');';
     }
     private insertEQUIPSQL(equip : any, id : any){
         return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER) values ('+ id+','+ equip.id+',\''+ equip.oper+'\');';
