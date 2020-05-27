@@ -39,8 +39,8 @@ var InviteOMAction = /** @class */ (function (_super) {
     InviteOMAction.prototype.insertSQL = function () {
         return 'insert into TBUSUARIO_WITH_TBOM (TBUSUARIO_WITH_TBOM.IDMANUT, TBUSUARIO_WITH_TBOM.IDOM) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\');';
     };
-    InviteOMAction.prototype.historico = function () {
-        var desc = 'Usuário com id = ' + this.req.body.idAdm + ' convidou o usuário com id = ' + this.req.body.idUser + ' para a OM com id = ' + this.req.body.idOm;
+    InviteOMAction.prototype.historico = function (nomeADM, manutNome) {
+        var desc = 'Manuntentor ' + nomeADM + ' convidou o manutentor ' + manutNome + ' para a OM';
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idAdm + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
     };
     InviteOMAction.prototype.generateSQL = function () {
@@ -50,45 +50,50 @@ var InviteOMAction = /** @class */ (function (_super) {
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idAdm + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
     };
     InviteOMAction.prototype.validateADM = function () {
-        return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idAdm + '\' AND STATUS = 1;';
+        return 'select CARGO,NOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idAdm + '\' AND STATUS = 1;';
+    };
+    InviteOMAction.prototype.validateManut = function () {
+        return 'select CARGO,NOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
     };
     InviteOMAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
-            console.log(adm);
             if (adm[0].CARGO == 1) {
-                console.log(_this.req.body);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
-                    console.log(admon);
-                    if (admon.length || admon.length > 0) {
-                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL()).subscribe(function (data) {
-                            console.log(data);
-                            if (data.length || data.length > 0) {
-                                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
-                                return;
-                            }
-                            else {
-                                console.log('ELSE');
-                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data1) {
-                                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico()).subscribe(function (data2) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.validateManut()).subscribe(function (manut) {
+                    if (manut[0].CARGO == 1) {
+                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
+                            if (admon.length || admon.length > 0) {
+                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL()).subscribe(function (data) {
+                                    if (data.length || data.length > 0) {
+                                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
+                                        return;
+                                    }
+                                    else {
+                                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data1) {
+                                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(adm[0].NOME, manut[0].NOME)).subscribe(function (data2) {
+                                            });
+                                        });
+                                    }
+                                    _this.sendAnswer({
+                                        token: new vputils_1.VPUtils().generateGUID().toUpperCase()
                                     });
+                                }, function (error) {
+                                    _this.sendError(error);
                                 });
                             }
-                            _this.sendAnswer({
-                                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-                            });
-                        }, function (error) {
-                            _this.sendError(error);
+                            else {
+                                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                            }
                         });
                     }
                     else {
-                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para receber a OM'));
                     }
                 });
             }
             else {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para convidar'));
             }
         });
     };

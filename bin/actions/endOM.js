@@ -49,8 +49,14 @@ var EndOMAction = /** @class */ (function (_super) {
             return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', TBOM.DTBAIXA_ADMIN = \'' + horaatual + '\' WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
         }
     };
-    EndOMAction.prototype.historico = function () {
-        var desc = 'Usuário com id = ' + this.req.body.idUser + ' finalizou a OM com id = ' + this.req.body.idOm;
+    EndOMAction.prototype.historico = function (nome, estado) {
+        var desc = 'Manutentor ' + nome + ' assinou a OM';
+        if (estado == 4) {
+            desc = 'Líder ' + nome + ' assinou a OM';
+        }
+        else if (estado == 5) {
+            desc = 'Administrador ' + nome + ' assinou a OM';
+        }
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
     };
     EndOMAction.prototype.generateSQL = function () {
@@ -60,23 +66,23 @@ var EndOMAction = /** @class */ (function (_super) {
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\'';
     };
     EndOMAction.prototype.validateADM = function () {
-        return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
+        return 'select CARGO,NOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
     };
     EndOMAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
-            var estado = adm.CARGO + 2;
+            var estado = adm[0].CARGO + 2;
             new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
-                if (admon.length || admon.length > 0 || adm.CARGO > 1) {
+                if (admon.length || admon.length > 0 || adm[0].CARGO > 1) {
                     new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL()).subscribe(function (data) {
-                        if (data.ESTADO > estado) {
+                        if (data[0].ESTADO > estado) {
                             _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Estado setado é menor que o atual.'));
                             return;
                         }
                         else {
                             new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL(estado)).subscribe(function (data) {
-                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico()).subscribe(function (data) {
+                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(adm[0].NOME, estado)).subscribe(function (data) {
                                 });
                             });
                         }

@@ -50,7 +50,7 @@ var OMAction = /** @class */ (function (_super) {
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
     OMAction.prototype.selectEquipWOM = function () {
-        return 'SELECT TBEQUIP.NOME EQUIPNOME, TBEQUIP_WITH_TBOM.OPER from TBEQUIP_WITH_TBOM INNER JOIN TBEQUIP ON TBEQUIP_WITH_TBOM.IDEQUIP = TBEQUIP.ID where TBEQUIP_WITH_TBOM.IDOM = \'' + this.req.body.idom + '\';';
+        return 'SELECT TBEQUIP.NOME EQUIPNOME, TBEQUIP_WITH_TBOM.OPER,TBEQUIP_WITH_TBOM.OPER_REALIZADA from TBEQUIP_WITH_TBOM INNER JOIN TBEQUIP ON TBEQUIP_WITH_TBOM.IDEQUIP = TBEQUIP.ID where TBEQUIP_WITH_TBOM.IDOM = \'' + this.req.body.idom + '\';';
     };
     OMAction.prototype.generateSQL = function () {
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\'  AND STATUS = 1;';

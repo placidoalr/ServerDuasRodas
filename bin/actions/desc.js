@@ -38,9 +38,8 @@ var DescOMAction = /** @class */ (function (_super) {
     DescOMAction.prototype.insertSQL = function () {
         return 'insert into TB_OM_DESC (TB_OM_DESC.IDMANUT, TB_OM_DESC.IDOM, TB_OM_DESC.DESC, TB_OM_DESC.TEMPO_UTIL) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.desc + '\',\'' + this.req.body.time + '\');';
     };
-    DescOMAction.prototype.historico = function () {
-        var desc = 'Usuário com id = ' + this.req.body.idUser + ' adicionou um comentário para a OM com id = ' + this.req.body.idOm;
-        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
+    DescOMAction.prototype.insertRota = function () {
+        return 'insert into TB_OM_DESC_ROTA (TB_OM_DESC_ROTA.IDMANUT, TB_OM_DESC_ROTA.IDOM, TB_OM_DESC_ROTA.DESC, TB_OM_DESC_ROTA.TEMPO_UTIL, TB_OM_DESC_ROTA.IDEQUIP) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.desc + '\',\'' + this.req.body.time + '\',\'' + this.req.body.idequip + '\');';
     };
     DescOMAction.prototype.ADMonOM = function () {
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
@@ -48,15 +47,58 @@ var DescOMAction = /** @class */ (function (_super) {
     DescOMAction.prototype.validateADM = function () {
         return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
     };
+    DescOMAction.prototype.updateEQUIPSQL = function (id) {
+        return 'update TBEQUIP_WITH_TBOM set OPER_REALIZADA = 1 where IDEQUIP = ' + id + ' and IDOM = ' + this.req.body.idOm + ';';
+    };
     DescOMAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
-            if (adm.CARGO == 1) {
+            if (adm[0].CARGO == 1) {
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
                     if (admon.length || admon.length > 0) {
                         new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico()).subscribe(function (data) {
+                        });
+                    }
+                    else {
+                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                    }
+                });
+            }
+            else {
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
+            }
+        });
+    };
+    DescOMAction.prototype.PostRota = function () {
+        var _this = this;
+        this.validateData();
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
+            if (adm[0].CARGO == 1) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
+                    if (admon.length || admon.length > 0) {
+                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertRota()).subscribe(function (data) {
+                        });
+                    }
+                    else {
+                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                    }
+                });
+            }
+            else {
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
+            }
+        });
+    };
+    DescOMAction.prototype.PostLista = function () {
+        var _this = this;
+        this.validateData();
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
+            if (adm[0].CARGO == 1) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
+                    if (admon.length || admon.length > 0) {
+                        _this.req.body.equips.forEach(function (equip) {
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateEQUIPSQL(equip.id)).subscribe(function (data1) {
                             });
                         });
                     }
@@ -79,6 +121,18 @@ var DescOMAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], DescOMAction.prototype, "Post", null);
+    __decorate([
+        decorators_1.Post('/DescOMRota'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], DescOMAction.prototype, "PostRota", null);
+    __decorate([
+        decorators_1.Post('/DescOMLista'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], DescOMAction.prototype, "PostLista", null);
     return DescOMAction;
 }(action_1.Action));
 exports.DescOMAction = DescOMAction;

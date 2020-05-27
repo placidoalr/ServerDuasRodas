@@ -62,9 +62,7 @@ var UserAction = /** @class */ (function (_super) {
     };
     UserAction.prototype.Post = function () {
         var _this = this;
-        console.log(this.req.body);
         this.validateData();
-        console.log("validate");
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
             console.log(data);
             if (data.length || data.length > 0) {

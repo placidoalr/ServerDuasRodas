@@ -39,37 +39,47 @@ var DelegateOMAction = /** @class */ (function (_super) {
     DelegateOMAction.prototype.insertSQL = function () {
         return 'insert into TBUSUARIO_WITH_TBOM (TBUSUARIO_WITH_TBOM.IDMANUT, TBUSUARIO_WITH_TBOM.IDOM) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\');';
     };
-    DelegateOMAction.prototype.historico = function () {
-        var desc = 'Usuário com id = ' + this.req.body.idAdm + ' delegou a OM com id = ' + this.req.body.idOm + ' para o usuário com id = ' + this.req.body.idUser;
+    DelegateOMAction.prototype.historico = function (nomeADM, manutNome) {
+        var desc = 'Lider ' + nomeADM + ' delegou a OM para o manutentor ' + manutNome;
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idAdm + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
     };
     DelegateOMAction.prototype.generateSQL = function () {
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
     };
     DelegateOMAction.prototype.validateADM = function () {
-        return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idAdm + '\' AND STATUS = 1;';
+        return 'select CARGO,NOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idAdm + '\' AND STATUS = 1;';
+    };
+    DelegateOMAction.prototype.validateManut = function () {
+        return 'select CARGO,NOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
     };
     DelegateOMAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
-            if (adm.CARGO = 1) {
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL()).subscribe(function (data) {
-                    if (data.length || data.length > 0) {
-                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
-                        return;
-                    }
-                    else {
-                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico()).subscribe(function (data) {
+            if (adm[0].CARGO != 1) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.validateManut()).subscribe(function (manut) {
+                    if (manut[0].CARGO == 1) {
+                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL()).subscribe(function (data) {
+                            if (data.length || data.length > 0) {
+                                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
+                                return;
+                            }
+                            else {
+                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
+                                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(adm[0].NOME, manut[0].NOME)).subscribe(function (data) {
+                                    });
+                                });
+                            }
+                            _this.sendAnswer({
+                                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
                             });
+                        }, function (error) {
+                            _this.sendError(error);
                         });
                     }
-                    _this.sendAnswer({
-                        token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-                    });
-                }, function (error) {
-                    _this.sendError(error);
+                    else {
+                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário não é um manutentor'));
+                    }
                 });
             }
             else {

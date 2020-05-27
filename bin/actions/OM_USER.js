@@ -42,8 +42,8 @@ var OMUserAction = /** @class */ (function (_super) {
     OMUserAction.prototype.updateOM = function () {
         return 'update TBOM set ESTADO = 2 where TBOM.ID = \'' + this.req.body.idOm + '\';';
     };
-    OMUserAction.prototype.historico = function () {
-        var desc = 'Usuário com id = ' + this.req.body.idUser + ' assumiu a OM com id = ' + this.req.body.idOm;
+    OMUserAction.prototype.historico = function (nome) {
+        var desc = 'Manutentor ' + nome + ' assumiu a OM';
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
     };
     OMUserAction.prototype.generateSQL = function () {
@@ -65,25 +65,34 @@ var OMUserAction = /** @class */ (function (_super) {
             return 'select TBOM.*,TBSETOR.NOME as TBSETORNOME,TBCT.NOME as TBCTNOME,TBLAYOUTOM.NOME as TBLAYOUTOMNOME,TBTIPOMAN.NOME as TBTIPOMANNOME, TBCAUSADEF.DSCAUSA as TBCAUSADEFNOME, TBPRIORIDADE.NOME as TBPRIORIDADENOME from TBOM INNER JOIN TBSETOR ON TBOM.SETOR_ATRIB = TBSETOR.ID inner join TBCT on TBOM.IDCT = TBCT.ID inner join TBLAYOUTOM on TBOM.IDLAYOUT = TBLAYOUTOM.ID INNER JOIN TBTIPOMAN ON TBOM.TPOM = TBTIPOMAN.ID INNER JOIN TBCAUSADEF ON TBOM.CAUSADEF = TBCAUSADEF.ID INNER JOIN TBPRIORIDADE ON TBOM.PRIORIDADE = TBPRIORIDADE.ID INNER JOIN TBUSUARIO_WITH_TBOM ON TBOM.ID = TBUSUARIO_WITH_TBOM.IDOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBOM.ESTADO = 3 AND  TBOM.STATUS = 1  LIMIT 100;';
         }
     };
+    OMUserAction.prototype.validateADM = function () {
+        return 'select CARGO,NOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
+    };
     OMUserAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
-            if (data.length || data.length > 0) {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
-                return;
-            }
-            else {
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateOM()).subscribe(new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico()).subscribe(function (data) {
-                    }));
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
+            if (adm[0].CARGO == 1) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL()).subscribe(function (data) {
+                    if (data.length || data.length > 0) {
+                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
+                        return;
+                    }
+                    else {
+                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateOM()).subscribe(function (data) {
+                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(adm[0].NOME)).subscribe(function (data) {
+                                });
+                            });
+                        });
+                    }
+                    _this.sendAnswer({
+                        token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+                    });
+                }, function (error) {
+                    _this.sendError(error);
                 });
             }
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-            });
-        }, function (error) {
-            _this.sendError(error);
         });
     };
     OMUserAction.prototype.Get = function () {

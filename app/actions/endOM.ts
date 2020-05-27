@@ -12,13 +12,12 @@ export class EndOMAction extends Action{
     }
     private insertSQL(estado : any) : string{
         
-        let horaatual = Date.now();
         if(estado == 3){
-            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_MANUT = \''+ horaatual+'\' WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
+            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_MANUT = \'DATE(CURRENT_TIMESTAMP)\' WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
         }else if(estado == 4){
-            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_SETOR = \''+ horaatual+'\' WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
+            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_SETOR = \'DATE(CURRENT_TIMESTAMP)\' WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
         }else {
-            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_ADMIN = \''+ horaatual+'\' WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
+            return 'update TBOM SET TBOM.ESTADO = \''+ estado+'\', TBOM.DTBAIXA_ADMIN = \'DATE(CURRENT_TIMESTAMP)\' WHERE TBOM.ID = \''+ this.req.body.idOm+'\';';
         }
     }
     private historico(nome : any,estado : any) : string{
