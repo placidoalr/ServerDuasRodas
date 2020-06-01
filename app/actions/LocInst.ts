@@ -6,40 +6,40 @@ import {KernelUtils} from '../kernel/kernel-utils';
 import {MySQL} from '../mysql/mysql';
 import {MySQLFactory} from '../mysql/mysql_factory';
 
-export class SetorAction extends Action{
+export class LOC_INSTAction extends Action{
 
     private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o Setor', this.req.body.name == '' || this.req.body.name == undefined || this.req.body.idsap == '' || this.req.body.idsap == undefined);
+        new KernelUtils().createExceptionApiError('1001', 'Informe o Local de instalação', this.req.body.name == '' || this.req.body.name == undefined || this.req.body.idsap == '' || this.req.body.idsap == undefined);
     }
 
     private generateSQL(){
-        return 'select * from TBSETOR where (TBSETOR.NOME = \'' + this.req.body.name + '\' AND \'' + this.req.body.name + '\' != \'' + this.req.body.namelast + '\' ) \
-        OR (TBSETOR.IDSAP = \'' + this.req.body.idsap + '\' AND \'' + this.req.body.idsap + '\' != \'' + this.req.body.idsaplast + '\' ) AND STATUS = 1;';
+        return 'select * from TBLOC_INST where (TBLOC_INST.NOME = \'' + this.req.body.name + '\' AND \'' + this.req.body.name + '\' != \'' + this.req.body.namelast + '\' ) \
+        OR (TBLOC_INST.IDSAP = \'' + this.req.body.idsap + '\' AND \'' + this.req.body.idsap + '\' != \'' + this.req.body.idsaplast + '\' ) AND STATUS = 1;';
     }
     private generateADDSQL(){
-        return 'select * from TBSETOR where (TBSETOR.ID = \'' + this.req.body.ID + '\') AND STATUS = 1;';
+        return 'select * from TBLOC_INST where (TBLOC_INST.ID = \'' + this.req.body.ID + '\') AND STATUS = 1;';
     }
 
     private selectSQL() : string {
-        return 'select S.ID,S.IDSAP,S.NOME, U.NOME as LIDER from TBSETOR as S inner join TBUSUARIO as U on U.ID = S.IDLIDER where S.STATUS = 1;';
+        return 'select S.ID,S.IDSAP,S.NOME, U.NOME as LIDER from TBLOC_INST as S inner join TBUSUARIO as U on U.ID = S.IDLIDER where S.STATUS = 1;';
     }
 
     private deleteSQL() : string {
-        return 'UPDATE TBSETOR SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
+        return 'UPDATE TBLOC_INST SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
 
     private editSQL() : string {
-        return 'UPDATE TBSETOR SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\', IDLIDER = \'' + this.req.body.idlider + '\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
+        return 'UPDATE TBLOC_INST SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\', IDLIDER = \'' + this.req.body.idlider + '\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
 
 
     private insertSQL() : string{
-        return 'insert into TBSETOR (TBSETOR.NOME,TBSETOR.IDSAP, TBSETOR.IDLIDER) values (\''+ this.req.body.name+'\',\''+ this.req.body.idsap+'\',\''+ this.req.body.idlider+'\');';
+        return 'insert into TBLOC_INST (TBLOC_INST.NOME,TBLOC_INST.IDSAP, TBLOC_INST.IDLIDER) values (\''+ this.req.body.name+'\',\''+ this.req.body.idsap+'\',\''+ this.req.body.idlider+'\');';
     }
 
 
 
-    @Post('/AddSETOR')
+    @Post('/AddLOC_INST')
     public Post(){
         this.validateData();
 
@@ -48,7 +48,7 @@ export class SetorAction extends Action{
                 console.log(data);
                 if (data.length || data.length > 0){
                     //console.log("Centro de trabalho já existe "+data);
-                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Setor já existe'));
+                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Local de instalação já existe'));
                   return;
                 }else{
                     console.log(data);
@@ -68,8 +68,8 @@ export class SetorAction extends Action{
         );
     }
 
-    @Get('/GetSETOR')
-    public GetSetor(){
+    @Get('/GetLOC_INST')
+    public GetLOC_INST(){
         
         new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
             (data : any) => {
@@ -81,7 +81,7 @@ export class SetorAction extends Action{
         );
     }
 
-    @Post('/DelSETOR')
+    @Post('/DelLOC_INST')
     public PatchCT(){
         //console.log("ENTROU"+this.req.body.name)
         new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
@@ -94,14 +94,14 @@ export class SetorAction extends Action{
             }
         );
 }
-@Post('/EditSETOR')
-    public EditSetor(){
+@Post('/EditLOC_INST')
+    public EditLOC_INST(){
 
         // new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
         //     (data : any) => {
         //         if (data.length || data.length > 0){
         //             //console.log(data);
-        //           this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Novo Setor já existe'));
+        //           this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Novo LOC_INST já existe'));
         //           return;
         //         }else{
                     //console.log(data);

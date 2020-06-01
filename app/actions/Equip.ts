@@ -21,10 +21,10 @@ export class EquipAction extends Action{
     
     }
     private insertSQL() : string{
-        return 'insert into TBEQUIP (TBEQUIP.IDSAP ,TBEQUIP.NOME, TBEQUIP.SETOR_ATRIB) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.name +'\', \''+ this.req.body.setor+'\');';
+        return 'insert into TBEQUIP (TBEQUIP.IDSAP ,TBEQUIP.NOME, TBEQUIP.LOC_INST_ATRIB, TBEQUIP.LOCAL, TBEQUIP.EQUIP_SUP) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.name +'\', \''+ this.req.body.li+'\',\''+ this.req.body.local +'\', \''+ this.req.body.equipsup+'\');';
     }
     private selectSQL() : string {
-        return 'select TBEQUIP.*,TBSETOR.NOME as TBSETORNOME from TBEQUIP INNER JOIN TBSETOR ON TBEQUIP.SETOR_ATRIB = TBSETOR.ID where TBEQUIP.STATUS = 1;';
+        return 'select TBEQUIP.*,TBLOC_INST.NOME as TBLOC_INSTNOME from TBEQUIP INNER JOIN TBLOC_INST ON TBEQUIP.LOC_INST_ATRIB = TBLOC_INST.ID where TBEQUIP.STATUS = 1;';
     }
     
     private deleteSQL() : string {
@@ -34,7 +34,8 @@ export class EquipAction extends Action{
     private editSQL() : string {
         
         return 'UPDATE TBEQUIP SET NOME = \'' + this.req.body.name + '\', IDSAP = \'' + this.req.body.idsap + '\', \
-        SETOR_ATRIB = \'' + this.req.body.setor + '\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
+        LOC_INST_ATRIB = \'' + this.req.body.li + '\', LOCAL = \'' + this.req.body.local + '\', \
+        EQUIP_SUP = \'' + this.req.body.equipsup + '\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
     
     
