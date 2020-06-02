@@ -21,6 +21,8 @@ import {selectManutsAction} from './selectManuts';
 import {HistoricoAction} from './historico';
 import {EPIAction} from './Epis';
 import {OMEPIAction} from './OM_EPI';
+import {OperAction} from './Oper';
+import {MaterialAction} from './Material';
 
 
 export {LogonAction};
@@ -46,3 +48,5 @@ export {selectManutsAction}
 export {HistoricoAction}
 export {EPIAction}
 export {OMEPIAction}
+export {OperAction}
+export {MaterialAction}
