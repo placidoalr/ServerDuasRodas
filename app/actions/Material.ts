@@ -15,7 +15,7 @@ export class MaterialAction extends Action{
         return 'select * from TBMATERIAL where TBMATERIAL.DESC = \'' + this.req.body.desc + '\' AND STATUS = 1;';
     }
     private selectSQL() : string {
-        return 'select ID,DESC,IDSAP from TBMATERIAL where STATUS = 1;';
+        return 'select TBMATERIAL.ID,TBMATERIAL.DESC,TBMATERIAL.IDSAP from TBMATERIAL where STATUS = 1;';
     }
 
     private deleteSQL() : string {

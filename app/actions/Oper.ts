@@ -15,7 +15,7 @@ export class OperAction extends Action{
         return 'select * from TBOPERACAO where TBOPERACAO.DESC = \'' + this.req.body.desc + '\' AND STATUS = 1;';
     }
     private selectSQL() : string {
-        return 'select ID,DESC,IDSAP from TBOPERACAO where STATUS = 1;';
+        return 'select TBOPERACAO.ID,TBOPERACAO.DESC,TBOPERACAO.IDSAP from TBOPERACAO where STATUS = 1;';
     }
 
     private deleteSQL() : string {
