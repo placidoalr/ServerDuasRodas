@@ -22,8 +22,11 @@ export class OMAction extends Action{
     private insertEQUIPSQL(equip : any, id : any){
         return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER) values ('+ id+','+ equip.id+',\''+ equip.oper+'\');';
     }
-    private insertOPERSQL(equip : any, id : any){
-     //   return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER) values ('+ id+','+ equip.id+',\''+ equip.oper+'\');';//
+    private insertMATSQL(mat : any, id : any){
+        return 'insert into TBMAT_WITH_OM (IDOM, IDMAT, QTD) values ('+ id+','+ mat.id+',\''+ mat.qtd+'\');';
+    }
+    private insertOPERSQL(oper : any, id : any){
+        return 'insert into TBOPER_WITH_OM (IDOM, IDOPER) values ('+ id+'\''+ oper.id+'\');';
     }
     private generateADDSQL(){
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
@@ -112,6 +115,15 @@ export class OMAction extends Action{
                             if(this.req.body.opers.length()){
                                 this.req.body.opers.forEach((oper: any) => {
                                     new MySQLFactory().getConnection().select(this.insertOPERSQL(oper,data.insertId)).subscribe(
+                                        (data1 : any) => {
+                                    
+                                        }
+                                    );
+                                });
+                            }
+                            if(this.req.body.mats.length()){
+                                this.req.body.mats.forEach((mat: any) => {
+                                    new MySQLFactory().getConnection().select(this.insertOPERSQL(mat,data.insertId)).subscribe(
                                         (data1 : any) => {
                                     
                                         }
