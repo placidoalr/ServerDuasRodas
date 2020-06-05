@@ -22,6 +22,9 @@ export class OMAction extends Action{
     private insertEQUIPSQL(equip : any, id : any){
         return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER) values ('+ id+','+ equip.id+',\''+ equip.oper+'\');';
     }
+    private insertOPERSQL(equip : any, id : any){
+     //   return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER) values ('+ id+','+ equip.id+',\''+ equip.oper+'\');';//
+    }
     private generateADDSQL(){
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
@@ -103,12 +106,21 @@ export class OMAction extends Action{
                                 new MySQLFactory().getConnection().select(this.insertEQUIPSQL(equip,data.insertId)).subscribe(
                                     (data1 : any) => {
                                 
-                        });
+                                    }
+                                );
                             });
-                                   
+                            if(this.req.body.opers.length()){
+                                this.req.body.opers.forEach((oper: any) => {
+                                    new MySQLFactory().getConnection().select(this.insertOPERSQL(oper,data.insertId)).subscribe(
+                                        (data1 : any) => {
+                                    
+                                        }
+                                    );
+                                });
+                            }
                         }
                     );
-                // }
+            // }
                 this.sendAnswer({
                     token    : new VPUtils().generateGUID().toUpperCase()
                 });
