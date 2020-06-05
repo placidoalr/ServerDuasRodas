@@ -34,6 +34,14 @@ export class OMAction extends Action{
     private selectEquipWOM(){
         return 'SELECT TBEQUIP.NOME EQUIPNOME, TBEQUIP_WITH_TBOM.OPER,TBEQUIP_WITH_TBOM.OPER_REALIZADA from TBEQUIP_WITH_TBOM INNER JOIN TBEQUIP ON TBEQUIP_WITH_TBOM.IDEQUIP = TBEQUIP.ID where TBEQUIP_WITH_TBOM.IDOM = \'' + this.req.body.idom + '\';';
     }
+    
+    private selectMATWOM(){
+        return 'SELECT TBMATERIAL.DESC MATDESC,TBMATERIAL.UN_MEDIDA MATMEDIDA, TBMAT_WITH_OM.QTDE from TBMAT_WITH_OM INNER JOIN TBMATERIAL ON TBMAT_WITH_OM.IDMAT = TBMATERIAL.ID where TBMAT_WITH_OM.IDOM = \'' + this.req.body.idom + '\';';
+    }
+    
+    private selectOPERWOM(){
+        return 'SELECT TBOPERACAO.DESC OPERDESC from TBOPER_WITH_OM INNER JOIN TBEQUIP ON TBOPER_WITH_OM.IDEQUIP = TBOPERACAO.ID where TBOPER_WITH_OM.IDOM = \'' + this.req.body.idom + '\';';
+    }
     private generateSQL(){
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\'  AND STATUS = 1;';
     }
