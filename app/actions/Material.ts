@@ -15,7 +15,7 @@ export class MaterialAction extends Action{
         return 'select * from TBMATERIAL where TBMATERIAL.DESC = \'' + this.req.body.desc + '\' AND STATUS = 1;';
     }
     private selectSQL() : string {
-        return 'select TBMATERIAL.ID,TBMATERIAL.DESC,TBMATERIAL.IDSAP from TBMATERIAL where STATUS = 1;';
+        return 'select TBMATERIAL.ID,TBMATERIAL.DESC,TBMATERIAL.IDSAP,TBMATERIAL.UN_MEDIDA from TBMATERIAL where STATUS = 1;';
     }
 
     private deleteSQL() : string {
@@ -23,7 +23,7 @@ export class MaterialAction extends Action{
     }
 
     private insertSQL() : string{
-        return 'insert into TBMATERIAL (TBMATERIAL.DESC,TBMATERIAL.IDSAP) values (\''+ this.req.body.desc+'\',\''+ this.req.body.idsap+'\');';
+        return 'insert into TBMATERIAL (TBMATERIAL.DESC,TBMATERIAL.IDSAP,TBMATERIAL.UN_MEDIDA) values (\''+ this.req.body.desc+'\',\''+ this.req.body.idsap+'\',\''+ this.req.body.medida+'\');';
     }
 
     @Post('/AddMATERIAL')
