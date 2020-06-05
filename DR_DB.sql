@@ -101,6 +101,7 @@
     `ID` INT NOT NULL  AUTO_INCREMENT,
     `IDSAP` VARCHAR(45) NOT NULL,
     `DESC` VARCHAR(45) NULL NOT NULL,
+    `UN_MEDIDA` VARCHAR(10) NULL NOT NULL,
     `STATUS` INT NOT NULL DEFAULT '1',
     PRIMARY KEY (`ID`)
   );
@@ -198,11 +199,23 @@
     `ID` INT NOT NULL AUTO_INCREMENT,
     `IDOM` INT NOT NULL,
     `IDEQUIP` INT NOT NULL,
-    `OPER` VARCHAR(250) DEFAULT NULL, /* Operação que deverá ser realizada sobre o equipamento */
+    `OPER` INT DEFAULT NULL, /* Operação que deverá ser realizada sobre o equipamento */
     `OPER_REALIZADA` INT DEFAULT NULL, /* Deverá gravar 1 se o manutentor preencher o checkbox no momento da OM LISTA */
+    `MAT_UTIL` INT DEFAULT NULL, /* Deverá gravar o material que sera necessário para realizar a operação no equipamento !! Apenas nas om rota !! */
+    `QTDE_MAT` FLOAT DEFAULT NULL, /* Qt que sera utilizada do material. */
     PRIMARY KEY(`ID`),
     FOREIGN KEY (`IDEQUIP`) REFERENCES `DRDB`.`TBEQUIP` (`ID`),
-    FOREIGN KEY (`IDOM`) REFERENCES `DRDB`.`TBOM` (`ID`)
+    FOREIGN KEY (`OPER`) REFERENCES `DRDB`.`TBOPERACAO` (`ID`),
+    FOREIGN KEY (`IDOM`) REFERENCES `DRDB`.`TBOM` (`ID`),
+    FOREIGN KEY (`MAT_UTIL`) REFERENCES `DRDB`.`TBMATERIAL` (`ID`)
+  );
+
+  CREATE TABLE IF NOT EXISTS `DRDB`.`TBOPER_WITH_OM` ( /* QUANDO SE TRATA DE OM CORRETIVA/PREVENTIVA/LISTA */ 
+    `ID` INT NOT NULL AUTO_INCREMENT,
+    `IDOM` INT NOT NULL,
+    `OPER` INT DEFAULT NULL, /* Operação que deverá ser realizada sobre o equipamento */
+    PRIMARY KEY(`ID`),
+    FOREIGN KEY (`OPER`) REFERENCES `DRDB`.`TBOPERACAO` (`ID`),
   );
 
   CREATE TABLE if not EXISTS `DRDB`.`TBEPI_WITH_TBOM`(
