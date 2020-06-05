@@ -123,7 +123,7 @@ export class OMAction extends Action{
                             }
                             if(this.req.body.mats.length()){
                                 this.req.body.mats.forEach((mat: any) => {
-                                    new MySQLFactory().getConnection().select(this.insertOPERSQL(mat,data.insertId)).subscribe(
+                                    new MySQLFactory().getConnection().select(this.insertMATSQL(mat,data.insertId)).subscribe(
                                         (data1 : any) => {
                                     
                                         }
