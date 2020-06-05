@@ -23,7 +23,7 @@ export class OMAction extends Action{
         return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER) values ('+ id+','+ equip.id+',\''+ equip.oper+'\');';
     }
     private insertMATSQL(mat : any, id : any){
-        return 'insert into TBMAT_WITH_OM (IDOM, IDMAT, QTD) values ('+ id+','+ mat.id+',\''+ mat.qtd+'\');';
+        return 'insert into TBMAT_WITH_OM (IDOM, IDMAT, QTDE) values ('+ id+','+ mat.id+',\''+ mat.qtde+'\');';
     }
     private insertOPERSQL(oper : any, id : any){
         return 'insert into TBOPER_WITH_OM (IDOM, IDOPER) values ('+ id+'\''+ oper.id+'\');';
