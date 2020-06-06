@@ -23,10 +23,10 @@ export class OMAction extends Action{
         return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER,MAT_UTIL,QTDE_MAT) values ('+ id+','+ equip.id+',\''+ equip.oper+'\','+ equip.material+',\''+ equip.qtde+'\');';
     }
     private insertMATSQL(mat : any, id : any){
-        return 'insert into TBMAT_WITH_OM (IDOM, IDMAT, QTDE) values ('+ id+','+ mat.id+',\''+ mat.qtde+'\');';
+        return 'insert into TBMAT_WITH_OM (IDOM, IDMAT, QTDE) values ('+ id+','+ mat.id+','+ mat.qtde+');';
     }
     private insertOPERSQL(oper : any, id : any){
-        return 'insert into TBOPER_WITH_OM (IDOM, IDOPER) values ('+ id+'\','+ oper.id+'\');';
+        return 'insert into TBOPER_WITH_OM (IDOM, IDOPER) values ('+ id+','+ oper.id+');';
     }
     private generateADDSQL(){
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
