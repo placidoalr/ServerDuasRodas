@@ -32,7 +32,7 @@ export class OMAction extends Action{
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
     private selectEquipWOM(){
-        return 'SELECT TBEQUIP.NOME EQUIPNOME, TBEQUIP_WITH_TBOM.OPER,TBEQUIP_WITH_TBOM.OPER_REALIZADA, TBEQUIP_WITH_TBOM.OPER, TBEQUIP_WITH_TBOM.MAT_UTIL,QTDE_MAT from TBEQUIP_WITH_TBOM INNER JOIN TBEQUIP ON TBEQUIP_WITH_TBOM.IDEQUIP = TBEQUIP.ID where TBEQUIP_WITH_TBOM.IDOM = \'' + this.req.body.idom + '\';';
+        return 'SELECT TBEQUIP.NOME EQUIPNOME, TBEQUIP_WITH_TBOM.OPER,TBEQUIP_WITH_TBOM.OPER_REALIZADA, TBEQUIP_WITH_TBOM.OPER, TBEQUIP_WITH_TBOM.MAT_UTIL,TBEQUIP_WITH_TBOM.QTDE_MAT from TBEQUIP_WITH_TBOM INNER JOIN TBEQUIP ON TBEQUIP_WITH_TBOM.IDEQUIP = TBEQUIP.ID where TBEQUIP_WITH_TBOM.IDOM = \'' + this.req.body.idom + '\';';
     }
     
     private selectMATWOM(){
@@ -161,6 +161,30 @@ export class OMAction extends Action{
                 this.sendError(error);
             }
         );
+    }    
+    @Post('/GetMatWOM')
+    public MatWOM(){
+
+        new MySQLFactory().getConnection().select(this.selectMATWOM()).subscribe(
+            (data : any) => {
+                this.sendAnswer(data);
+            },
+            (error : any) => {
+                this.sendError(error);
+            }
+        );
+    }    
+    @Post('/GetOperWOM')
+    public OperWOM(){
+
+        new MySQLFactory().getConnection().select(this.selectOPERWOM()).subscribe(
+            (data : any) => {
+                this.sendAnswer(data);
+            },
+            (error : any) => {
+                this.sendError(error);
+            }
+        );
     }
 
     @Get('/GetOM')
@@ -274,7 +298,7 @@ export class OMAction extends Action{
                     //console.log(data);
                     new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
                         (data : any) => {
-                        //  console.log(data);
+
                         }
                     );
                 }
