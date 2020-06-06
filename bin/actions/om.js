@@ -44,13 +44,15 @@ var OMAction = /** @class */ (function (_super) {
         return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,LOC_INST_ATRIB,REQUERPARADA,DT_INI_PLAN,DT_INI_PROG,DT_FIM_PLAN,DT_FIM_PROG ) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.solicitante + '\',' + this.req.body.layout + ',' + this.req.body.ct + ',' + this.req.body.tipoManut + ',' + this.req.body.causa + ',\'' + this.req.body.def + '\',NOW(), \'' + this.req.body.obs + '\',' + this.req.body.prior + ', 1,' + this.req.body.li + ',\'' + this.req.body.requerParada + '\',\'' + this.req.body.dtIniPlan + '\',\'' + this.req.body.dtIniProg + '\',\'' + this.req.body.dtFimPlan + '\',\'' + this.req.body.dtFimProg + '\');';
     };
     OMAction.prototype.insertEQUIPSQL = function (equip, id) {
-        return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER,MAT_UTIL,QTDE_MAT) values (' + id + ',' + equip.id + ',\'' + equip.oper + '\',' + equip.material + ',\'' + equip.qtde + '\');';
+        equip.oper = (equip.oper !== undefined) ? equip.oper : null;
+        console.log(equip.oper + " OPA");
+        return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER,MAT_UTIL,QTDE_MAT) values (' + id + ',' + equip.id + ',' + (equip.oper !== undefined) ? equip.oper : null + ',' + (equip.material !== undefined) ? equip.material : null + ',' + (equip.qtde !== undefined) ? equip.qtde : null + ');';
     };
     OMAction.prototype.insertMATSQL = function (mat, id) {
-        return 'insert into TBMAT_WITH_OM (IDOM, IDMAT, QTDE) values (' + id + ',' + mat.id + ',\'' + mat.qtde + '\');';
+        return 'insert into TBMAT_WITH_OM (IDOM, IDMAT, QTDE) values (' + id + ',' + mat.id ? null : null + ',' + mat.qtde ? undefined : null + ');';
     };
     OMAction.prototype.insertOPERSQL = function (oper, id) {
-        return 'insert into TBOPER_WITH_OM (IDOM, IDOPER) values (' + id + '\'' + oper.id + '\');';
+        return 'insert into TBOPER_WITH_OM (IDOM, IDOPER) values (' + id + ',' + oper.id + ');';
     };
     OMAction.prototype.generateADDSQL = function () {
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
@@ -137,18 +139,10 @@ var OMAction = /** @class */ (function (_super) {
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertEQUIPSQL(equip, data.insertId)).subscribe(function (data1) {
                 });
             });
-            if (_this.req.body.opers.length()) {
-                _this.req.body.opers.forEach(function (oper) {
-                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertOPERSQL(oper, data.insertId)).subscribe(function (data1) {
-                    });
+            _this.req.body.opers.forEach(function (oper) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertOPERSQL(oper, data.insertId)).subscribe(function (data1) {
                 });
-            }
-            if (_this.req.body.mats.length()) {
-                _this.req.body.mats.forEach(function (mat) {
-                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertMATSQL(mat, data.insertId)).subscribe(function (data1) {
-                    });
-                });
-            }
+            });
         });
         // }
         this.sendAnswer({

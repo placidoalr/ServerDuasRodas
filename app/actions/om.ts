@@ -20,7 +20,9 @@ export class OMAction extends Action{
         return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,LOC_INST_ATRIB,REQUERPARADA,DT_INI_PLAN,DT_INI_PROG,DT_FIM_PLAN,DT_FIM_PROG ) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.solicitante+'\','+ this.req.body.layout+','+ this.req.body.ct+','+ this.req.body.tipoManut+','+ this.req.body.causa+',\''+ this.req.body.def+'\',NOW(), \''+ this.req.body.obs+'\','+this.req.body.prior+', 1,'+this.req.body.li+',\''+this.req.body.requerParada+'\',\''+this.req.body.dtIniPlan+'\',\''+this.req.body.dtIniProg+'\',\''+this.req.body.dtFimPlan+'\',\''+this.req.body.dtFimProg+'\');';
     }
     private insertEQUIPSQL(equip : any, id : any){
-        return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER,MAT_UTIL,QTDE_MAT) values ('+ id+','+ equip.id+','+(equip.oper === undefined) ? null : equip.oper+','+ (equip.material === undefined) ? null : equip.material +','+ (equip.qtde === undefined) ? null :equip.qtde +');';
+        equip.oper = (equip.oper !== undefined) ? equip.oper : null;
+        console.log(equip.oper + " OPA")
+        return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER,MAT_UTIL,QTDE_MAT) values ('+ id+','+ equip.id+','+(equip.oper !== undefined) ? equip.oper : null +','+ (equip.material !== undefined) ? equip.material : null +','+ (equip.qtde !== undefined) ? equip.qtde : null +');';
     }
     private insertMATSQL(mat : any, id : any){
         return 'insert into TBMAT_WITH_OM (IDOM, IDMAT, QTDE) values ('+ id+','+ mat.id?null:null+','+ mat.qtde?undefined:null +');';
