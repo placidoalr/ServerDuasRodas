@@ -127,13 +127,6 @@ export class OMAction extends Action{
                                         }
                                     );
                                 });
-                                this.req.body.mats.forEach((mat: any) => {
-                                    new MySQLFactory().getConnection().select(this.insertMATSQL(mat,data.insertId)).subscribe(
-                                        (data1 : any) => {
-                                    
-                                        }
-                                    );
-                                });
                             }
                     );
             // }
