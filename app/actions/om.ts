@@ -120,7 +120,6 @@ export class OMAction extends Action{
                                     }
                                 );
                             });
-                            if(this.req.body.opers.length()){
                                 this.req.body.opers.forEach((oper: any) => {
                                     new MySQLFactory().getConnection().select(this.insertOPERSQL(oper,data.insertId)).subscribe(
                                         (data1 : any) => {
@@ -128,8 +127,6 @@ export class OMAction extends Action{
                                         }
                                     );
                                 });
-                            }
-                            if(this.req.body.mats.length()){
                                 this.req.body.mats.forEach((mat: any) => {
                                     new MySQLFactory().getConnection().select(this.insertMATSQL(mat,data.insertId)).subscribe(
                                         (data1 : any) => {
@@ -138,7 +135,6 @@ export class OMAction extends Action{
                                     );
                                 });
                             }
-                        }
                     );
             // }
                 this.sendAnswer({

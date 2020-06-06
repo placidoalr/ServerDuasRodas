@@ -38,15 +38,14 @@ var EndOMAction = /** @class */ (function (_super) {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o ID do Manutentor do Convidado e ID  da Ordem de manutenção', this.req.body.idUser == '' || this.req.body.idUser == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined);
     };
     EndOMAction.prototype.insertSQL = function (estado) {
-        var horaatual = Date.now();
         if (estado == 3) {
-            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', TBOM.DTBAIXA_MANUT = \'' + horaatual + '\' WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
+            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', TBOM.DTBAIXA_MANUT = NOW() WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
         }
         else if (estado == 4) {
-            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', TBOM.DTBAIXA_SETOR = \'' + horaatual + '\' WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
+            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', TBOM.DTBAIXA_SETOR = NOW() WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
         }
         else {
-            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', TBOM.DTBAIXA_ADMIN = \'' + horaatual + '\' WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
+            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', TBOM.DTBAIXA_ADMIN = NOW() WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
         }
     };
     EndOMAction.prototype.historico = function (nome, estado) {
