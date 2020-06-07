@@ -79,6 +79,8 @@ export class OMUserAction extends Action{
                             this.sendError(error);
                         }
                     );
+                }else{
+                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário não é um manutentor'));
                 }
             });
     }
