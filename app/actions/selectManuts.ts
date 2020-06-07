@@ -13,8 +13,8 @@ export class selectManutsAction extends Action{
         return 'select ID,NOME from TBUSUARIO where TBUSUARIO.ID != \'' + this.req.body.idUser + '\' and TBUSUARIO.CARGO = 1;';
     }
     
-    @Get('/GetManuts')
-    public Get(){
+    @Post('/GetManuts')
+    public Post(){
         
         new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
             (data : any) => {
