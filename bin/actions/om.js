@@ -52,7 +52,7 @@ var OMAction = /** @class */ (function (_super) {
         return 'insert into TBMAT_WITH_OM (IDOM, IDMAT, QTDE) values (' + id + ',' + mat.id ? null : null + ',' + mat.qtde ? undefined : null + ');';
     };
     OMAction.prototype.insertOPERSQL = function (oper, id) {
-        return 'insert into TBOPER_WITH_OM (IDOM, IDOPER) values (' + id + ',' + oper.id + ');';
+        return 'insert into TBOPER_WITH_OM (IDOM, OPER) values (' + id + ',' + oper.id + ');';
     };
     OMAction.prototype.generateADDSQL = function () {
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
@@ -127,32 +127,23 @@ var OMAction = /** @class */ (function (_super) {
         var _this = this;
         this.validateData();
         console.log(this.req.body);
-        // new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-        //     (data : any) => {
-        //         if (data.length || data.length > 0){
-        //         this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'OM já existe'));
-        //         return;
-        //         }else{
         new mysql_factory_1.MySQLFactory().getConnection().select(this.insertSQL()).subscribe(function (data) {
-            console.log(data.insertId);
-            _this.req.body.equips.forEach(function (equip) {
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertEQUIPSQL(equip, data.insertId)).subscribe(function (data1) {
+            if (_this.req.body.tipoManut == 2) {
+                _this.req.body.equips.forEach(function (equip) {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertEQUIPSQL(equip, data.insertId)).subscribe(function (data1) {
+                    });
                 });
-            });
-            _this.req.body.opers.forEach(function (oper) {
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertOPERSQL(oper, data.insertId)).subscribe(function (data1) {
+            }
+            if (_this.req.body.opers) {
+                _this.req.body.opers.forEach(function (oper) {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertOPERSQL(oper, data.insertId)).subscribe(function (data1) {
+                    });
                 });
-            });
+            }
         });
-        // }
         this.sendAnswer({
             token: new vputils_1.VPUtils().generateGUID().toUpperCase()
         });
-        //     },
-        //     (error : any) => {
-        //         this.sendError(error);
-        //     }
-        // );
     };
     OMAction.prototype.EquipWOM = function () {
         var _this = this;

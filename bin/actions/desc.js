@@ -47,8 +47,19 @@ var DescOMAction = /** @class */ (function (_super) {
     DescOMAction.prototype.validateADM = function () {
         return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
     };
+    DescOMAction.prototype.selectDesc = function () {
+        return 'select u.NOME,d.DESC, d.TEMPO_UTIL from TBUSUARIO u inner join TB_OM_DESC d in d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
+    };
     DescOMAction.prototype.updateEQUIPSQL = function (id) {
         return 'update TBEQUIP_WITH_TBOM set OPER_REALIZADA = 1 where IDEQUIP = ' + id + ' and IDOM = ' + this.req.body.idOm + ';';
+    };
+    DescOMAction.prototype.GetDescOM = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectDesc()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
     };
     DescOMAction.prototype.Post = function () {
         var _this = this;
@@ -98,7 +109,7 @@ var DescOMAction = /** @class */ (function (_super) {
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
                     if (admon.length || admon.length > 0) {
                         _this.req.body.equips.forEach(function (equip) {
-                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateEQUIPSQL(equip.id)).subscribe(function (data1) {
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateEQUIPSQL(equip)).subscribe(function (data1) {
                             });
                         });
                     }
@@ -115,6 +126,12 @@ var DescOMAction = /** @class */ (function (_super) {
     DescOMAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
+    __decorate([
+        decorators_1.Post('/GetDescOM'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], DescOMAction.prototype, "GetDescOM", null);
     __decorate([
         decorators_1.Post('/DescOM'),
         __metadata("design:type", Function),

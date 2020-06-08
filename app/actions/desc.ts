@@ -23,11 +23,28 @@ export class DescOMAction extends Action{
     private validateADM(){
         return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
     }
+    private selectDesc(){
+        return 'select u.NOME,d.DESC, d.TEMPO_UTIL from TBUSUARIO u inner join TB_OM_DESC d in d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
+    }
     
     private updateEQUIPSQL( id : any){
         return 'update TBEQUIP_WITH_TBOM set OPER_REALIZADA = 1 where IDEQUIP = '+ id+' and IDOM = '+this.req.body.idOm+';';
     }
     
+
+    @Post('/GetDescOM')
+    public GetDescOM(){
+        
+        new MySQLFactory().getConnection().select(this.selectDesc()).subscribe(
+            (data : any) => {
+                this.sendAnswer(data);
+            },
+            (error : any) => {
+                this.sendError(error);
+            }
+        );
+    }
+
     @Post('/DescOM')
     public Post(){
         this.validateData();
@@ -91,7 +108,7 @@ export class DescOMAction extends Action{
                     if (admon.length || admon.length > 0){
 
                         this.req.body.equips.forEach((equip: any) => {
-                            new MySQLFactory().getConnection().select(this.updateEQUIPSQL(equip.id)).subscribe(
+                            new MySQLFactory().getConnection().select(this.updateEQUIPSQL(equip )).subscribe(
                                 (data1 : any) => {
                             
                             });

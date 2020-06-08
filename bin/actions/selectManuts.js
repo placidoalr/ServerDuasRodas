@@ -34,7 +34,7 @@ var selectManutsAction = /** @class */ (function (_super) {
     selectManutsAction.prototype.selectSQL = function () {
         return 'select ID,NOME from TBUSUARIO where TBUSUARIO.ID != \'' + this.req.body.idUser + '\' and TBUSUARIO.CARGO = 1;';
     };
-    selectManutsAction.prototype.Get = function () {
+    selectManutsAction.prototype.Post = function () {
         var _this = this;
         new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
             _this.sendAnswer(data);
@@ -46,11 +46,11 @@ var selectManutsAction = /** @class */ (function (_super) {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Get('/GetManuts'),
+        decorators_1.Post('/GetManuts'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], selectManutsAction.prototype, "Get", null);
+    ], selectManutsAction.prototype, "Post", null);
     return selectManutsAction;
 }(action_1.Action));
 exports.selectManutsAction = selectManutsAction;

@@ -39,8 +39,11 @@ var EPIAction = /** @class */ (function (_super) {
     EPIAction.prototype.generateSQL = function () {
         return 'select * from TBEPI where TBEPI.NOME = \'' + this.req.body.name + '\' AND STATUS = 1;';
     };
-    EPIAction.prototype.selectSQL = function () {
-        return 'select ID,NOME,IDPADRAO from TBEPI where STATUS = 1;';
+    EPIAction.prototype.selectS = function () {
+        return 'select ID,NOME,IDPADRAO from TBEPI where STATUS = 1 and UPPER(IDPADRAO) = \'S\';';
+    };
+    EPIAction.prototype.select = function () {
+        return 'select ID,NOME,IDPADRAO from TBEPI where STATUS = 1 and UPPER(IDPADRAO) != \'S\';';
     };
     EPIAction.prototype.deleteSQL = function () {
         return 'UPDATE TBEPI SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
@@ -72,7 +75,15 @@ var EPIAction = /** @class */ (function (_super) {
     };
     EPIAction.prototype.GetCT = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectS()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    EPIAction.prototype.Get = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.select()).subscribe(function (data) {
             _this.sendAnswer(data);
         }, function (error) {
             _this.sendError(error);
@@ -103,6 +114,12 @@ var EPIAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], EPIAction.prototype, "GetCT", null);
+    __decorate([
+        decorators_1.Get('/GetEPI'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], EPIAction.prototype, "Get", null);
     __decorate([
         decorators_1.Post('/DelEPI'),
         __metadata("design:type", Function),
