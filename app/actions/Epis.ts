@@ -20,6 +20,9 @@ export class EPIAction extends Action {
     private select(): string {
         return 'select ID,NOME,IDPADRAO from TBEPI where STATUS = 1 and UPPER(IDPADRAO) != \'S\';';
     }
+    private selectALL(): string {
+        return 'select ID,NOME,IDPADRAO from TBEPI where STATUS = 1';
+    }
 
     private deleteSQL(): string {
         return 'UPDATE TBEPI SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
@@ -57,7 +60,18 @@ export class EPIAction extends Action {
             }
         );
     }
+    @Get('/GetEPIall')
+    public GetepiAll() {
 
+        new MySQLFactory().getConnection().select(this.selectALL()).subscribe(
+            (data: any) => {
+                this.sendAnswer(data);
+            },
+            (error: any) => {
+                this.sendError(error);
+            }
+        );
+    }
     @Get('/GetEPIs')
     public GetCT() {
 
