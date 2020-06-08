@@ -23,11 +23,9 @@ export class OMAction extends Action {
         return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER,MAT_UTIL,QTDE_MAT) values (' + id + ',' + equip.id + ',' + (equip.oper !== undefined) ? equip.oper : null + ',' + (equip.material !== undefined) ? equip.material : null + ',' + (equip.qtde !== undefined) ? equip.qtde : null + ');';
     }
     private insertEQUIPSQL(equip: any, id: any) {
-        return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP) values (' + id + ',' + equip.id + ');';
+        return 'insert into TBEQUIP_OM (IDOM,IDEQUIP) values (' + id + ',' + equip.id + ');';
     }
-    private insertMATSQL(mat: any, id: any) {
-        return 'insert into TBMAT_WITH_OM (IDOM, IDMAT, QTDE) values (' + id + ',' + mat.id ? null : null + ',' + mat.qtde ? undefined : null + ');';
-    }
+   
     private insertOPERSQL(oper: any, id: any) {
         return 'insert into TBOPER_WITH_OM (IDOM, OPER) values (' + id + ',' + oper.id + ');';
     }
