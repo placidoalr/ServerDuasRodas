@@ -25,6 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var decorators_1 = require("../decorators");
 var action_1 = require("../kernel/action");
 var route_types_1 = require("../kernel/route-types");
+var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
 var DescOMAction = /** @class */ (function (_super) {
@@ -39,16 +40,19 @@ var DescOMAction = /** @class */ (function (_super) {
         return 'insert into TB_OM_DESC (TB_OM_DESC.IDMANUT, TB_OM_DESC.IDOM, TB_OM_DESC.DESC, TB_OM_DESC.TEMPO_UTIL) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.desc + '\',\'' + this.req.body.time + '\');';
     };
     DescOMAction.prototype.insertRota = function () {
-        return 'insert into TB_OM_DESC_ROTA (TB_OM_DESC_ROTA.IDMANUT, TB_OM_DESC_ROTA.IDOM, TB_OM_DESC_ROTA.DESC, TB_OM_DESC_ROTA.TEMPO_UTIL, TB_OM_DESC_ROTA.IDEQUIP) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.desc + '\',\'' + this.req.body.time + '\',\'' + this.req.body.idequip + '\');';
+        return 'insert into TB_OM_DESC_ROTA (TB_OM_DESC_ROTA.IDMANUT, TB_OM_DESC_ROTA.IDOM, TB_OM_DESC_ROTA.DESC, TB_OM_DESC_ROTA.IDEQUIP) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.desc + '\',\'' + this.req.body.idequip + '\');';
     };
     DescOMAction.prototype.ADMonOM = function () {
-        return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
+        return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
     };
     DescOMAction.prototype.validateADM = function () {
-        return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
+        return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND TBUSUARIO.STATUS = 1;';
     };
     DescOMAction.prototype.selectDesc = function () {
-        return 'select u.NOME,d.DESC, d.TEMPO_UTIL from TBUSUARIO u inner join TB_OM_DESC d in d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
+        return 'select u.NOME, d.DESC, d.TEMPO_UTIL from TBUSUARIO u inner join TB_OM_DESC d on d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
+    };
+    DescOMAction.prototype.selectDescROTA = function () {
+        return 'select u.NOME, d.DESC from TBUSUARIO u inner join TB_OM_DESC_ROTA d on d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
     };
     DescOMAction.prototype.updateEQUIPSQL = function (id) {
         return 'update TBEQUIP_WITH_TBOM set OPER_REALIZADA = 1 where IDEQUIP = ' + id + ' and IDOM = ' + this.req.body.idOm + ';';
@@ -56,6 +60,14 @@ var DescOMAction = /** @class */ (function (_super) {
     DescOMAction.prototype.GetDescOM = function () {
         var _this = this;
         new mysql_factory_1.MySQLFactory().getConnection().select(this.selectDesc()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    DescOMAction.prototype.GetDescOMROTA = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectDescROTA()).subscribe(function (data) {
             _this.sendAnswer(data);
         }, function (error) {
             _this.sendError(error);
@@ -77,13 +89,15 @@ var DescOMAction = /** @class */ (function (_super) {
                 });
             }
             else {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
             }
+        });
+        this.sendAnswer({
+            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
         });
     };
     DescOMAction.prototype.PostRota = function () {
         var _this = this;
-        this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
             if (adm[0].CARGO == 1) {
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
@@ -99,6 +113,9 @@ var DescOMAction = /** @class */ (function (_super) {
             else {
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
             }
+        });
+        this.sendAnswer({
+            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
         });
     };
     DescOMAction.prototype.PostLista = function () {
@@ -122,6 +139,9 @@ var DescOMAction = /** @class */ (function (_super) {
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
             }
         });
+        this.sendAnswer({
+            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+        });
     };
     DescOMAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
@@ -132,6 +152,12 @@ var DescOMAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], DescOMAction.prototype, "GetDescOM", null);
+    __decorate([
+        decorators_1.Post('/GetDescOMROTA'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], DescOMAction.prototype, "GetDescOMROTA", null);
     __decorate([
         decorators_1.Post('/DescOM'),
         __metadata("design:type", Function),
