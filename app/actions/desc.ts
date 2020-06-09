@@ -26,6 +26,9 @@ export class DescOMAction extends Action{
     private selectDesc(){
         return 'select u.NOME, d.DESC, d.TEMPO_UTIL from TBUSUARIO u inner join TB_OM_DESC d on d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
     }
+    private selectDescROTA(){
+        return 'select u.NOME, d.DESC from TBUSUARIO u inner join TB_OM_DESC_ROTA d on d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
+    }
     
     private updateEQUIPSQL( id : any){
         return 'update TBEQUIP_WITH_TBOM set OPER_REALIZADA = 1 where IDEQUIP = '+ id+' and IDOM = '+this.req.body.idOm+';';
@@ -36,6 +39,18 @@ export class DescOMAction extends Action{
     public GetDescOM(){
         
         new MySQLFactory().getConnection().select(this.selectDesc()).subscribe(
+            (data : any) => {
+                this.sendAnswer(data);
+            },
+            (error : any) => {
+                this.sendError(error);
+            }
+        );
+    }
+    @Post('/GetDescOMROTA')
+    public GetDescOMROTA(){
+        
+        new MySQLFactory().getConnection().select(this.selectDescROTA()).subscribe(
             (data : any) => {
                 this.sendAnswer(data);
             },
