@@ -104,7 +104,7 @@ export class OMAction extends Action {
         console.log(this.req.body)
         new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
             (data: any) => {
-                if (this.req.body.tipoManut == 2) {
+                if (this.req.body.layout == 2) {
                     if (this.req.body.equips) {
                         this.req.body.equips.forEach((equip: any) => {
                             new MySQLFactory().getConnection().select(this.insertEQUIPROTA(equip, data.insertId)).subscribe(
