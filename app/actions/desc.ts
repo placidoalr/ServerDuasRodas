@@ -24,7 +24,7 @@ export class DescOMAction extends Action{
         return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
     }
     private selectDesc(){
-        return 'select u.NOME,d.DESC, d.TEMPO_UTIL from TBUSUARIO u inner join TB_OM_DESC d in d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
+        return 'select u.NOME, d.DESC, d.TEMPO_UTIL from TBUSUARIO u inner join TB_OM_DESC d on d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
     }
     
     private updateEQUIPSQL( id : any){
