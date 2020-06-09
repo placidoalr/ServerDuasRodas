@@ -85,6 +85,9 @@ export class DescOMAction extends Action{
                 this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
             }
         });
+        this.sendAnswer({
+            token: new VPUtils().generateGUID().toUpperCase()
+        });
     }
     @Post('/DescOMRota')
     public PostRota(){
@@ -95,10 +98,10 @@ export class DescOMAction extends Action{
                 (admon : any) => {
                     if (admon.length || admon.length > 0){
                         
-                                    new MySQLFactory().getConnection().select(this.insertRota()).subscribe(
-                                        (data : any) => {
-                                        }
-                                    );
+                        new MySQLFactory().getConnection().select(this.insertRota()).subscribe(
+                            (data : any) => {
+                            }
+                        );
                                
                         
                     }else{ 
@@ -109,6 +112,9 @@ export class DescOMAction extends Action{
                             
                 this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
             }
+        });
+        this.sendAnswer({
+            token: new VPUtils().generateGUID().toUpperCase()
         });
     }
     @Post('/DescOMLista')
@@ -137,6 +143,9 @@ export class DescOMAction extends Action{
                             
                 this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
             }
+        });
+        this.sendAnswer({
+            token: new VPUtils().generateGUID().toUpperCase()
         });
     }
     defineVisibility() {
