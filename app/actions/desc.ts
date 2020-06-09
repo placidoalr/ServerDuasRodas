@@ -18,13 +18,16 @@ export class DescOMAction extends Action{
         return 'insert into TB_OM_DESC_ROTA (TB_OM_DESC_ROTA.IDMANUT, TB_OM_DESC_ROTA.IDOM, TB_OM_DESC_ROTA.DESC, TB_OM_DESC_ROTA.IDEQUIP) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\',\''+ this.req.body.desc+'\',\''+ this.req.body.idequip+'\');';
     }
     private ADMonOM(){
-        return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
+        return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND TBUSUARIO_WITH_TBOM.STATUS = 1;';
     }
     private validateADM(){
-        return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
+        return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND TBUSUARIO.STATUS = 1;';
     }
     private selectDesc(){
         return 'select u.NOME, d.DESC, d.TEMPO_UTIL from TBUSUARIO u inner join TB_OM_DESC d on d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
+    }
+    private selectDescROTA(){
+        return 'select u.NOME, d.DESC from TBUSUARIO u inner join TB_OM_DESC_ROTA d on d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
     }
     
     private updateEQUIPSQL( id : any){
@@ -36,6 +39,18 @@ export class DescOMAction extends Action{
     public GetDescOM(){
         
         new MySQLFactory().getConnection().select(this.selectDesc()).subscribe(
+            (data : any) => {
+                this.sendAnswer(data);
+            },
+            (error : any) => {
+                this.sendError(error);
+            }
+        );
+    }
+    @Post('/GetDescOMROTA')
+    public GetDescOMROTA(){
+        
+        new MySQLFactory().getConnection().select(this.selectDescROTA()).subscribe(
             (data : any) => {
                 this.sendAnswer(data);
             },
@@ -67,13 +82,12 @@ export class DescOMAction extends Action{
                 });
             }else{
                             
-                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
+                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
             }
         });
     }
     @Post('/DescOMRota')
     public PostRota(){
-        this.validateData();
         new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
         (adm : any) => {
             if (adm[0].CARGO == 1){
