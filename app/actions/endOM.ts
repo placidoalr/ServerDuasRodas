@@ -21,16 +21,16 @@ export class EndOMAction extends Action{
         }
     }
     private historico(nome : any,estado : any) : string{
-        var desc = 'Manutentor '+nome+' assinou a OM';
+        var desc = 'Manutentor '+nome+' assinou a OM as '+Date.now();
         if(estado == 4){
-            desc = 'Líder '+nome+' assinou a OM';            
+            desc = 'Líder '+nome+' assinou a OM as '+Date.now();            
         }else if(estado == 5){
-            desc = 'Administrador '+nome+' assinou a OM';    
+            desc = 'Administrador '+nome+' assinou a OM as '+Date.now();    
         }
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\',\''+ desc+'\',\''+ new Date().getDate().toString()+'\');';
     }
     private generateSQL(){
-        return 'select ESTADO from TBOM where  AND TBOM.ID = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
+        return 'select ESTADO from TBOM where TBOM.ID = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
     }   
     private ADMonOM(){
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\'';
