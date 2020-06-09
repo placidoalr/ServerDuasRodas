@@ -20,7 +20,7 @@ export class OMAction extends Action {
         return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,LOC_INST_ATRIB,REQUERPARADA,DT_INI_PLAN,DT_INI_PROG,DT_FIM_PLAN,DT_FIM_PROG ) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.solicitante + '\',' + this.req.body.layout + ',' + this.req.body.ct + ',' + this.req.body.tipoManut + ',' + this.req.body.causa + ',\'' + this.req.body.def + '\',NOW(), \'' + this.req.body.obs + '\',' + this.req.body.prior + ', 1,' + this.req.body.li + ',\'' + this.req.body.requerParada + '\',\'' + this.req.body.dtIniPlan + '\',\'' + this.req.body.dtIniProg + '\',\'' + this.req.body.dtFimPlan + '\',\'' + this.req.body.dtFimProg + '\');';
     }
     private insertEQUIPROTA(equip: any, id: any) {
-        return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER,MAT_UTIL,QTDE_MAT) values (' + id + ',' + equip.id + ',' + (equip.oper !== undefined) ? equip.oper : null + ',' + (equip.material !== undefined) ? equip.material : null + ',' + (equip.qtde !== undefined) ? parseInt(equip.qtde) : 0 + ');';
+        return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER,MAT_UTIL,QTDE_MAT) values (' + id + ',' + equip.id + ',' + equip.oper + ',' + equip.material  + ',' + equip.qtde + ');';
     }
     private insertEQUIPSQL(equip: any, id: any) {
         return 'insert into TBEQUIP_OM (IDOM,IDEQUIP) values (' + id + ',' + equip.id + ');';
@@ -33,14 +33,14 @@ export class OMAction extends Action {
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
     }
     private selectEquipWOMROTA() {
-        return 'SELECT TBEQUIP.NOME EQUIPNOME, TBEQUIP_WITH_TBOM.OPER,TBEQUIP_WITH_TBOM.OPER_REALIZADA, TBEQUIP_WITH_TBOM.MAT_UTIL,TBEQUIP_WITH_TBOM.QTDE_MAT, TBEQUIP.EQUIP_SUP from TBEQUIP_WITH_TBOM INNER JOIN TBEQUIP ON TBEQUIP_WITH_TBOM.IDEQUIP = TBEQUIP.ID where TBEQUIP_WITH_TBOM.IDOM = \'' + this.req.body.idom + '\';';
+        return 'SELECT TBEQUIP.NOME EQUIPNOME,  TBEQUIP_WITH_TBOM.OPER,TBEQUIP_WITH_TBOM.OPER_REALIZADA, TBEQUIP_WITH_TBOM.MAT_UTIL,TBEQUIP_WITH_TBOM.QTDE_MAT from TBEQUIP_WITH_TBOM INNER JOIN TBEQUIP ON TBEQUIP_WITH_TBOM.IDEQUIP = TBEQUIP.ID where TBEQUIP_WITH_TBOM.IDOM = \'' + this.req.body.idom + '\';';
     }
     private selectEquipWOM() {
-        return 'SELECT TBEQUIP.NOME EQUIPNOME,TBEQUIP_OM.OPER_REALIZADA, TBEQUIP.EQUIP_SUP from TBEQUIP_OM INNER JOIN TBEQUIP ON TBEQUIP_OM.IDEQUIP = TBEQUIP.ID where TBEQUIP_OM.IDOM = \'' + this.req.body.idom + '\';';
+        return 'SELECT TBEQUIP.NOME EQUIPNOME,TBEQUIP.LOCAL, TBLOC_INST.NOME LI, TBEQUIP_OM.OPER_REALIZADA from TBEQUIP_OM INNER JOIN TBEQUIP ON TBEQUIP_OM.IDEQUIP = TBEQUIP.ID INNER JOIN TBLOC_INST ON TBLOC_INST.ID = TBEQUIP.LOC_INST_ATRIB where TBEQUIP_OM.IDOM = \'' + this.req.body.idom + '\';';
     }
 
     private selectMATWOM() {
-        return 'SELECT TBMATERIAL.DESC MATDESC,TBMATERIAL.UN_MEDIDA MATMEDIDA, TBMAT_WITH_OM.QTDE from TBMAT_WITH_OM INNER JOIN TBMATERIAL ON TBMAT_WITH_OM.IDMAT = TBMATERIAL.ID where TBMAT_WITH_OM.IDOM = \'' + this.req.body.idom + '\';';
+        return 'SELECT TBMATERIAL.DESC MATDESC,TBLOC_INST.NOME LI,TBMATERIAL.UN_MEDIDA MATMEDIDA, TBMAT_WITH_OM.QTDE from TBMAT_WITH_OM INNER JOIN TBMATERIAL ON TBMAT_WITH_OM.IDMAT = TBMATERIAL.ID INNER JOIN TBLOC_INST ON TBLOC_INST.ID = TBEQUIP.LOC_INST_ATRIB where TBMAT_WITH_OM.IDOM = \'' + this.req.body.idom + '\';';
     }
 
     private selectOPERWOM() {
