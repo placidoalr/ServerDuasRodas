@@ -144,9 +144,21 @@ export class OMAction extends Action {
         });
     }
     @Post('/GetEquipWOMROTA')
-    public EquipWOM() {
+    public EquipWOMROTA() {
 
         new MySQLFactory().getConnection().select(this.selectEquipWOMROTA()).subscribe(
+            (data: any) => {
+                this.sendAnswer(data);
+            },
+            (error: any) => {
+                this.sendError(error);
+            }
+        );
+    }
+    @Post('/GetEquipWOM')
+    public EquipWOM() {
+
+        new MySQLFactory().getConnection().select(this.selectEquipWOM()).subscribe(
             (data: any) => {
                 this.sendAnswer(data);
             },
