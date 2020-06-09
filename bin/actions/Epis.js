@@ -45,6 +45,9 @@ var EPIAction = /** @class */ (function (_super) {
     EPIAction.prototype.select = function () {
         return 'select ID,NOME,IDPADRAO from TBEPI where STATUS = 1 and UPPER(IDPADRAO) != \'S\';';
     };
+    EPIAction.prototype.selectALL = function () {
+        return 'select ID,NOME,IDPADRAO from TBEPI where STATUS = 1';
+    };
     EPIAction.prototype.deleteSQL = function () {
         return 'UPDATE TBEPI SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
@@ -69,6 +72,14 @@ var EPIAction = /** @class */ (function (_super) {
             _this.sendAnswer({
                 token: new vputils_1.VPUtils().generateGUID().toUpperCase()
             });
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    EPIAction.prototype.GetepiAll = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectALL()).subscribe(function (data) {
+            _this.sendAnswer(data);
         }, function (error) {
             _this.sendError(error);
         });
@@ -108,6 +119,12 @@ var EPIAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], EPIAction.prototype, "Post", null);
+    __decorate([
+        decorators_1.Get('/GetEPIall'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], EPIAction.prototype, "GetepiAll", null);
     __decorate([
         decorators_1.Get('/GetEPIs'),
         __metadata("design:type", Function),
