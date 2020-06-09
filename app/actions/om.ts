@@ -44,7 +44,7 @@ export class OMAction extends Action {
     }
 
     private selectOPERWOM() {
-        return 'SELECT TBOPERACAO.DESC OPERDESC,TBOPERACAO.IDSAP  from TBOPER_WITH_OM INNER JOIN TBEQUIP ON TBOPER_WITH_OM.IDEQUIP = TBOPERACAO.ID where TBOPER_WITH_OM.IDOM = \'' + this.req.body.idom + '\';';
+        return 'SELECT TBOPERACAO.DESC OPERDESC,TBOPERACAO.IDSAP  from TBOPER_WITH_OM INNER JOIN TBOPER_WITH_OM ON TBOPER_WITH_OM.OPER = TBOPERACAO.ID where TBOPER_WITH_OM.IDOM = \'' + this.req.body.idom + '\';';
     }
     private generateSQL() {
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\'  AND STATUS = 1;';
