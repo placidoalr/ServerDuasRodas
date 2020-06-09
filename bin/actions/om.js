@@ -44,7 +44,7 @@ var OMAction = /** @class */ (function (_super) {
         return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,LOC_INST_ATRIB,REQUERPARADA,DT_INI_PLAN,DT_INI_PROG,DT_FIM_PLAN,DT_FIM_PROG ) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.solicitante + '\',' + this.req.body.layout + ',' + this.req.body.ct + ',' + this.req.body.tipoManut + ',' + this.req.body.causa + ',\'' + this.req.body.def + '\',NOW(), \'' + this.req.body.obs + '\',' + this.req.body.prior + ', 1,' + this.req.body.li + ',\'' + this.req.body.requerParada + '\',\'' + this.req.body.dtIniPlan + '\',\'' + this.req.body.dtIniProg + '\',\'' + this.req.body.dtFimPlan + '\',\'' + this.req.body.dtFimProg + '\');';
     };
     OMAction.prototype.insertEQUIPROTA = function (equip, id) {
-        return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER,MAT_UTIL,QTDE_MAT) values (' + id + ',' + equip.id + ',' + (equip.oper !== undefined) ? equip.oper : null + ',' + (equip.material !== undefined) ? equip.material : null + ',' + (equip.qtde !== undefined) ? parseInt(equip.qtde) : 0 + ');';
+        return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER,MAT_UTIL,QTDE_MAT) values (' + id + ',' + equip.id + ',' + equip.oper + ',' + equip.material + ',' + equip.qtde + ');';
     };
     OMAction.prototype.insertEQUIPSQL = function (equip, id) {
         return 'insert into TBEQUIP_OM (IDOM,IDEQUIP) values (' + id + ',' + equip.id + ');';
@@ -55,8 +55,11 @@ var OMAction = /** @class */ (function (_super) {
     OMAction.prototype.generateADDSQL = function () {
         return 'select * from TBOM where TBOM.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
     };
+    OMAction.prototype.selectEquipWOMROTA = function () {
+        return 'SELECT TBEQUIP.NOME EQUIPNOME, TBEQUIP_WITH_TBOM.OPER,TBEQUIP_WITH_TBOM.OPER_REALIZADA, TBEQUIP_WITH_TBOM.MAT_UTIL,TBEQUIP_WITH_TBOM.QTDE_MAT from TBEQUIP_WITH_TBOM INNER JOIN TBEQUIP ON TBEQUIP_WITH_TBOM.IDEQUIP = TBEQUIP.ID where TBEQUIP_WITH_TBOM.IDOM = \'' + this.req.body.idom + '\';';
+    };
     OMAction.prototype.selectEquipWOM = function () {
-        return 'SELECT TBEQUIP.NOME EQUIPNOME, TBEQUIP_WITH_TBOM.OPER,TBEQUIP_WITH_TBOM.OPER_REALIZADA, TBEQUIP_WITH_TBOM.OPER, TBEQUIP_WITH_TBOM.MAT_UTIL,TBEQUIP_WITH_TBOM.QTDE_MAT from TBEQUIP_WITH_TBOM INNER JOIN TBEQUIP ON TBEQUIP_WITH_TBOM.IDEQUIP = TBEQUIP.ID where TBEQUIP_WITH_TBOM.IDOM = \'' + this.req.body.idom + '\';';
+        return 'SELECT TBEQUIP.NOME EQUIPNOME,TBEQUIP_OM.OPER_REALIZADA from TBEQUIP_OM INNER JOIN TBEQUIP ON TBEQUIP_OM.IDEQUIP = TBEQUIP.ID where TBEQUIP_OM.IDOM = \'' + this.req.body.idom + '\';';
     };
     OMAction.prototype.selectMATWOM = function () {
         return 'SELECT TBMATERIAL.DESC MATDESC,TBMATERIAL.UN_MEDIDA MATMEDIDA, TBMAT_WITH_OM.QTDE from TBMAT_WITH_OM INNER JOIN TBMATERIAL ON TBMAT_WITH_OM.IDMAT = TBMATERIAL.ID where TBMAT_WITH_OM.IDOM = \'' + this.req.body.idom + '\';';
@@ -151,6 +154,14 @@ var OMAction = /** @class */ (function (_super) {
         });
         this.sendAnswer({
             token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+        });
+    };
+    OMAction.prototype.EquipWOMROTA = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectEquipWOMROTA()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
         });
     };
     OMAction.prototype.EquipWOM = function () {
@@ -273,6 +284,12 @@ var OMAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], OMAction.prototype, "Post", null);
+    __decorate([
+        decorators_1.Post('/GetEquipWOMROTA'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], OMAction.prototype, "EquipWOMROTA", null);
     __decorate([
         decorators_1.Post('/GetEquipWOM'),
         __metadata("design:type", Function),
