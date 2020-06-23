@@ -21,11 +21,11 @@ export class EndOMAction extends Action{
         }
     }
     private historico(nome : any,estado : any) : string{
-        var desc = 'Manutentor '+nome+' assinou a OM as '+Date.now();
+        var desc = 'Manutentor '+nome+' assinou a OM as '+ new Date().getHours().toString() +' do dia '+new Date().getDay().toString()+' de '+new Date().getMonth().toString()+' de '+new Date().getUTCFullYear().toString();
         if(estado == 4){
-            desc = 'Líder '+nome+' assinou a OM as '+Date.now();            
+            desc = 'Líder '+nome+' assinou a OM as '+ new Date().toLocaleDateString();            
         }else if(estado == 5){
-            desc = 'Administrador '+nome+' assinou a OM as '+Date.now();    
+            desc = 'Administrador '+nome+' assinou a OM as '+ new Date().toLocaleDateString();    
         }
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\',\''+ desc+'\',\''+ new Date().getDate().toString()+'\');';
     }

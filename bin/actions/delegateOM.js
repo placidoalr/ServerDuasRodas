@@ -46,6 +46,9 @@ var DelegateOMAction = /** @class */ (function (_super) {
     DelegateOMAction.prototype.generateSQL = function () {
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
     };
+    DelegateOMAction.prototype.updateOM = function () {
+        return 'update TBOM set ESTADO = 2 where TBOM.ID = \'' + this.req.body.idOm + '\';';
+    };
     DelegateOMAction.prototype.validateADM = function () {
         return 'select CARGO,NOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idAdm + '\' AND STATUS = 1;';
     };
@@ -66,7 +69,9 @@ var DelegateOMAction = /** @class */ (function (_super) {
                             }
                             else {
                                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(adm[0].NOME, manut[0].NOME)).subscribe(function (data) {
+                                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateOM()).subscribe(function (data) {
+                                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(adm[0].NOME, manut[0].NOME)).subscribe(function (data) {
+                                        });
                                     });
                                 });
                             }
