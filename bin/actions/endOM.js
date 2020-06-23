@@ -59,7 +59,7 @@ var EndOMAction = /** @class */ (function (_super) {
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
     };
     EndOMAction.prototype.generateSQL = function () {
-        return 'select ESTADO from TBOM where  AND TBOM.ID = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
+        return 'select ESTADO from TBOM where TBOM.ID = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
     };
     EndOMAction.prototype.ADMonOM = function () {
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\'';
