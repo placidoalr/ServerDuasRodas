@@ -49,17 +49,17 @@ var EndOMAction = /** @class */ (function (_super) {
         }
     };
     EndOMAction.prototype.historico = function (nome, estado) {
-        var desc = 'Manutentor ' + nome + ' assinou a OM as ' + Date.now();
+        var desc = 'Manutentor ' + nome + ' assinou a OM as ' + new Date().getHours().toString() + ' do dia ' + new Date().getDay().toString() + ' de ' + new Date().getMonth().toString() + ' de ' + new Date().getUTCFullYear().toString();
         if (estado == 4) {
-            desc = 'Líder ' + nome + ' assinou a OM as ' + Date.now();
+            desc = 'Líder ' + nome + ' assinou a OM as ' + new Date().toLocaleDateString();
         }
         else if (estado == 5) {
-            desc = 'Administrador ' + nome + ' assinou a OM as ' + Date.now();
+            desc = 'Administrador ' + nome + ' assinou a OM as ' + new Date().toLocaleDateString();
         }
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
     };
     EndOMAction.prototype.generateSQL = function () {
-        return 'select ESTADO from TBOM where  AND TBOM.ID = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
+        return 'select ESTADO from TBOM where TBOM.ID = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
     };
     EndOMAction.prototype.ADMonOM = function () {
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\'';

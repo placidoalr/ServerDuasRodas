@@ -24,6 +24,9 @@ export class LayoutAction extends Action{
     private selectSQL() : string{
         return 'select TBLAYOUTOM.*,TBESTILOLAYOUT.NOME as ESTILONOME from TBLAYOUTOM INNER JOIN TBESTILOLAYOUT ON TBLAYOUTOM.IDESTILO = TBESTILOLAYOUT.ID  where status = 1';
     }
+    private selectSQLEstilo() : string{
+        return 'select TBESTILOLAYOUT from TBESTILOLAYOUT where status = 1';
+    }
     private deleteSQL() : string {
         return 'UPDATE TBLAYOUTOM SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\';';
     }
@@ -31,7 +34,7 @@ export class LayoutAction extends Action{
         
         return 'UPDATE TBLAYOUTOM SET NOME  = \'' + this.req.body.name + '\', IDESTILO  = \'' + this.req.body.layout + '\' WHERE ID = \'' + this.req.body.id + '\' AND STATUS = 1 ;';
     }
-
+    p
 
     @Post('/AddLAYOUTOM')
     public Post(){
@@ -64,6 +67,18 @@ export class LayoutAction extends Action{
     public Get(){
         
         new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
+            (data : any) => {
+                this.sendAnswer(data);
+            },
+            (error : any) => {
+                this.sendError(error);
+            }
+        );
+    }
+    @Get('/GetESTILO')
+    public GetEstilo(){
+        
+        new MySQLFactory().getConnection().select(this.selectSQLEstilo()).subscribe(
             (data : any) => {
                 this.sendAnswer(data);
             },
