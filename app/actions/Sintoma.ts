@@ -13,11 +13,11 @@ export class SintomaAction extends Action{
 
        
 private insertSQL() : string{
-    return 'insert into TBSINTOMA (TBSINTOMA.NOME ) values (\''+ this.req.body.name+'\');';
+    return 'insert into TBSINTOMA (TBSINTOMA.NOME) values (\''+ this.req.body.name+'\');';
 }
 
 private generateSQL(){
-    return 'select * from TBSINTOMA where TBSINTOMA.ID = \'' + this.req.body.ID + '\' AND STATUS = 1;';
+    return 'select * from TBSINTOMA where TBSINTOMA.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
 }
 private selectSQL() : string {
     return 'select ID,NOME from TBSINTOMA where STATUS = 1;';
