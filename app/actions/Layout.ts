@@ -34,7 +34,6 @@ export class LayoutAction extends Action{
         
         return 'UPDATE TBLAYOUTOM SET NOME  = \'' + this.req.body.name + '\', IDESTILO  = \'' + this.req.body.layout + '\' WHERE ID = \'' + this.req.body.id + '\' AND STATUS = 1 ;';
     }
-    p
 
     @Post('/AddLAYOUTOM')
     public Post(){
