@@ -25,7 +25,7 @@ export class LayoutAction extends Action{
         return 'select TBLAYOUTOM.*,TBESTILOLAYOUT.NOME as ESTILONOME from TBLAYOUTOM INNER JOIN TBESTILOLAYOUT ON TBLAYOUTOM.IDESTILO = TBESTILOLAYOUT.ID  where status = 1';
     }
     private selectSQLEstilo() : string{
-        return 'select ID,NOME from TBESTILOLAYOUT where status = 1';
+        return 'select ID,NOME from TBESTILOLAYOUT';
     }
     private deleteSQL() : string {
         return 'UPDATE TBLAYOUTOM SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\';';
