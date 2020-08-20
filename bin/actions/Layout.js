@@ -49,6 +49,9 @@ var LayoutAction = /** @class */ (function (_super) {
     LayoutAction.prototype.selectSQL = function () {
         return 'select TBLAYOUTOM.*,TBESTILOLAYOUT.NOME as ESTILONOME from TBLAYOUTOM INNER JOIN TBESTILOLAYOUT ON TBLAYOUTOM.IDESTILO = TBESTILOLAYOUT.ID  where status = 1';
     };
+    LayoutAction.prototype.selectSQLEstilo = function () {
+        return 'select ID,NOME from TBESTILOLAYOUT';
+    };
     LayoutAction.prototype.deleteSQL = function () {
         return 'UPDATE TBLAYOUTOM SET STATUS = \'0\' WHERE ID =  \'' + this.req.body.id + '\';';
     };
@@ -80,6 +83,14 @@ var LayoutAction = /** @class */ (function (_super) {
     LayoutAction.prototype.Get = function () {
         var _this = this;
         new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    LayoutAction.prototype.GetEstilo = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQLEstilo()).subscribe(function (data) {
             _this.sendAnswer(data);
         }, function (error) {
             _this.sendError(error);
@@ -134,6 +145,12 @@ var LayoutAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], LayoutAction.prototype, "Get", null);
+    __decorate([
+        decorators_1.Get('/GetESTILO'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], LayoutAction.prototype, "GetEstilo", null);
     __decorate([
         decorators_1.Post('/DelLAYOUTOM'),
         __metadata("design:type", Function),
