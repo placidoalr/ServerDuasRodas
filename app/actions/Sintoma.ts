@@ -17,7 +17,7 @@ private insertSQL() : string{
 }
 
 private generateSQL(){
-    return 'select * from TBSINTOMA where TBSINTOMA.ID = \'' + this.req.body.id + '\' AND STATUS = 1;';
+    return 'select * from TBSINTOMA where TBSINTOMA.ID = \'' + this.req.body.name + '\' AND STATUS = 1;';
 }
 private selectSQL() : string {
     return 'select ID,NOME from TBSINTOMA where STATUS = 1;';
