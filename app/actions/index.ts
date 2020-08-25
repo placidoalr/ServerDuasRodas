@@ -23,6 +23,8 @@ import {EPIAction} from './Epis';
 import {OMEPIAction} from './OM_EPI';
 import {OperAction} from './Oper';
 import {MaterialAction} from './Material';
+import {OMMaterialAction} from './OM_Material';
+import {ReproveOMAction} from './reprove';
 
 
 export {LogonAction};
@@ -50,3 +52,5 @@ export {EPIAction}
 export {OMEPIAction}
 export {OperAction}
 export {MaterialAction}
+export {OMMaterialAction}
+export {ReproveOMAction}

@@ -132,7 +132,7 @@ var OMAction = /** @class */ (function (_super) {
             if (_this.req.body.layout == 2) {
                 if (_this.req.body.equips) {
                     _this.req.body.equips.forEach(function (equip) {
-                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertEQUIPROTA(equip, data.insertId)).subscribe(function (data1) {
+                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertEQUIPROTA(equip.id, data.insertId)).subscribe(function (data1) {
                         });
                     });
                 }
@@ -140,7 +140,7 @@ var OMAction = /** @class */ (function (_super) {
             else {
                 if (_this.req.body.equips) {
                     _this.req.body.equips.forEach(function (equip) {
-                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertEQUIPSQL(equip, data.insertId)).subscribe(function (data1) {
+                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertEQUIPSQL(equip.id, data.insertId)).subscribe(function (data1) {
                         });
                     });
                 }

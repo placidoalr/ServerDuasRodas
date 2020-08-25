@@ -37,10 +37,17 @@ var OMEPIAction = /** @class */ (function (_super) {
         new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o ID do Manutentor e ID da Ordem de manutenção', this.req.body.idEpi == '' || this.req.body.idEpi == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined);
     };
     OMEPIAction.prototype.insertSQL = function () {
-        return 'insert into TBEPI_WITH_TBOM (TBEPI_WITH_TBOM.IDEPI, TBUSUARIO_WITH_TBOM.IDOM, TBUSUARIO_WITH_TBOM.IDMANUT) values (\'' + this.req.body.idEpi + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.idUser + '\');';
+        return 'insert into TBEPI_WITH_TBOM (TBEPI_WITH_TBOM.IDEPI, TBEPI_WITH_TBOM.IDOM, TBEPI_WITH_TBOM.IDMANUT) values (\'' + this.req.body.idEpi + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.idUser + '\');';
+    };
+    OMEPIAction.prototype.historico = function (manutNome, epiNome) {
+        var desc = 'EPI - Manuntentor ' + manutNome + ' sinalizou que está utilizando o EPI ' + epiNome;
+        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\', now());';
     };
     OMEPIAction.prototype.generateSQL = function () {
-        return 'select * from TBEPI_WITH_TBOM where TBEPI_WITH_TBOM.IDEPI = \'' + this.req.body.idEpi + '\' AND TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND TBEPI_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
+        return 'select * from TBEPI_WITH_TBOM where TBEPI_WITH_TBOM.IDEPI = \'' + this.req.body.idEpi + '\' AND TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND TBEPI_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\';';
+    };
+    OMEPIAction.prototype.getNomes = function () {
+        return 'select NOME,(select NOME from TBEPI where TBEPI.ID = \'' + this.req.body.idEpi + '\' LIMIT 1) as EPINOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\';';
     };
     OMEPIAction.prototype.selectSQL = function () {
         return 'select TBEPI.ID,TBEPI.NOME as EPINOME, TBUSUARIO.NOME as USERNAME, TBEPI.IDOM from TBEPI INNER JOIN TBEPI_WITH_TBOM on TBEPI_WITH_TBOM.IDEPI = TBEPI.ID INNER JOIN TBUSUARIO on  TBEPI_WITH_TBOM.IDMANUT = TBUSUARIO.ID where TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
@@ -55,6 +62,10 @@ var OMEPIAction = /** @class */ (function (_super) {
             }
             else {
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.getNomes()).subscribe(function (dados) {
+                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(dados[0].NOME, dados[0].EPINOME)).subscribe(function (dados) {
+                        });
+                    });
                 });
             }
             _this.sendAnswer({
