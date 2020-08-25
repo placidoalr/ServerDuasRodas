@@ -29,7 +29,7 @@ export class OMMaterialAction extends Action{
         return 'select TBEPI.ID,TBEPI.NOME as EPINOME, TBUSUARIO.NOME as USERNAME, TBEPI.IDOM from TBEPI INNER JOIN TBEPI_WITH_TBOM on TBEPI_WITH_TBOM.IDEPI = TBEPI.ID INNER JOIN TBUSUARIO on  TBEPI_WITH_TBOM.IDMANUT = TBUSUARIO.ID where TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
     }
     
-    @Post('/AddOMEPI')
+    @Post('/AddOMMaterial')
     public Post(){
         this.validateData();
 
@@ -61,20 +61,5 @@ export class OMMaterialAction extends Action{
                 this.sendError(error);
             }
         );
-    }
-    @Post('/GetOMEPI')
-    public Getone(){
-        
-        new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
-            (data : any) => {
-                this.sendAnswer(data);
-            },
-            (error : any) => {
-                this.sendError(error);
-            }
-        );
-    }
-    defineVisibility() {
-        this.actionEscope = ActionType.atPublic;
     }
 }
