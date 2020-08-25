@@ -112,7 +112,7 @@ export class OMAction extends Action {
                 if (this.req.body.layout == 2) {
                     if (this.req.body.equips) {
                         this.req.body.equips.forEach((equip: any) => {
-                            new MySQLFactory().getConnection().select(this.insertEQUIPROTA(equip, data.insertId)).subscribe(
+                            new MySQLFactory().getConnection().select(this.insertEQUIPROTA(equip.id, data.insertId)).subscribe(
                                 (data1: any) => {
 
                                 }
@@ -122,7 +122,7 @@ export class OMAction extends Action {
                 } else {
                     if (this.req.body.equips) {
                         this.req.body.equips.forEach((equip: any) => {
-                            new MySQLFactory().getConnection().select(this.insertEQUIPSQL(equip, data.insertId)).subscribe(
+                            new MySQLFactory().getConnection().select(this.insertEQUIPSQL(equip.id, data.insertId)).subscribe(
                                 (data1: any) => {
 
                                 }

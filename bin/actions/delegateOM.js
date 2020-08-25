@@ -41,7 +41,7 @@ var DelegateOMAction = /** @class */ (function (_super) {
     };
     DelegateOMAction.prototype.historico = function (nomeADM, manutNome) {
         var desc = 'Lider ' + nomeADM + ' delegou a OM para o manutentor ' + manutNome;
-        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idAdm + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
+        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idAdm + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\', now());';
     };
     DelegateOMAction.prototype.generateSQL = function () {
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';

@@ -56,7 +56,7 @@ var EndOMAction = /** @class */ (function (_super) {
         else if (estado == 5) {
             desc = 'Administrador ' + nome + ' assinou a OM as ' + new Date().toLocaleDateString();
         }
-        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\',\'' + new Date().getDate().toString() + '\');';
+        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\', now());';
     };
     EndOMAction.prototype.generateSQL = function () {
         return 'select ESTADO from TBOM where TBOM.ID = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
