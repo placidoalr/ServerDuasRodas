@@ -50,3 +50,7 @@ var Oper_1 = require("./Oper");
 exports.OperAction = Oper_1.OperAction;
 var Material_1 = require("./Material");
 exports.MaterialAction = Material_1.MaterialAction;
+var OM_Material_1 = require("./OM_Material");
+exports.OMMaterialAction = OM_Material_1.OMMaterialAction;
+var reprove_1 = require("./reprove");
+exports.ReproveOMAction = reprove_1.ReproveOMAction;
