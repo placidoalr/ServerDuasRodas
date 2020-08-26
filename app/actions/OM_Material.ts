@@ -22,6 +22,11 @@ export class OMMaterialAction extends Action{
         var desc = 'Material - Manuntentor '+manutNome+' adicionou à OM o material '+matNome;
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\',\''+ desc+'\', now());';
     }
+    private historicoUp(manutNome : any, matNome:any) : string{
+        
+        var desc = 'Material - Manuntentor '+manutNome+' adicionou à OM o material '+matNome;
+        return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\''+ this.req.body.idUser+'\',\''+ this.req.body.idOm+'\',\''+ desc+'\', now());';
+    }
     private generateSQL(){
         return 'select * from TBMAT_WITH_OM where TBMAT_WITH_OM.IDMAT = \'' + this.req.body.idMat + '\' AND TBMAT_WITH_OM.IDOM = \'' + this.req.body.idOm + '\';';
     }
