@@ -58,15 +58,16 @@ export class OMEPIAction extends Action {
                                     }
                                 );
                             }
-                            this.sendAnswer({
-                                token: new VPUtils().generateGUID().toUpperCase()
-                            });
+                            
                         },
                         (error: any) => {
                             this.sendError(error);
                         }
 
                     ));
+            });
+            this.sendAnswer({
+                token: new VPUtils().generateGUID().toUpperCase()
             });
         }
     }
