@@ -9,7 +9,7 @@ import { MySQLFactory } from '../mysql/mysql_factory';
 export class OMEPIAction extends Action {
 
     private validateData() {
-        new KernelUtils().createExceptionApiError('1001', 'Informe o ID do Manutentor e ID da Ordem de manutenção', this.req.body.epis == '' || this.req.body.epis == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined);
+        new KernelUtils().createExceptionApiError('1001', 'Informe os EPIS e ID da Ordem de manutenção', this.req.body.epis == '' || this.req.body.epis == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined);
     }
     private insertSQL(epi: any): string {
         return 'insert into TBEPI_WITH_TBOM (TBEPI_WITH_TBOM.IDEPI, TBEPI_WITH_TBOM.IDOM, TBEPI_WITH_TBOM.IDMANUT) values (\'' + epi + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.idUser + '\');';
@@ -39,10 +39,10 @@ export class OMEPIAction extends Action {
 
                     new MySQLFactory().getConnection().select(this.generateSQL(epi)).subscribe(
                         (data: any) => {
-                            if (data.length || data.length > 0) {
-                                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
-                                return;
-                            } else {
+                            // if (data.length || data.length > 0) {
+                            //     this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
+                            //     return;
+                            // } else {
 
                                 new MySQLFactory().getConnection().select(this.insertSQL(epi)).subscribe(
                                     (data: any) => {
@@ -57,16 +57,17 @@ export class OMEPIAction extends Action {
                                         );
                                     }
                                 );
-                            }
-                            this.sendAnswer({
-                                token: new VPUtils().generateGUID().toUpperCase()
-                            });
+                            // }
+                            
                         },
                         (error: any) => {
                             this.sendError(error);
                         }
 
                     ));
+            });
+            this.sendAnswer({
+                token: new VPUtils().generateGUID().toUpperCase()
             });
         }
     }
