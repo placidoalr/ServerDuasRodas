@@ -34,20 +34,20 @@ var OMEPIAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     OMEPIAction.prototype.validateData = function () {
-        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe o ID do Manutentor e ID da Ordem de manutenção', this.req.body.epis == '' || this.req.body.epis == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined);
+        new kernel_utils_1.KernelUtils().createExceptionApiError('1001', 'Informe os EPIS e ID da Ordem de manutenção', this.req.body.epis == '' || this.req.body.epis == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined);
     };
     OMEPIAction.prototype.insertSQL = function (epi) {
-        return 'insert into TBEPI_WITH_TBOM (TBEPI_WITH_TBOM.IDEPI, TBEPI_WITH_TBOM.IDOM, TBEPI_WITH_TBOM.IDMANUT) values (\'' + epi.id + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.idUser + '\');';
+        return 'insert into TBEPI_WITH_TBOM (TBEPI_WITH_TBOM.IDEPI, TBEPI_WITH_TBOM.IDOM, TBEPI_WITH_TBOM.IDMANUT) values (\'' + epi + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.idUser + '\');';
     };
     OMEPIAction.prototype.historico = function (manutNome, epiNome) {
         var desc = 'EPI - Manuntentor ' + manutNome + ' sinalizou que está utilizando o EPI ' + epiNome;
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\', now());';
     };
     OMEPIAction.prototype.generateSQL = function (epi) {
-        return 'select * from TBEPI_WITH_TBOM where TBEPI_WITH_TBOM.IDEPI = \'' + epi.id + '\' AND TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND TBEPI_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\';';
+        return 'select * from TBEPI_WITH_TBOM where TBEPI_WITH_TBOM.IDEPI = \'' + epi + '\' AND TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND TBEPI_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\';';
     };
     OMEPIAction.prototype.getNomes = function (epi) {
-        return 'select NOME,(select NOME from TBEPI where TBEPI.ID = \'' + epi.id + '\' LIMIT 1) as EPINOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\';';
+        return 'select NOME,(select NOME from TBEPI where TBEPI.ID = \'' + epi + '\' LIMIT 1) as EPINOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\';';
     };
     OMEPIAction.prototype.selectSQL = function () {
         return 'select TBEPI.ID,TBEPI.NOME as EPINOME, TBUSUARIO.NOME as USERNAME, TBEPI_WITH_TBOM.IDOM from TBEPI INNER JOIN TBEPI_WITH_TBOM on TBEPI_WITH_TBOM.IDEPI = TBEPI.ID INNER JOIN TBUSUARIO on  TBEPI_WITH_TBOM.IDMANUT = TBUSUARIO.ID where TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
@@ -58,24 +58,23 @@ var OMEPIAction = /** @class */ (function (_super) {
         if (this.req.body.epis) {
             this.req.body.epis.forEach(function (epi) {
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL(epi)).subscribe(new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL(epi)).subscribe(function (data) {
-                    if (data.length || data.length > 0) {
-                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
-                        return;
-                    }
-                    else {
-                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL(epi)).subscribe(function (data) {
-                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.getNomes(epi)).subscribe(function (dados) {
-                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(dados[0].NOME, dados[0].EPINOME)).subscribe(function (dados) {
-                                });
+                    // if (data.length || data.length > 0) {
+                    //     this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
+                    //     return;
+                    // } else {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL(epi)).subscribe(function (data) {
+                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.getNomes(epi)).subscribe(function (dados) {
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(dados[0].NOME, dados[0].EPINOME)).subscribe(function (dados) {
                             });
                         });
-                    }
-                    _this.sendAnswer({
-                        token: new vputils_1.VPUtils().generateGUID().toUpperCase()
                     });
+                    // }
                 }, function (error) {
                     _this.sendError(error);
                 }));
+            });
+            this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
             });
         }
     };
