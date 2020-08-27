@@ -9,7 +9,7 @@ import { MySQLFactory } from '../mysql/mysql_factory';
 export class OMEPIAction extends Action {
 
     private validateData() {
-        new KernelUtils().createExceptionApiError('1001', 'Informe o ID do Manutentor e ID da Ordem de manutenção', this.req.body.epis == '' || this.req.body.epis == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined);
+        new KernelUtils().createExceptionApiError('1001', 'Informe os EPIS e ID da Ordem de manutenção', this.req.body.epis == '' || this.req.body.epis == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined);
     }
     private insertSQL(epi: any): string {
         return 'insert into TBEPI_WITH_TBOM (TBEPI_WITH_TBOM.IDEPI, TBEPI_WITH_TBOM.IDOM, TBEPI_WITH_TBOM.IDMANUT) values (\'' + epi + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.idUser + '\');';
