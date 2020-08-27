@@ -39,10 +39,10 @@ export class OMEPIAction extends Action {
 
                     new MySQLFactory().getConnection().select(this.generateSQL(epi)).subscribe(
                         (data: any) => {
-                            if (data.length || data.length > 0) {
-                                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
-                                return;
-                            } else {
+                            // if (data.length || data.length > 0) {
+                            //     this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
+                            //     return;
+                            // } else {
 
                                 new MySQLFactory().getConnection().select(this.insertSQL(epi)).subscribe(
                                     (data: any) => {
@@ -57,7 +57,7 @@ export class OMEPIAction extends Action {
                                         );
                                     }
                                 );
-                            }
+                            // }
                             
                         },
                         (error: any) => {
