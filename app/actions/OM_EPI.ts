@@ -12,7 +12,7 @@ export class OMEPIAction extends Action {
         new KernelUtils().createExceptionApiError('1001', 'Informe o ID do Manutentor e ID da Ordem de manutenção', this.req.body.epis == '' || this.req.body.epis == undefined || this.req.body.idOm == '' || this.req.body.idOm == undefined);
     }
     private insertSQL(epi: any): string {
-        return 'insert into TBEPI_WITH_TBOM (TBEPI_WITH_TBOM.IDEPI, TBEPI_WITH_TBOM.IDOM, TBEPI_WITH_TBOM.IDMANUT) values (\'' + epi.id + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.idUser + '\');';
+        return 'insert into TBEPI_WITH_TBOM (TBEPI_WITH_TBOM.IDEPI, TBEPI_WITH_TBOM.IDOM, TBEPI_WITH_TBOM.IDMANUT) values (\'' + epi + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.idUser + '\');';
     }
     private historico(manutNome: any, epiNome: any): string {
 
@@ -20,10 +20,10 @@ export class OMEPIAction extends Action {
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\', now());';
     }
     private generateSQL(epi:any) {
-        return 'select * from TBEPI_WITH_TBOM where TBEPI_WITH_TBOM.IDEPI = \'' + epi.id + '\' AND TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND TBEPI_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\';';
+        return 'select * from TBEPI_WITH_TBOM where TBEPI_WITH_TBOM.IDEPI = \'' + epi + '\' AND TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND TBEPI_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\';';
     }
     private getNomes(epi: any) {
-        return 'select NOME,(select NOME from TBEPI where TBEPI.ID = \'' + epi.id + '\' LIMIT 1) as EPINOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\';';
+        return 'select NOME,(select NOME from TBEPI where TBEPI.ID = \'' + epi + '\' LIMIT 1) as EPINOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\';';
     }
     private selectSQL() {
         return 'select TBEPI.ID,TBEPI.NOME as EPINOME, TBUSUARIO.NOME as USERNAME, TBEPI_WITH_TBOM.IDOM from TBEPI INNER JOIN TBEPI_WITH_TBOM on TBEPI_WITH_TBOM.IDEPI = TBEPI.ID INNER JOIN TBUSUARIO on  TBEPI_WITH_TBOM.IDMANUT = TBUSUARIO.ID where TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
