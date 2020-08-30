@@ -24,6 +24,8 @@ import {OperAction} from './Oper';
 import {MaterialAction} from './Material';
 import {OMMaterialAction} from './OM_Material';
 import {ReproveOMAction} from './reprove';
+import {FiltrosAction} from './Filtros';
+
 
 
 export {LogonAction};
@@ -52,3 +54,4 @@ export {OperAction}
 export {MaterialAction}
 export {OMMaterialAction}
 export {ReproveOMAction}
+export {FiltrosAction}
