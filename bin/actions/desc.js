@@ -42,6 +42,12 @@ var DescOMAction = /** @class */ (function (_super) {
     DescOMAction.prototype.insertRota = function () {
         return 'insert into TB_OM_DESC_ROTA (TB_OM_DESC_ROTA.IDMANUT, TB_OM_DESC_ROTA.IDOM, TB_OM_DESC_ROTA.DESC, TB_OM_DESC_ROTA.IDEQUIP) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + this.req.body.desc + '\',\'' + this.req.body.idequip + '\');';
     };
+    DescOMAction.prototype.updateSQL = function () {
+        return 'update TB_OM_DESC set TB_OM_DESC.DESC = \'' + this.req.body.desc + '\', TB_OM_DESC.TEMPO_UTIL = \'' + this.req.body.time + '\' where TB_OM_DESC.ID = \'' + this.req.body.id + '\';';
+    };
+    DescOMAction.prototype.updateRotaSQL = function () {
+        return 'update TB_OM_DESC set TB_OM_DESC.DESC = \'' + this.req.body.desc + '\' where TB_OM_DESC.ID = \'' + this.req.body.id + '\';';
+    };
     DescOMAction.prototype.ADMonOM = function () {
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
     };
@@ -49,10 +55,10 @@ var DescOMAction = /** @class */ (function (_super) {
         return 'select CARGO from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND TBUSUARIO.STATUS = 1;';
     };
     DescOMAction.prototype.selectDesc = function () {
-        return 'select u.NOME, d.DESC, d.TEMPO_UTIL from TBUSUARIO u inner join TB_OM_DESC d on d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
+        return 'select u.NOME, d.DESC, d.TEMPO_UTIL, d.ID from TBUSUARIO u inner join TB_OM_DESC d on d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
     };
     DescOMAction.prototype.selectDescROTA = function () {
-        return 'select u.NOME, d.DESC from TBUSUARIO u inner join TB_OM_DESC_ROTA d on d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
+        return 'select u.NOME, d.DESC, d.ID from TBUSUARIO u inner join TB_OM_DESC_ROTA d on d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
     };
     DescOMAction.prototype.updateEQUIPSQL = function (id) {
         return 'update TBEQUIP_WITH_TBOM set OPER_REALIZADA = 1 where IDEQUIP = ' + id + ' and IDOM = ' + this.req.body.idOm + ';';
@@ -111,7 +117,51 @@ var DescOMAction = /** @class */ (function (_super) {
                 });
             }
             else {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
+            }
+        });
+        this.sendAnswer({
+            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+        });
+    };
+    DescOMAction.prototype.Update = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
+            if (adm[0].CARGO == 1) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
+                    if (admon.length || admon.length > 0) {
+                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateSQL()).subscribe(function (data) {
+                        });
+                    }
+                    else {
+                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                    }
+                });
+            }
+            else {
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
+            }
+        });
+        this.sendAnswer({
+            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+        });
+    };
+    DescOMAction.prototype.UpdateRota = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
+            if (adm[0].CARGO == 1) {
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
+                    if (admon.length || admon.length > 0) {
+                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateRotaSQL()).subscribe(function (data) {
+                        });
+                    }
+                    else {
+                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                    }
+                });
+            }
+            else {
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
             }
         });
         this.sendAnswer({
@@ -136,7 +186,7 @@ var DescOMAction = /** @class */ (function (_super) {
                 });
             }
             else {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
             }
         });
         this.sendAnswer({
@@ -170,6 +220,18 @@ var DescOMAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], DescOMAction.prototype, "PostRota", null);
+    __decorate([
+        decorators_1.Post('/UpdateDescOM'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], DescOMAction.prototype, "Update", null);
+    __decorate([
+        decorators_1.Post('/UpdateDescOMRota'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], DescOMAction.prototype, "UpdateRota", null);
     __decorate([
         decorators_1.Post('/DescOMLista'),
         __metadata("design:type", Function),

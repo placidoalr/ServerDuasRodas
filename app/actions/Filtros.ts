@@ -99,5 +99,7 @@ export class FiltrosAction extends Action {
             }
         );
     }
-
+    defineVisibility() {
+        this.actionEscope = ActionType.atPublic;
+    }
 }
