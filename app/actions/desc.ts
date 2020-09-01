@@ -37,6 +37,9 @@ export class DescOMAction extends Action{
         return 'select u.NOME, d.DESC, d.ID from TBUSUARIO u inner join TB_OM_DESC_ROTA d on d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
     }
     
+    private selectTempo(){
+        return 'select SEC_TO_TIME(SUM(TIME_TO_SEC(TEMPO_UTIL))) as TEMPO from TB_OM_DESC where IDOM = ' + this.req.body.idOm + ';';
+    }
     private updateEQUIPSQL( id : any){
         return 'update TBEQUIP_WITH_TBOM set OPER_REALIZADA = 1 where IDEQUIP = '+ id+' and IDOM = '+this.req.body.idOm+';';
     }
@@ -46,6 +49,18 @@ export class DescOMAction extends Action{
     public GetDescOM(){
         
         new MySQLFactory().getConnection().select(this.selectDesc()).subscribe(
+            (data : any) => {
+                this.sendAnswer(data);
+            },
+            (error : any) => {
+                this.sendError(error);
+            }
+        );
+    }
+    @Post('/GetTempo')
+    public GetTempoOM(){
+        
+        new MySQLFactory().getConnection().select(this.selectTempo()).subscribe(
             (data : any) => {
                 this.sendAnswer(data);
             },

@@ -60,12 +60,23 @@ var DescOMAction = /** @class */ (function (_super) {
     DescOMAction.prototype.selectDescROTA = function () {
         return 'select u.NOME, d.DESC, d.ID from TBUSUARIO u inner join TB_OM_DESC_ROTA d on d.IDMANUT = u.ID where d.IDOM = ' + this.req.body.idOm + ';';
     };
+    DescOMAction.prototype.selectTempo = function () {
+        return 'select SEC_TO_TIME(SUM(TIME_TO_SEC(TEMPO_UTIL))) as TEMPO from TB_OM_DESC where IDOM = ' + this.req.body.idOm + ';';
+    };
     DescOMAction.prototype.updateEQUIPSQL = function (id) {
         return 'update TBEQUIP_WITH_TBOM set OPER_REALIZADA = 1 where IDEQUIP = ' + id + ' and IDOM = ' + this.req.body.idOm + ';';
     };
     DescOMAction.prototype.GetDescOM = function () {
         var _this = this;
         new mysql_factory_1.MySQLFactory().getConnection().select(this.selectDesc()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    DescOMAction.prototype.GetTempoOM = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectTempo()).subscribe(function (data) {
             _this.sendAnswer(data);
         }, function (error) {
             _this.sendError(error);
@@ -202,6 +213,12 @@ var DescOMAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], DescOMAction.prototype, "GetDescOM", null);
+    __decorate([
+        decorators_1.Post('/GetTempo'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], DescOMAction.prototype, "GetTempoOM", null);
     __decorate([
         decorators_1.Post('/GetDescOMROTA'),
         __metadata("design:type", Function),
