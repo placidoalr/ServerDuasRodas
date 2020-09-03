@@ -54,3 +54,5 @@ var reprove_1 = require("./reprove");
 exports.ReproveOMAction = reprove_1.ReproveOMAction;
 var Filtros_1 = require("./Filtros");
 exports.FiltrosAction = Filtros_1.FiltrosAction;
+var OM_Oper_1 = require("./OM_Oper");
+exports.OmOperAction = OM_Oper_1.OmOperAction;
