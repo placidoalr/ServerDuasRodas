@@ -16,7 +16,7 @@ export class OMAction extends Action {
 
     private insertSQL(): string {
         let horaatual = Date.now();
-
+        this.req.body.titulo = 'titulo idiota'
         return 'insert into TBOM (TITULO,IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,LOC_INST_ATRIB,REQUERPARADA,DT_INI_PLAN,DT_INI_PROG,DT_FIM_PLAN,DT_FIM_PROG,SINTOMA) values (\'' + this.req.body.titulo + '\',\'' + this.req.body.idsap + '\',\'' + this.req.body.solicitante + '\',' + this.req.body.layout + ',' + this.req.body.ct + ',' + this.req.body.tipoManut + ',' + this.req.body.causa + ',\'' + this.req.body.def + '\',NOW(), \'' + this.req.body.obs + '\',' + this.req.body.prior + ', 1,' + this.req.body.li + ',\'' + this.req.body.requerParada + '\',\'' + this.req.body.dtIniPlan + '\',\'' + this.req.body.dtIniProg + '\',\'' + this.req.body.dtFimPlan + '\',\'' + this.req.body.dtFimProg + '\',\'' + this.req.body.sintoma + '\');';
     }
     private insertEQUIPROTA(equip: any, id: any) {
@@ -26,7 +26,7 @@ export class OMAction extends Action {
         return 'insert into TBEQUIP_OM (IDOM,IDEQUIP) values (' + id + ',' + equip.id + ');';
     }
     private insertEQUIPSQLObs() {
-        return 'update TBEQUIP_OM set Obs = ' + this.req.body.obs + 'where IDOM = ' + this.req.body.idOm + ' AND IDEQUIP = ' + this.req.body.idEquip + ');';
+        return 'update TBEQUIP_OM set Obs = \'' + this.req.body.obs + '\' where IDOM = ' + this.req.body.idOm + ' AND IDEQUIP = ' + this.req.body.idEquip + ';';
     }
    
     private insertOPERSQL(oper: any, id: any) {
@@ -39,7 +39,7 @@ export class OMAction extends Action {
         return 'SELECT TBOPERACAO.DESC OPERDESC, u.NOME UNAME, TB_OM_DESC_ROTA.DESC,TBEQUIP.ID IDEQUIP, TBEQUIP.NOME EQUIPNOME,TBEQUIP.LOCAL,TBEQUIP.EQUIP_SUP , TBEQUIP_WITH_TBOM.OPER,TBEQUIP_WITH_TBOM.OPER_REALIZADA, TBMATERIAL.DESC MAT_UTIL, TBMATERIAL.UN_MEDIDA ,TBEQUIP_WITH_TBOM.QTDE_MAT from TBEQUIP_WITH_TBOM INNER JOIN TBEQUIP ON TBEQUIP_WITH_TBOM.IDEQUIP = TBEQUIP.ID INNER JOIN TBMATERIAL ON TBMATERIAL.ID = TBEQUIP_WITH_TBOM.MAT_UTIL LEFT JOIN TB_OM_DESC_ROTA ON TB_OM_DESC_ROTA.IDEQUIP = TBEQUIP.ID LEFT JOIN TBUSUARIO u ON u.ID = TB_OM_DESC_ROTA.IDMANUT INNER JOIN TBOPERACAO ON TBOPERACAO.ID = TBEQUIP_WITH_TBOM.OPER  where TBEQUIP_WITH_TBOM.IDOM = \'' + this.req.body.idom + '\';';
     }
     private selectEquipWOM() {
-        return 'SELECT TBEQUIP.NOME EQUIPNOME,TBEQUIP.LOCAL,TBEQUIP.EQUIP_SUP, TBLOC_INST.NOME LI, TBEQUIP_OM.OPER_REALIZADA, TBEQUIP_OM.Obs from TBEQUIP_OM INNER JOIN TBEQUIP ON TBEQUIP_OM.IDEQUIP = TBEQUIP.ID INNER JOIN TBLOC_INST ON TBLOC_INST.ID = TBEQUIP.LOC_INST_ATRIB where TBEQUIP_OM.IDOM = \'' + this.req.body.idom + '\';';
+        return 'SELECT TBEQUIP.NOME EQUIPNOME,TBEQUIP.LOCAL,TBEQUIP.EQUIP_SUP, TBLOC_INST.NOME LI, TBEQUIP_OM.OPER_REALIZADA, TBEQUIP_OM.Obs OBS from TBEQUIP_OM INNER JOIN TBEQUIP ON TBEQUIP_OM.IDEQUIP = TBEQUIP.ID INNER JOIN TBLOC_INST ON TBLOC_INST.ID = TBEQUIP.LOC_INST_ATRIB where TBEQUIP_OM.IDOM = \'' + this.req.body.idom + '\';';
     }
 
     private selectMATWOM() {
