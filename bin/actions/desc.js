@@ -46,7 +46,7 @@ var DescOMAction = /** @class */ (function (_super) {
         return 'update TB_OM_DESC set TB_OM_DESC.DESC = \'' + this.req.body.desc + '\', TB_OM_DESC.TEMPO_UTIL = \'' + this.req.body.time + '\' where TB_OM_DESC.ID = \'' + this.req.body.id + '\';';
     };
     DescOMAction.prototype.updateRotaSQL = function () {
-        return 'update TB_OM_DESC set TB_OM_DESC.DESC = \'' + this.req.body.desc + '\' where TB_OM_DESC.ID = \'' + this.req.body.id + '\';';
+        return 'update TB_OM_DESC_ROTA set TB_OM_DESC_ROTA.DESC = \'' + this.req.body.desc + '\' where TB_OM_DESC_ROTA.ID = \'' + this.req.body.id + '\';';
     };
     DescOMAction.prototype.ADMonOM = function () {
         return 'select * from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
@@ -65,6 +65,9 @@ var DescOMAction = /** @class */ (function (_super) {
     };
     DescOMAction.prototype.updateEQUIPSQL = function (id) {
         return 'update TBEQUIP_WITH_TBOM set OPER_REALIZADA = 1 where IDEQUIP = ' + id + ' and IDOM = ' + this.req.body.idOm + ';';
+    };
+    DescOMAction.prototype.deleteDescOMRota = function () {
+        return 'delete from TB_OM_DESC_ROTA WHERE ID =  \'' + this.req.body.id + '\';';
     };
     DescOMAction.prototype.GetDescOM = function () {
         var _this = this;
@@ -116,23 +119,28 @@ var DescOMAction = /** @class */ (function (_super) {
     DescOMAction.prototype.PostRota = function () {
         var _this = this;
         new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
-            if (adm[0].CARGO == 1) {
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
-                    if (admon.length || admon.length > 0) {
-                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertRota()).subscribe(function (data) {
-                        });
-                    }
-                    else {
-                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
-                    }
-                });
+            if (adm[0]) {
+                if (adm[0].CARGO == 1) {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
+                        if (admon.length || admon.length > 0) {
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertRota()).subscribe(function (data) {
+                                _this.sendAnswer({
+                                    token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+                                });
+                            });
+                        }
+                        else {
+                            _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                        }
+                    });
+                }
+                else {
+                    _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
+                }
             }
             else {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
+                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário não encontrado'));
             }
-        });
-        this.sendAnswer({
-            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
         });
     };
     DescOMAction.prototype.Update = function () {
@@ -204,6 +212,16 @@ var DescOMAction = /** @class */ (function (_super) {
             token: new vputils_1.VPUtils().generateGUID().toUpperCase()
         });
     };
+    DescOMAction.prototype.Patch = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteDescOMRota()).subscribe(function (data) {
+            _this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
     DescOMAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
@@ -255,6 +273,12 @@ var DescOMAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], DescOMAction.prototype, "PostLista", null);
+    __decorate([
+        decorators_1.Patch('/DelDescOMRota'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], DescOMAction.prototype, "Patch", null);
     return DescOMAction;
 }(action_1.Action));
 exports.DescOMAction = DescOMAction;
