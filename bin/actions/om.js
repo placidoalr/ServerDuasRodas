@@ -41,13 +41,16 @@ var OMAction = /** @class */ (function (_super) {
     };
     OMAction.prototype.insertSQL = function () {
         var horaatual = Date.now();
-        return 'insert into TBOM (IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,LOC_INST_ATRIB,REQUERPARADA,DT_INI_PLAN,DT_INI_PROG,DT_FIM_PLAN,DT_FIM_PROG,SINTOMA) values (\'' + this.req.body.idsap + '\',\'' + this.req.body.solicitante + '\',' + this.req.body.layout + ',' + this.req.body.ct + ',' + this.req.body.tipoManut + ',' + this.req.body.causa + ',\'' + this.req.body.def + '\',NOW(), \'' + this.req.body.obs + '\',' + this.req.body.prior + ', 1,' + this.req.body.li + ',\'' + this.req.body.requerParada + '\',\'' + this.req.body.dtIniPlan + '\',\'' + this.req.body.dtIniProg + '\',\'' + this.req.body.dtFimPlan + '\',\'' + this.req.body.dtFimProg + '\',\'' + this.req.body.sintoma + '\');';
+        return 'insert into TBOM (TITULO,IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,LOC_INST_ATRIB,REQUERPARADA,DT_INI_PLAN,DT_INI_PROG,DT_FIM_PLAN,DT_FIM_PROG,SINTOMA) values (\'' + this.req.body.titulo + '\',\'' + this.req.body.idsap + '\',\'' + this.req.body.solicitante + '\',' + this.req.body.layout + ',' + this.req.body.ct + ',' + this.req.body.tipoManut + ',' + this.req.body.causa + ',\'' + this.req.body.def + '\',NOW(), \'' + this.req.body.obs + '\',' + this.req.body.prior + ', 1,' + this.req.body.li + ',\'' + this.req.body.requerParada + '\',\'' + this.req.body.dtIniPlan + '\',\'' + this.req.body.dtIniProg + '\',\'' + this.req.body.dtFimPlan + '\',\'' + this.req.body.dtFimProg + '\',\'' + this.req.body.sintoma + '\');';
     };
     OMAction.prototype.insertEQUIPROTA = function (equip, id) {
         return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER,MAT_UTIL,QTDE_MAT) values (' + id + ',' + equip.id + ',' + equip.oper + ',' + equip.material + ',' + equip.qtde + ');';
     };
     OMAction.prototype.insertEQUIPSQL = function (equip, id) {
         return 'insert into TBEQUIP_OM (IDOM,IDEQUIP) values (' + id + ',' + equip.id + ');';
+    };
+    OMAction.prototype.insertEQUIPSQLObs = function () {
+        return 'update TBEQUIP_OM set Obs = \'' + this.req.body.obs + '\' where IDOM = ' + this.req.body.idOm + ' AND IDEQUIP = ' + this.req.body.idEquip + ';';
     };
     OMAction.prototype.insertOPERSQL = function (oper, id) {
         return 'insert into TBOPER_WITH_OM (IDOM, OPER) values (' + id + ',' + oper.id + ');';
@@ -59,7 +62,7 @@ var OMAction = /** @class */ (function (_super) {
         return 'SELECT TBOPERACAO.DESC OPERDESC, u.NOME UNAME, TB_OM_DESC_ROTA.DESC,TBEQUIP.ID IDEQUIP, TBEQUIP.NOME EQUIPNOME,TBEQUIP.LOCAL,TBEQUIP.EQUIP_SUP , TBEQUIP_WITH_TBOM.OPER,TBEQUIP_WITH_TBOM.OPER_REALIZADA, TBMATERIAL.DESC MAT_UTIL, TBMATERIAL.UN_MEDIDA ,TBEQUIP_WITH_TBOM.QTDE_MAT from TBEQUIP_WITH_TBOM INNER JOIN TBEQUIP ON TBEQUIP_WITH_TBOM.IDEQUIP = TBEQUIP.ID INNER JOIN TBMATERIAL ON TBMATERIAL.ID = TBEQUIP_WITH_TBOM.MAT_UTIL LEFT JOIN TB_OM_DESC_ROTA ON TB_OM_DESC_ROTA.IDEQUIP = TBEQUIP.ID LEFT JOIN TBUSUARIO u ON u.ID = TB_OM_DESC_ROTA.IDMANUT INNER JOIN TBOPERACAO ON TBOPERACAO.ID = TBEQUIP_WITH_TBOM.OPER  where TBEQUIP_WITH_TBOM.IDOM = \'' + this.req.body.idom + '\';';
     };
     OMAction.prototype.selectEquipWOM = function () {
-        return 'SELECT TBEQUIP.NOME EQUIPNOME,TBEQUIP.LOCAL,TBEQUIP.EQUIP_SUP, TBLOC_INST.NOME LI, TBEQUIP_OM.OPER_REALIZADA from TBEQUIP_OM INNER JOIN TBEQUIP ON TBEQUIP_OM.IDEQUIP = TBEQUIP.ID INNER JOIN TBLOC_INST ON TBLOC_INST.ID = TBEQUIP.LOC_INST_ATRIB where TBEQUIP_OM.IDOM = \'' + this.req.body.idom + '\';';
+        return 'SELECT TBEQUIP.NOME EQUIPNOME,TBEQUIP.LOCAL,TBEQUIP.EQUIP_SUP, TBLOC_INST.NOME LI, TBEQUIP_OM.OPER_REALIZADA, TBEQUIP_OM.Obs OBS from TBEQUIP_OM INNER JOIN TBEQUIP ON TBEQUIP_OM.IDEQUIP = TBEQUIP.ID INNER JOIN TBLOC_INST ON TBLOC_INST.ID = TBEQUIP.LOC_INST_ATRIB where TBEQUIP_OM.IDOM = \'' + this.req.body.idom + '\';';
     };
     OMAction.prototype.selectMATWOM = function () {
         return 'SELECT TBMATERIAL.DESC MATDESC,TBLOC_INST.NOME LI,TBMATERIAL.UN_MEDIDA MATMEDIDA, TBMAT_WITH_OM.QTDE from TBMAT_WITH_OM INNER JOIN TBMATERIAL ON TBMAT_WITH_OM.IDMAT = TBMATERIAL.ID INNER JOIN TBLOC_INST ON TBLOC_INST.ID = TBEQUIP.LOC_INST_ATRIB where TBMAT_WITH_OM.IDOM = \'' + this.req.body.idom + '\';';
@@ -275,6 +278,16 @@ var OMAction = /** @class */ (function (_super) {
             _this.sendError(error);
         });
     };
+    OMAction.prototype.EditObsEquipLista = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.insertEQUIPSQLObs()).subscribe(function (data) {
+            _this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
     OMAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
@@ -362,6 +375,12 @@ var OMAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], OMAction.prototype, "Edit", null);
+    __decorate([
+        decorators_1.Post('/EditObsEquipLista'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], OMAction.prototype, "EditObsEquipLista", null);
     return OMAction;
 }(action_1.Action));
 exports.OMAction = OMAction;
