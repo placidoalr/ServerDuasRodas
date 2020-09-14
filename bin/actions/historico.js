@@ -32,10 +32,10 @@ var HistoricoAction = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     HistoricoAction.prototype.selectAll = function () {
-        return 'select * from TBHISTORICO ORDER BY DTALTER desc;';
+        return 'select  TBHISTORICO.*, TBUSUARIO.NOME NOME from TBHISTORICO inner join TBUSUARIO on TBUSUARIO.ID = TBHISTORICO.IDUSER ORDER BY DTALTER desc;';
     };
     HistoricoAction.prototype.selectSQL = function () {
-        return 'select * from TBHISTORICO where TBHISTORICO.IDOM = \'' + this.req.body.ID + '\';';
+        return 'select TBHISTORICO.*, TBUSUARIO.NOME NOME from TBHISTORICO inner join TBUSUARIO on TBUSUARIO.ID = TBHISTORICO.IDUSER where TBHISTORICO.IDOM = \'' + this.req.body.idOm + '\' ORDER BY DTALTER desc;';
     };
     HistoricoAction.prototype.Get = function () {
         var _this = this;
