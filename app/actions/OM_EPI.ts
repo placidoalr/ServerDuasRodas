@@ -28,10 +28,18 @@ export class OMEPIAction extends Action {
     private selectSQL() {
         return 'select TBEPI.ID,TBEPI.NOME as EPINOME, TBUSUARIO.NOME as USERNAME, TBEPI_WITH_TBOM.IDOM from TBEPI INNER JOIN TBEPI_WITH_TBOM on TBEPI_WITH_TBOM.IDEPI = TBEPI.ID INNER JOIN TBUSUARIO on  TBEPI_WITH_TBOM.IDMANUT = TBUSUARIO.ID where TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
     }
+    private selectEPISNotUsed() {
+        return 'select ID,NOME,IDPADRAO from TBEPI WHERE ID not in (select ewo.IDEPI from TBEPI_WITH_TBOM ewo where ewo.IDOM = \'' + this.req.body.idOm + '\' and ewo.IDMANUT = \'' + this.req.body.idUser + '\');';
+    }
+    private selectEPISUsed() {
+        return 'select ID,NOME,IDPADRAO from TBEPI WHERE ID in (select ewo.IDEPI from TBEPI_WITH_TBOM ewo where ewo.IDOM = \'' + this.req.body.idOm + '\' and ewo.IDMANUT = \'' + this.req.body.idUser + '\');';
+    }
+    private deleteEpi() {
+        return 'delete from TBEPI_WITH_TBOM WHERE IDEPI = \'' + this.req.body.idEpi + '\' AND IDOM = \'' + this.req.body.idOm + '\' AND IDMANUT = \'' + this.req.body.idUser + '\';';
+    }
 
     @Post('/AddOMEPI')
     public Post() {
-
         this.validateData();
         if (this.req.body.epis) {
             this.req.body.epis.forEach((epi: any) => {
@@ -77,6 +85,43 @@ export class OMEPIAction extends Action {
         new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
             (data: any) => {
                 this.sendAnswer(data);
+            },
+            (error: any) => {
+                this.sendError(error);
+            }
+        );
+    }
+    @Post('/GetOMEPINotUsed')
+    public GetEpisNot() {
+
+        new MySQLFactory().getConnection().select(this.selectEPISNotUsed()).subscribe(
+            (data: any) => {
+                this.sendAnswer(data);
+            },
+            (error: any) => {
+                this.sendError(error);
+            }
+        );
+    }
+    @Post('/GetOMEPIUsed')
+    public GetEpisIn() {
+
+        new MySQLFactory().getConnection().select(this.selectEPISUsed()).subscribe(
+            (data: any) => {
+                this.sendAnswer(data);
+            },
+            (error: any) => {
+                this.sendError(error);
+            }
+        );
+    }
+    @Patch('/DelOMEPI')
+    public Patch() {
+        new MySQLFactory().getConnection().select(this.deleteEpi()).subscribe(
+            (data: any) => {
+                this.sendAnswer({
+                token: new VPUtils().generateGUID().toUpperCase()
+            });
             },
             (error: any) => {
                 this.sendError(error);
