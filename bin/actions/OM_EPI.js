@@ -52,6 +52,15 @@ var OMEPIAction = /** @class */ (function (_super) {
     OMEPIAction.prototype.selectSQL = function () {
         return 'select TBEPI.ID,TBEPI.NOME as EPINOME, TBUSUARIO.NOME as USERNAME, TBEPI_WITH_TBOM.IDOM from TBEPI INNER JOIN TBEPI_WITH_TBOM on TBEPI_WITH_TBOM.IDEPI = TBEPI.ID INNER JOIN TBUSUARIO on  TBEPI_WITH_TBOM.IDMANUT = TBUSUARIO.ID where TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
     };
+    OMEPIAction.prototype.selectEPISNotUsed = function () {
+        return 'select ID,NOME,IDPADRAO from TBEPI WHERE ID not in (select ewo.IDEPI from TBEPI_WITH_TBOM ewo where ewo.IDOM = \'' + this.req.body.idOm + '\' and ewo.IDMANUT = \'' + this.req.body.idUser + '\');';
+    };
+    OMEPIAction.prototype.selectEPISUsed = function () {
+        return 'select ID,NOME,IDPADRAO from TBEPI WHERE ID in (select ewo.IDEPI from TBEPI_WITH_TBOM ewo where ewo.IDOM = \'' + this.req.body.idOm + '\' and ewo.IDMANUT = \'' + this.req.body.idUser + '\');';
+    };
+    OMEPIAction.prototype.deleteEpi = function () {
+        return 'delete from TBEPI_WITH_TBOM WHERE IDEPI = \'' + this.req.body.idEpi + '\' AND IDOM = \'' + this.req.body.idOm + '\' AND IDMANUT = \'' + this.req.body.idUser + '\';';
+    };
     OMEPIAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
@@ -86,6 +95,32 @@ var OMEPIAction = /** @class */ (function (_super) {
             _this.sendError(error);
         });
     };
+    OMEPIAction.prototype.GetEpisNot = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectEPISNotUsed()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    OMEPIAction.prototype.GetEpisIn = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectEPISUsed()).subscribe(function (data) {
+            _this.sendAnswer(data);
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
+    OMEPIAction.prototype.Patch = function () {
+        var _this = this;
+        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteEpi()).subscribe(function (data) {
+            _this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }, function (error) {
+            _this.sendError(error);
+        });
+    };
     OMEPIAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
@@ -101,6 +136,24 @@ var OMEPIAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], OMEPIAction.prototype, "Getone", null);
+    __decorate([
+        decorators_1.Post('/GetOMEPINotUsed'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], OMEPIAction.prototype, "GetEpisNot", null);
+    __decorate([
+        decorators_1.Post('/GetOMEPIUsed'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], OMEPIAction.prototype, "GetEpisIn", null);
+    __decorate([
+        decorators_1.Patch('/DelOMEPI'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], OMEPIAction.prototype, "Patch", null);
     return OMEPIAction;
 }(action_1.Action));
 exports.OMEPIAction = OMEPIAction;

@@ -10,10 +10,10 @@ export class HistoricoAction extends Action{
 
 
     private selectAll() : string {
-        return 'select * from TBHISTORICO ORDER BY DTALTER desc;';
+        return 'select  TBHISTORICO.*, TBUSUARIO.NOME NOME from TBHISTORICO inner join TBUSUARIO on TBUSUARIO.ID = TBHISTORICO.IDUSER ORDER BY DTALTER desc;';
     }
     private selectSQL() : string {
-        return 'select * from TBHISTORICO where TBHISTORICO.IDOM = \'' + this.req.body.ID + '\';';
+        return 'select TBHISTORICO.*, TBUSUARIO.NOME NOME from TBHISTORICO inner join TBUSUARIO on TBUSUARIO.ID = TBHISTORICO.IDUSER where TBHISTORICO.IDOM = \'' + this.req.body.idOm + '\' ORDER BY DTALTER desc;';
     }
     @Get('/GetHistoricos')
     public Get(){
