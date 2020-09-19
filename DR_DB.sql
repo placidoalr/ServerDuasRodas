@@ -202,7 +202,7 @@
     `IDOM` INT NOT NULL,
     `IDEQUIP` INT NOT NULL,
     `OPER` INT DEFAULT NULL, /* Operação que deverá ser realizada sobre o equipamento */
-    `OPER_REALIZADA` INT DEFAULT NULL, /* Deverá gravar 1 se o manutentor preencher o checkbox  */
+    `OPER_REALIZADA` INT DEFAULT 0, /* Deverá gravar 1 se o manutentor preencher o checkbox  */
     `MAT_UTIL` INT DEFAULT NULL, /* Deverá gravar o material que sera necessário para realizar a operação no equipamento !! Apenas nas om rota !! */
     `QTDE_MAT` FLOAT DEFAULT NULL, /* Qt que sera utilizada do material. */
     PRIMARY KEY(`ID`),
@@ -217,7 +217,7 @@
     `IDOM` INT NOT NULL,
     `IDEQUIP` INT NOT NULL,
     `Obs` varchar(200) DEFAULT NULL,
-    `OPER_REALIZADA` INT DEFAULT NULL,/* Deverá gravar 1 se o manutentor preencher o checkbox no momento da OM LISTA */
+    `OPER_REALIZADA` INT DEFAULT 0,/* Deverá gravar 1 se o manutentor preencher o checkbox no momento da OM LISTA */
     PRIMARY KEY(`ID`),
     FOREIGN KEY (`IDEQUIP`) REFERENCES `DRDB`.`TBEQUIP` (`ID`)
   );
