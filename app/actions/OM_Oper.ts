@@ -21,9 +21,9 @@ export class OmOperAction extends Action {
 
     private editSQL(id:any) {
         if (this.req.body.tipoOm == "rota") {
-            return 'UPDATE TBEQUIP_WITH_TBOM SET OPER_REALIZADA = 1 WHERE ID =  \'' + id + '\';';
+            return 'UPDATE TBEQUIP_WITH_TBOM SET OPER_REALIZADA = '+this.req.body.realizada+' WHERE ID =  \'' + id + '\';';
         } else if (this.req.body.tipoOm == "lista") {
-            return 'UPDATE TBEQUIP_OM SET OPER_REALIZADA = 1 WHERE ID =  \'' + id + '\';';
+            return 'UPDATE TBEQUIP_OM SET OPER_REALIZADA = '+this.req.body.realizada+' WHERE ID =  \'' + id + '\';';
         }
     }
 
