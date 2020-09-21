@@ -12,17 +12,17 @@ export class OmOperAction extends Action {
     }
 
     private generateSQL() {
-        if (this.req.body.tipoOm == "rota") {
+        if (this.req.body.tipoOm == 2) {
             return 'select ID from TBEQUIP_WITH_TBOM where IDEQUIP = \'' + this.req.body.idEquip + '\' AND IDOM = \'' + this.req.body.idOm + '\';';
-        } else if (this.req.body.tipoOm == "lista") {
+        } else if (this.req.body.tipoOm == 3) {
             return 'select ID from TBEQUIP_OM where IDEQUIP = \'' + this.req.body.idEquip + '\' AND IDOM = \'' + this.req.body.idOm + '\';';
         }
     }
 
     private editSQL(id:any) {
-        if (this.req.body.tipoOm == "rota") {
+        if (this.req.body.tipoOm == 2) {
             return 'UPDATE TBEQUIP_WITH_TBOM SET OPER_REALIZADA = '+this.req.body.realizada+' WHERE ID =  \'' + id + '\';';
-        } else if (this.req.body.tipoOm == "lista") {
+        } else if (this.req.body.tipoOm == 3) {
             return 'UPDATE TBEQUIP_OM SET OPER_REALIZADA = '+this.req.body.realizada+' WHERE ID =  \'' + id + '\';';
         }
     }
