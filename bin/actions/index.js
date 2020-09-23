@@ -56,3 +56,5 @@ var Filtros_1 = require("./Filtros");
 exports.FiltrosAction = Filtros_1.FiltrosAction;
 var OM_Oper_1 = require("./OM_Oper");
 exports.OmOperAction = OM_Oper_1.OmOperAction;
+var assinaturas_1 = require("./assinaturas");
+exports.assinaturasAction = assinaturas_1.assinaturasAction;

@@ -58,6 +58,9 @@ var EndOMAction = /** @class */ (function (_super) {
         }
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\', now());';
     };
+    EndOMAction.prototype.assinar = function () {
+        return 'insert into TBASSINATURAS (TBASSINATURAS.IDUSER, TBASSINATURAS.IDOM, TBASSINATURAS.DTBAIXA) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\', now());';
+    };
     EndOMAction.prototype.generateSQL = function () {
         return 'select ESTADO from TBOM where TBOM.ID = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
     };
@@ -82,6 +85,8 @@ var EndOMAction = /** @class */ (function (_super) {
                         else {
                             new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL(estado)).subscribe(function (data) {
                                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(adm[0].NOME, estado)).subscribe(function (data) {
+                                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.assinar()).subscribe(function (data) {
+                                    });
                                 });
                             });
                         }

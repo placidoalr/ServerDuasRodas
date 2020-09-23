@@ -31,6 +31,9 @@ export class ReproveOMAction extends Action{
     private Reprove(state:any){
         return 'update TBOM set ESTADO = '+state+' where ID = '+ this.req.body.idOm +';';
     }
+    private rejeitar(){
+        return 'DELETE from TBASSINATURAS where IDOM = '+ this.req.body.idOm +';';
+    }
     private validateManut(){
         return 'select CARGO,NOME from TBUSUARIO where TBUSUARIO.ID = \'' + this.req.body.idUser + '\' AND STATUS = 1;';
     }
@@ -85,7 +88,11 @@ export class ReproveOMAction extends Action{
                                     (rep : any)=>{
                                         new MySQLFactory().getConnection().select(this.historico(manut[0].NOME,manut[0].CARGO )).subscribe(
                                             (data2 : any) => {
-                                                
+                                                new MySQLFactory().getConnection().select(this.rejeitar()).subscribe(
+                                                    (data2 : any) => {
+                                                        
+                                                    }
+                                                );
                                             }
                                         );
                                     });
@@ -95,7 +102,11 @@ export class ReproveOMAction extends Action{
                                     (rep : any)=>{
                                         new MySQLFactory().getConnection().select(this.historico(manut[0].NOME,manut[0].CARGO )).subscribe(
                                             (data2 : any) => {
-                                                
+                                                new MySQLFactory().getConnection().select(this.rejeitar()).subscribe(
+                                                    (data2 : any) => {
+                                                        
+                                                    }
+                                                );
                                             }
                                         );
                                     });
