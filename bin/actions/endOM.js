@@ -49,14 +49,17 @@ var EndOMAction = /** @class */ (function (_super) {
         }
     };
     EndOMAction.prototype.historico = function (nome, estado) {
-        var desc = 'Manutentor ' + nome + ' assinou a OM as ' + new Date().getHours().toString() + ' do dia ' + new Date().getDay().toString() + ' de ' + new Date().getMonth().toString() + ' de ' + new Date().getUTCFullYear().toString();
+        var desc = 'Manutentor ' + nome + ' assinou a OM';
         if (estado == 4) {
-            desc = 'Líder ' + nome + ' assinou a OM as ' + new Date().toLocaleDateString();
+            desc = 'Líder ' + nome + ' assinou a OM';
         }
         else if (estado == 5) {
-            desc = 'Administrador ' + nome + ' assinou a OM as ' + new Date().toLocaleDateString();
+            desc = 'Administrador ' + nome + ' assinou a OM';
         }
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\', now());';
+    };
+    EndOMAction.prototype.assinar = function () {
+        return 'insert into TBASSINATURAS (TBASSINATURAS.IDUSER, TBASSINATURAS.IDOM, TBASSINATURAS.DTBAIXA) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\', now());';
     };
     EndOMAction.prototype.generateSQL = function () {
         return 'select ESTADO from TBOM where TBOM.ID = \'' + this.req.body.idOm + '\' AND STATUS = 1;';
@@ -82,6 +85,8 @@ var EndOMAction = /** @class */ (function (_super) {
                         else {
                             new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL(estado)).subscribe(function (data) {
                                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(adm[0].NOME, estado)).subscribe(function (data) {
+                                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.assinar()).subscribe(function (data) {
+                                    });
                                 });
                             });
                         }

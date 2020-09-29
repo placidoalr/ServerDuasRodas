@@ -16,7 +16,6 @@ export class ListaIMAction extends Action{
 
     @Get('/listaim')
     public GetListaOM(){
-        console.log("AWOWW");
         new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
             (data : any) => {
                 this.sendAnswer(data);

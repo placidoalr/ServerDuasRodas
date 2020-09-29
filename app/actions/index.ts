@@ -26,6 +26,7 @@ import {OMMaterialAction} from './OM_Material';
 import {ReproveOMAction} from './reprove';
 import {FiltrosAction} from './Filtros';
 import {OmOperAction} from './OM_Oper';
+import {assinaturasAction} from './assinaturas';
 
 
 
@@ -57,3 +58,4 @@ export {OMMaterialAction}
 export {ReproveOMAction}
 export {FiltrosAction}
 export {OmOperAction}
+export {assinaturasAction}

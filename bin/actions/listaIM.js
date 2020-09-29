@@ -36,7 +36,6 @@ var ListaIMAction = /** @class */ (function (_super) {
     };
     ListaIMAction.prototype.GetListaOM = function () {
         var _this = this;
-        console.log("AWOWW");
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
             _this.sendAnswer(data);
         }, function (error) {
