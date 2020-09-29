@@ -49,12 +49,12 @@ var EndOMAction = /** @class */ (function (_super) {
         }
     };
     EndOMAction.prototype.historico = function (nome, estado) {
-        var desc = 'Manutentor ' + nome + ' assinou a OM as ' + new Date().getHours().toString() + ' do dia ' + new Date().getDay().toString() + ' de ' + new Date().getMonth().toString() + ' de ' + new Date().getUTCFullYear().toString();
+        var desc = 'Manutentor ' + nome + ' assinou a OM';
         if (estado == 4) {
-            desc = 'Líder ' + nome + ' assinou a OM as ' + new Date().toLocaleDateString();
+            desc = 'Líder ' + nome + ' assinou a OM';
         }
         else if (estado == 5) {
-            desc = 'Administrador ' + nome + ' assinou a OM as ' + new Date().toLocaleDateString();
+            desc = 'Administrador ' + nome + ' assinou a OM';
         }
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\', now());';
     };
