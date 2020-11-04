@@ -91,7 +91,6 @@ export class OperAction extends Action {
         } else {
             new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
                 (data: any) => {
-                    //console.log(data);
                     this.sendAnswer(data);
                 },
                 (error: any) => {

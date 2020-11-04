@@ -96,11 +96,8 @@ export class CausaDefAction extends Action {
         if (retorno.val == false) {
             return retorno.res;
         } else {
-            //console.log("ENTROU"+this.req.body.name)
-            console.log(this.req.body)
             new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
                 (data: any) => {
-                    //console.log(data);
                 },
                 (error: any) => {
                     this.sendError(error);
@@ -116,18 +113,14 @@ export class CausaDefAction extends Action {
         if (retorno.val == false) {
             return retorno.res;
         } else {
-            console.log(this.req.body)
             new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
                 (data: any) => {
                     if (data.length || data.length > 0) {
-                        //console.log(data);
                         this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Causa já existe'));
                         return;
                     } else {
-                        //console.log(data);
                         new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
                             (data: any) => {
-                                //  console.log(data);
                             }
                         );
                     }

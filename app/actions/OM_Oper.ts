@@ -41,11 +41,9 @@ export class OmOperAction extends Action {
                     if (data.length || data.length > 0) {
                         new MySQLFactory().getConnection().select(this.editSQL(data[0].ID)).subscribe(
                             (data: any) => {
-                                //  console.log(data);
                             }
                         );
                     } else {
-                        //console.log(data);
                         this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Causa já existe'));
                         return;
                     }

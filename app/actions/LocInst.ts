@@ -52,16 +52,12 @@ export class LOC_INSTAction extends Action {
 
             new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
                 (data: any) => {
-                    console.log(data);
                     if (data.length || data.length > 0) {
-                        //console.log("Centro de trabalho já existe "+data);
                         this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Local de instalação já existe'));
                         return;
                     } else {
-                        console.log(data);
                         new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                             (data: any) => {
-                                console.log("DEU CERTO ADD " + data);
                             }
                         );
                     }
@@ -103,10 +99,8 @@ export class LOC_INSTAction extends Action {
         if (retorno.val == false) {
             return retorno.res;
         } else {
-            //console.log("ENTROU"+this.req.body.name)
             new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
                 (data: any) => {
-                    //console.log(data);
                     this.sendAnswer(data);
                 },
                 (error: any) => {
@@ -133,7 +127,7 @@ export class LOC_INSTAction extends Action {
         }
     }
 
-    
+
     defineVisibility() {
         this.actionEscope = ActionType.atPublic;
     }

@@ -104,10 +104,8 @@ export class EquipAction extends Action {
         if (retorno.val == false) {
             return retorno.res;
         } else {
-            //console.log("ENTROU"+this.req.body.name)
             new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
                 (data: any) => {
-                    //console.log(data);
                     this.sendAnswer(data);
                 },
                 (error: any) => {

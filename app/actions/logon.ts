@@ -22,7 +22,6 @@ export class LogonAction extends Action {
     @Post('/logon')
     public Post() {
         this.validateData();
-        console.log(this.req.body)
         new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
             (data: any) => {
                 if (!data.length || data.length != 1) {

@@ -1,9 +1,8 @@
 import { Get, Patch, Post, Put } from '../decorators';
 import { Action } from '../kernel/action';
 import { ActionType } from '../kernel/route-types';
-import { VPUtils } from '../utils/vputils';
-import { KernelUtils } from '../kernel/kernel-utils';
 import { MySQLFactory } from '../mysql/mysql_factory';
+import { jwts } from '../utils/jwt';
 
 export class FiltrosAction extends Action {
 

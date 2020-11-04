@@ -137,14 +137,11 @@ export class UserAction extends Action {
             new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
                 (data: any) => {
                     if (data.length || data.length > 0 && this.req.body.idsap != this.req.body.idsaplast) {
-                        //console.log(data);
                         this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
                         return;
                     } else {
-                        //console.log(data);
                         new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
                             (data: any) => {
-                                //  console.log(data);
                             }
                         );
                     }

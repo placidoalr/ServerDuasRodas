@@ -49,14 +49,11 @@ export class LayoutAction extends Action {
             new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
                 (data: any) => {
                     if (data.length || data.length > 0) {
-                        console.log(data);
                         this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Layout já existe'));
                         return;
                     } else {
-                        console.log(data);
                         new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                             (data: any) => {
-                                console.log(data);
                             }
                         );
                     }
@@ -114,10 +111,8 @@ export class LayoutAction extends Action {
         if (retorno.val == false) {
             return retorno.res;
         } else {
-            //console.log("ENTROU"+this.req.body.name)
             new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
                 (data: any) => {
-                    //console.log(data);
                     this.sendAnswer(data);
                 },
                 (error: any) => {
@@ -134,7 +129,6 @@ export class LayoutAction extends Action {
         if (retorno.val == false) {
             return retorno.res;
         } else {
-            console.log(this.req.body)
             new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
                 (data: any) => {
                 }

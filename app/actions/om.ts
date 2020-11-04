@@ -115,7 +115,6 @@ export class OMAction extends Action {
             return retorno.res;
         } else {
             this.validateData();
-            console.log(this.req.body)
             new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                 (data: any) => {
                     if (this.req.body.layout == 2) {
@@ -349,7 +348,6 @@ export class OMAction extends Action {
         if (retorno.val == false) {
             return retorno.res;
         } else {
-            console.log(this.req.body);
             new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
                 (data: any) => {
                     this.sendAnswer(data);
@@ -390,11 +388,9 @@ export class OMAction extends Action {
             new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
                 (data: any) => {
                     if (data.length || data.length > 0) {
-                        //console.log(data);
                         this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'OM já existe'));
                         return;
                     } else {
-                        //console.log(data);
                         new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
                             (data: any) => {
 
