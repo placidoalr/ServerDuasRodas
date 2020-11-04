@@ -25,7 +25,6 @@ export class LogonAction extends Action {
         console.log(this.req.body)
         new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
             (data: any) => {
-                console.log('data', data);
                 if (!data.length || data.length != 1) {
                     this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário e senha inválidos'));
                     return;
@@ -35,7 +34,7 @@ export class LogonAction extends Action {
                     expiresIn: 18000 // expires in 5min
                 });
                 this.sendAnswer({
-                    token: token, 
+                    token: token,
                     auth: true,
                     userName: this.req.body.userName,
                     id: id,
@@ -45,7 +44,6 @@ export class LogonAction extends Action {
                 });
             },
             (error: any) => {
-                console.log('Err', error);
                 this.sendError(error);
             }
         );

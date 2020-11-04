@@ -4,6 +4,7 @@ import { ActionType } from '../kernel/route-types';
 import { VPUtils } from '../utils/vputils';
 import { KernelUtils } from '../kernel/kernel-utils';
 import { MySQLFactory } from '../mysql/mysql_factory';
+import { jwts } from '../utils/jwt';
 
 export class OMAction extends Action {
     private validateData() {
@@ -19,7 +20,7 @@ export class OMAction extends Action {
         return 'insert into TBOM (TITULO,IDSAP,SOLIC,IDLAYOUT,IDCT,TPOM,CAUSADEF,DEF,DTGERACAO,OBS,PRIORIDADE,ESTADO,LOC_INST_ATRIB,REQUERPARADA,DT_INI_PLAN,DT_INI_PROG,DT_FIM_PLAN,DT_FIM_PROG,SINTOMA) values (\'' + this.req.body.titulo + '\',\'' + this.req.body.idsap + '\',\'' + this.req.body.solicitante + '\',' + this.req.body.layout + ',' + this.req.body.ct + ',' + this.req.body.tipoManut + ',' + this.req.body.causa + ',\'' + this.req.body.def + '\',NOW(), \'' + this.req.body.obs + '\',' + this.req.body.prior + ', 1,' + this.req.body.li + ',\'' + this.req.body.requerParada + '\',\'' + this.req.body.dtIniPlan + '\',\'' + this.req.body.dtIniProg + '\',\'' + this.req.body.dtFimPlan + '\',\'' + this.req.body.dtFimProg + '\',\'' + this.req.body.sintoma + '\');';
     }
     private insertEQUIPROTA(equip: any, id: any) {
-        return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER,MAT_UTIL,QTDE_MAT) values (' + id + ',' + equip.id + ',' + equip.oper + ',' + equip.material  + ',' + equip.qtde + ');';
+        return 'insert into TBEQUIP_WITH_TBOM (IDOM,IDEQUIP, OPER,MAT_UTIL,QTDE_MAT) values (' + id + ',' + equip.id + ',' + equip.oper + ',' + equip.material + ',' + equip.qtde + ');';
     }
     private insertEQUIPSQL(equip: any, id: any) {
         return 'insert into TBEQUIP_OM (IDOM,IDEQUIP) values (' + id + ',' + equip.id + ');';
@@ -27,7 +28,7 @@ export class OMAction extends Action {
     private insertEQUIPSQLObs() {
         return 'update TBEQUIP_OM set Obs = \'' + this.req.body.obs + '\' where IDOM = ' + this.req.body.idOm + ' AND IDEQUIP = ' + this.req.body.idEquip + ';';
     }
-   
+
     private insertOPERSQL(oper: any, id: any) {
         return 'insert into TBOPER_WITH_OM (IDOM, OPER) values (' + id + ',' + oper.id + ');';
     }
@@ -107,233 +108,332 @@ export class OMAction extends Action {
 
     @Post('/AddOM')
     public Post() {
-        this.validateData();
-        console.log(this.req.body)
-        new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
-            (data: any) => {
-                if (this.req.body.layout == 2) {
-                    if (this.req.body.equips) {
-                        this.req.body.equips.forEach((equip: any) => {
-                            new MySQLFactory().getConnection().select(this.insertEQUIPROTA(equip, data.insertId)).subscribe(
-                                (data1: any) => {
+        var jwtss = new jwts();
 
-                                }
-                            );
-                        });
-                    }
-                } else {
-                    if (this.req.body.equips) {
-                        this.req.body.equips.forEach((equip: any) => {
-                            new MySQLFactory().getConnection().select(this.insertEQUIPSQL(equip, data.insertId)).subscribe(
-                                (data1: any) => {
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            this.validateData();
+            console.log(this.req.body)
+            new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
+                (data: any) => {
+                    if (this.req.body.layout == 2) {
+                        if (this.req.body.equips) {
+                            this.req.body.equips.forEach((equip: any) => {
+                                new MySQLFactory().getConnection().select(this.insertEQUIPROTA(equip, data.insertId)).subscribe(
+                                    (data1: any) => {
 
-                                }
-                            );
-                        });
-                    }
-                    if (this.req.body.opers) {
-                        this.req.body.opers.forEach((oper: any) => {
-                            new MySQLFactory().getConnection().select(this.insertOPERSQL(oper, data.insertId)).subscribe(
-                                (data1: any) => {
+                                    }
+                                );
+                            });
+                        }
+                    } else {
+                        if (this.req.body.equips) {
+                            this.req.body.equips.forEach((equip: any) => {
+                                new MySQLFactory().getConnection().select(this.insertEQUIPSQL(equip, data.insertId)).subscribe(
+                                    (data1: any) => {
 
-                                }
-                            );
-                        });
+                                    }
+                                );
+                            });
+                        }
+                        if (this.req.body.opers) {
+                            this.req.body.opers.forEach((oper: any) => {
+                                new MySQLFactory().getConnection().select(this.insertOPERSQL(oper, data.insertId)).subscribe(
+                                    (data1: any) => {
+
+                                    }
+                                );
+                            });
+                        }
                     }
                 }
-            }
-        );
-        this.sendAnswer({
-            token: new VPUtils().generateGUID().toUpperCase()
-        });
+            );
+            this.sendAnswer({
+                token: new VPUtils().generateGUID().toUpperCase()
+            });
+        }
     }
+
     @Post('/GetEquipWOMROTA')
     public EquipWOMROTA() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectEquipWOMROTA()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectEquipWOMROTA()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
+
     @Post('/GetEquipWOM')
     public EquipWOM() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectEquipWOM()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectEquipWOM()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
+
     @Post('/GetMatWOM')
     public MatWOM() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectMATWOM()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectMATWOM()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
+
     @Post('/GetOperWOM')
     public OperWOM() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectOPERWOM()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectOPERWOM()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
 
     @Get('/GetOM')
     public Get() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
     @Get('/GetOMsFinalizadaADM')
     public getOMsFinalizadaADM() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectOMsFinalizadaADM()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectOMsFinalizadaADM()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
     @Post('/GetOMsAndamentoLider')
     public getOMsAndamentoLider() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectOMsAndamentoLider()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectOMsAndamentoLider()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
+
     @Get('/GetOMsAndamentoADM')
     public getOMsAndamentoADM() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectOMsAndamentoADM()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectOMsAndamentoADM()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
     @Post('/GetOMsBySetor')
     public getOMsBySetor() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectOMsBySetor()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectOMsBySetor()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
     @Post('/GetOMsFinalizadaLider')
     public getOMsFinalizadaLider() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectOMsFinalizadaLider()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectOMsFinalizadaLider()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
     @Post('/GetOMUnica')
     public Get1() {
-        console.log(this.req.body);
-        new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var jwtss = new jwts();
+
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            console.log(this.req.body);
+            new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
 
     @Patch('/DelOM')
     public Patch() {
-        //console.log("ENTROU"+this.req.body.name)
-        new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
-            (data: any) => {
-                //console.log(data);
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var jwtss = new jwts();
+
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
     @Post('/EditOM')
     public Edit() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-            (data: any) => {
-                if (data.length || data.length > 0) {
-                    //console.log(data);
-                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'OM já existe'));
-                    return;
-                } else {
-                    //console.log(data);
-                    new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
-                        (data: any) => {
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+                (data: any) => {
+                    if (data.length || data.length > 0) {
+                        //console.log(data);
+                        this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'OM já existe'));
+                        return;
+                    } else {
+                        //console.log(data);
+                        new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
+                            (data: any) => {
 
-                        }
-                    );
+                            }
+                        );
+                    }
+                    this.sendAnswer({
+                        token: new VPUtils().generateGUID().toUpperCase()
+                    });
+                },
+                (error: any) => {
+                    this.sendError(error);
                 }
-                this.sendAnswer({
-                    token: new VPUtils().generateGUID().toUpperCase()
-                });
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+            );
+        }
+
     }
     @Post('/EditObsEquipLista')
     public EditObsEquipLista() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.insertEQUIPSQLObs()).subscribe(
-            (data: any) => {
-                this.sendAnswer({
-                    token: new VPUtils().generateGUID().toUpperCase()
-                });
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.insertEQUIPSQLObs()).subscribe(
+                (data: any) => {
+                    this.sendAnswer({
+                        token: new VPUtils().generateGUID().toUpperCase()
+                    });
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
+
+
     defineVisibility() {
         this.actionEscope = ActionType.atPublic;
     }
