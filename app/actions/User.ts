@@ -16,7 +16,6 @@ export class UserAction extends Action{
     }
     private generateADDSQL() : string {
         return 'select * from TBUSUARIO where (TBUSUARIO.NOME = \'' + this.req.body.name + '\' OR TBUSUARIO.IDSAP = \'' + this.req.body.idsap + '\') AND STATUS = 1;';
-
     }
     private insertSQL() : string{
         return 'insert into TBUSUARIO (TBUSUARIO.IDSAP ,TBUSUARIO.LOGIN, TBUSUARIO.SENHA, TBUSUARIO.CARGO, TBUSUARIO.NOME, TBUSUARIO.CDCT) values (\''+ this.req.body.idsap+'\',\''+ this.req.body.login +'\', \''+ this.req.body.password+'\', \''+ this.req.body.cargo+'\', \''+ this.req.body.name+'\', \''+ this.req.body.cdct+'\');';
@@ -45,12 +44,10 @@ export class UserAction extends Action{
         this.validateData();
         new MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(
             (data : any) => {
-                console.log(data)
                 if (data.length || data.length > 0){
                   this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
                   return;
                 }else{
-                    console.log("else")
                     new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                         (data : any) => {
                             

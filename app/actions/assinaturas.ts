@@ -5,6 +5,7 @@ import { VPUtils } from '../utils/vputils';
 import { KernelUtils } from '../kernel/kernel-utils';
 import { MySQL } from '../mysql/mysql';
 import { MySQLFactory } from '../mysql/mysql_factory';
+import { jwts } from '../utils/jwt';
 
 export class assinaturasAction extends Action {
     private selectSQL(): string {
@@ -13,7 +14,12 @@ export class assinaturasAction extends Action {
 
     @Post('/GetAssinaturas')
     public GetCT() {
-
+        var jwtss = new jwts();
+        
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false){
+            return retorno.res;
+        }else{
         new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
             (data: any) => {
                 this.sendAnswer(data);
@@ -22,6 +28,7 @@ export class assinaturasAction extends Action {
                 this.sendError(error);
             }
         );
+    }
     }
 
     defineVisibility() {

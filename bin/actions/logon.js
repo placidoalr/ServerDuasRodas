@@ -25,9 +25,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var decorators_1 = require("../decorators");
 var action_1 = require("../kernel/action");
 var route_types_1 = require("../kernel/route-types");
-var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
+require("dotenv-safe").config();
+var jwt = require('jsonwebtoken');
 var LogonAction = /** @class */ (function (_super) {
     __extends(LogonAction, _super);
     function LogonAction() {
@@ -49,17 +50,26 @@ var LogonAction = /** @class */ (function (_super) {
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário e senha inválidos'));
                 return;
             }
-            console.log(data[0]);
+            var id = data[0].ID;
+            var token = jwt.sign({ id: id }, process.env.SECRET, {
+                expiresIn: 18000 // expires in 5min
+            });
             _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase(),
+                token: token,
+                auth: true,
                 userName: _this.req.body.userName,
-                id: data[0].ID,
+                id: id,
                 cargoId: data[0].CARGO,
                 cargoNome: data[0].CARGONOME
             });
         }, function (error) {
             console.log('Err', error);
             _this.sendError(error);
+        });
+    };
+    LogonAction.prototype.Logout = function () {
+        this.sendAnswer({
+            auth: false, token: null
         });
     };
     LogonAction.prototype.defineVisibility = function () {
@@ -71,6 +81,12 @@ var LogonAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], LogonAction.prototype, "Post", null);
+    __decorate([
+        decorators_1.Post('/logout'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", []),
+        __metadata("design:returntype", void 0)
+    ], LogonAction.prototype, "Logout", null);
     return LogonAction;
 }(action_1.Action));
 exports.LogonAction = LogonAction;

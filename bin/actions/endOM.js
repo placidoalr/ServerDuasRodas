@@ -39,13 +39,13 @@ var EndOMAction = /** @class */ (function (_super) {
     };
     EndOMAction.prototype.insertSQL = function (estado) {
         if (estado == 3) {
-            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', TBOM.DTBAIXA_MANUT = NOW() WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
+            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\' WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
         }
         else if (estado == 4) {
-            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', TBOM.DTBAIXA_SETOR = NOW() WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
+            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\' WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
         }
         else {
-            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', TBOM.DTBAIXA_ADMIN = NOW() WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
+            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\' WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
         }
     };
     EndOMAction.prototype.historico = function (nome, estado) {
