@@ -5,6 +5,7 @@ import { VPUtils } from '../utils/vputils';
 import { KernelUtils } from '../kernel/kernel-utils';
 import { MySQL } from '../mysql/mysql';
 import { MySQLFactory } from '../mysql/mysql_factory';
+import { jwts } from '../utils/jwt';
 
 export class DelegateOMAction extends Action {
 
@@ -32,51 +33,58 @@ export class DelegateOMAction extends Action {
     }
     @Post('/DelegateOM')
     public Post() {
-        this.validateData();
-        new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
-            (adm: any) => {
-                if (adm[0].CARGO != 1) {
-                    new MySQLFactory().getConnection().select(this.validateManut()).subscribe(
-                        (manut: any) => {
-                            if (manut[0].CARGO == 1) {
-                                new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-                                    (data: any) => {
-                                        if (data.length || data.length > 0) {
-                                            this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
-                                            return;
-                                        } else {
-                                            new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
-                                                (data: any) => {
+        var jwtss = new jwts();
 
-                                                    new MySQLFactory().getConnection().select(this.updateOM()).subscribe(
-                                                        (data: any) => {
-                                                            new MySQLFactory().getConnection().select(this.historico(adm[0].NOME, manut[0].NOME)).subscribe(
-                                                                (data: any) => {
-                                                                });
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            this.validateData();
+            new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
+                (adm: any) => {
+                    if (adm[0].CARGO != 1) {
+                        new MySQLFactory().getConnection().select(this.validateManut()).subscribe(
+                            (manut: any) => {
+                                if (manut[0].CARGO == 1) {
+                                    new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+                                        (data: any) => {
+                                            if (data.length || data.length > 0) {
+                                                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
+                                                return;
+                                            } else {
+                                                new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
+                                                    (data: any) => {
 
-                                                        }
-                                                    );
-                                                }
-                                            );
+                                                        new MySQLFactory().getConnection().select(this.updateOM()).subscribe(
+                                                            (data: any) => {
+                                                                new MySQLFactory().getConnection().select(this.historico(adm[0].NOME, manut[0].NOME)).subscribe(
+                                                                    (data: any) => {
+                                                                    });
+
+                                                            }
+                                                        );
+                                                    }
+                                                );
+                                            }
+                                            this.sendAnswer({
+                                                token: new VPUtils().generateGUID().toUpperCase()
+                                            });
+                                        },
+                                        (error: any) => {
+                                            this.sendError(error);
                                         }
-                                        this.sendAnswer({
-                                            token: new VPUtils().generateGUID().toUpperCase()
-                                        });
-                                    },
-                                    (error: any) => {
-                                        this.sendError(error);
-                                    }
-                                );
-                            } else {
+                                    );
+                                } else {
 
-                                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário não é um manutentor'));
-                            }
-                        })
-                } else {
+                                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário não é um manutentor'));
+                                }
+                            })
+                    } else {
 
-                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
-                }
-            });
+                        this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para delegar'));
+                    }
+                });
+        }
     }
 
     defineVisibility() {

@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
+var path_1 = require("path");
+require("dotenv-safe").config({ path: path_1.resolve(__dirname, "../.env"), sample: path_1.resolve(__dirname, "../.env.example") });
+var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var bodyParser = require('body-parser');
 var app = express();

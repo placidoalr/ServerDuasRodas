@@ -5,6 +5,7 @@ import { VPUtils } from '../utils/vputils';
 import { KernelUtils } from '../kernel/kernel-utils';
 import { MySQL } from '../mysql/mysql';
 import { MySQLFactory } from '../mysql/mysql_factory';
+import { jwts } from '../utils/jwt';
 
 export class DescOMAction extends Action {
     private validateData() {
@@ -49,85 +50,77 @@ export class DescOMAction extends Action {
 
     @Post('/GetDescOM')
     public GetDescOM() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectDesc()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectDesc()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
     @Post('/GetTempo')
     public GetTempoOM() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectTempo()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectTempo()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
     @Post('/GetDescOMROTA')
     public GetDescOMROTA() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectDescROTA()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectDescROTA()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
 
     @Post('/DescOM')
     public Post() {
-        this.validateData();
-        new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
-            (adm: any) => {
-                if (adm[0].CARGO == 1) {
-                    new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
-                        (admon: any) => {
-                            if (admon.length || admon.length > 0) {
+        var jwtss = new jwts();
 
-                                new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
-                                    (data: any) => {
-                                    }
-                                );
-
-
-                            } else {
-                                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
-                            }
-                        });
-                } else {
-
-                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
-                }
-            });
-        this.sendAnswer({
-            token: new VPUtils().generateGUID().toUpperCase()
-        });
-    }
-    @Post('/DescOMRota')
-    public PostRota() {
-        new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
-            (adm: any) => {
-                if (adm[0]) {
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            this.validateData();
+            new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
+                (adm: any) => {
                     if (adm[0].CARGO == 1) {
                         new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
                             (admon: any) => {
                                 if (admon.length || admon.length > 0) {
 
-                                    new MySQLFactory().getConnection().select(this.insertRota()).subscribe(
+                                    new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
                                         (data: any) => {
-                                            this.sendAnswer({
-                                                token: new VPUtils().generateGUID().toUpperCase()
-                                            });
                                         }
                                     );
 
@@ -140,112 +133,179 @@ export class DescOMAction extends Action {
 
                         this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
                     }
-                } else {
-
-                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário não encontrado'));
-                }
+                });
+            this.sendAnswer({
+                token: new VPUtils().generateGUID().toUpperCase()
             });
+        }
+    }
+    @Post('/DescOMRota')
+    public PostRota() {
+        var jwtss = new jwts();
 
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
+                (adm: any) => {
+                    if (adm[0]) {
+                        if (adm[0].CARGO == 1) {
+                            new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
+                                (admon: any) => {
+                                    if (admon.length || admon.length > 0) {
+
+                                        new MySQLFactory().getConnection().select(this.insertRota()).subscribe(
+                                            (data: any) => {
+                                                this.sendAnswer({
+                                                    token: new VPUtils().generateGUID().toUpperCase()
+                                                });
+                                            }
+                                        );
+
+
+                                    } else {
+                                        this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                                    }
+                                });
+                        } else {
+
+                            this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
+                        }
+                    } else {
+
+                        this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário não encontrado'));
+                    }
+                });
+        }
     }
     @Post('/UpdateDescOM')
     public Update() {
-        new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
-            (adm: any) => {
-                if (adm[0].CARGO == 1) {
-                    new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
-                        (admon: any) => {
-                            if (admon.length || admon.length > 0) {
+        var jwtss = new jwts();
 
-                                new MySQLFactory().getConnection().select(this.updateSQL()).subscribe(
-                                    (data: any) => {
-                                    }
-                                );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
+                (adm: any) => {
+                    if (adm[0].CARGO == 1) {
+                        new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
+                            (admon: any) => {
+                                if (admon.length || admon.length > 0) {
+
+                                    new MySQLFactory().getConnection().select(this.updateSQL()).subscribe(
+                                        (data: any) => {
+                                        }
+                                    );
 
 
-                            } else {
-                                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
-                            }
-                        });
-                } else {
+                                } else {
+                                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                                }
+                            });
+                    } else {
 
-                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
-                }
+                        this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
+                    }
+                });
+            this.sendAnswer({
+                token: new VPUtils().generateGUID().toUpperCase()
             });
-        this.sendAnswer({
-            token: new VPUtils().generateGUID().toUpperCase()
-        });
+        }
     }
     @Post('/UpdateDescOMRota')
     public UpdateRota() {
-        new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
-            (adm: any) => {
-                if (adm[0].CARGO == 1) {
-                    new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
-                        (admon: any) => {
-                            if (admon.length || admon.length > 0) {
+        var jwtss = new jwts();
 
-                                new MySQLFactory().getConnection().select(this.updateRotaSQL()).subscribe(
-                                    (data: any) => {
-                                    }
-                                );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
+                (adm: any) => {
+                    if (adm[0].CARGO == 1) {
+                        new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
+                            (admon: any) => {
+                                if (admon.length || admon.length > 0) {
+
+                                    new MySQLFactory().getConnection().select(this.updateRotaSQL()).subscribe(
+                                        (data: any) => {
+                                        }
+                                    );
 
 
-                            } else {
-                                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
-                            }
-                        });
-                } else {
+                                } else {
+                                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                                }
+                            });
+                    } else {
 
-                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
-                }
+                        this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
+                    }
+                });
+            this.sendAnswer({
+                token: new VPUtils().generateGUID().toUpperCase()
             });
-        this.sendAnswer({
-            token: new VPUtils().generateGUID().toUpperCase()
-        });
+        }
     }
     @Post('/DescOMLista')
     public PostLista() {
-        this.validateData();
-        new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
-            (adm: any) => {
-                if (adm[0].CARGO == 1) {
-                    new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
-                        (admon: any) => {
-                            if (admon.length || admon.length > 0) {
+        var jwtss = new jwts();
 
-                                this.req.body.equips.forEach((equip: any) => {
-                                    new MySQLFactory().getConnection().select(this.updateEQUIPSQL(equip)).subscribe(
-                                        (data1: any) => {
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            this.validateData();
+            new MySQLFactory().getConnection().select(this.validateADM()).subscribe(
+                (adm: any) => {
+                    if (adm[0].CARGO == 1) {
+                        new MySQLFactory().getConnection().select(this.ADMonOM()).subscribe(
+                            (admon: any) => {
+                                if (admon.length || admon.length > 0) {
 
-                                        });
-                                });
+                                    this.req.body.equips.forEach((equip: any) => {
+                                        new MySQLFactory().getConnection().select(this.updateEQUIPSQL(equip)).subscribe(
+                                            (data1: any) => {
+
+                                            });
+                                    });
 
 
-                            } else {
-                                this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
-                            }
-                        });
-                } else {
+                                } else {
+                                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                                }
+                            });
+                    } else {
 
-                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
-                }
+                        this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
+                    }
+                });
+            this.sendAnswer({
+                token: new VPUtils().generateGUID().toUpperCase()
             });
-        this.sendAnswer({
-            token: new VPUtils().generateGUID().toUpperCase()
-        });
+        }
     }
     @Patch('/DelDescOMRota')
     public Patch() {
-        new MySQLFactory().getConnection().select(this.deleteDescOMRota()).subscribe(
-            (data: any) => {
-                this.sendAnswer({
-                token: new VPUtils().generateGUID().toUpperCase()
-            });
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var jwtss = new jwts();
+
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.deleteDescOMRota()).subscribe(
+                (data: any) => {
+                    this.sendAnswer({
+                        token: new VPUtils().generateGUID().toUpperCase()
+                    });
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
     defineVisibility() {
         this.actionEscope = ActionType.atPublic;

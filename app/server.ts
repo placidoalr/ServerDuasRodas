@@ -1,4 +1,6 @@
 import express = require("express");
+import { resolve } from "path"
+require("dotenv-safe").config({ path: resolve(__dirname, "../.env"),sample: resolve(__dirname, "../.env.example")  });
 var cors = require('cors');
 var bodyParser = require('body-parser');
 

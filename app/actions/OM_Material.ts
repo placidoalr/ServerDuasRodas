@@ -5,6 +5,7 @@ import { VPUtils } from '../utils/vputils';
 import { KernelUtils } from '../kernel/kernel-utils';
 import { MySQL } from '../mysql/mysql';
 import { MySQLFactory } from '../mysql/mysql_factory';
+import { jwts } from '../utils/jwt';
 
 export class OMMaterialAction extends Action {
 
@@ -42,104 +43,126 @@ export class OMMaterialAction extends Action {
 
     @Post('/AddOMMaterial')
     public Post() {
-        this.validateData();
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-            (data: any) => {
-                if (data.length || data.length > 0) {
-                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
-                    return;
-                } else {
-                    new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
-                        (data: any) => {
-                            new MySQLFactory().getConnection().select(this.getNomes()).subscribe(
-                                (dados: any) => {
-                                    new MySQLFactory().getConnection().select(this.historico(dados[0].NOME, dados[0].MATERIALNOME)).subscribe(
-                                        (dados: any) => {
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            this.validateData();
 
-                                        }
-                                    );
-                                }
-                            );
-                        }
-                    );
+            new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+                (data: any) => {
+                    if (data.length || data.length > 0) {
+                        this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
+                        return;
+                    } else {
+                        new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
+                            (data: any) => {
+                                new MySQLFactory().getConnection().select(this.getNomes()).subscribe(
+                                    (dados: any) => {
+                                        new MySQLFactory().getConnection().select(this.historico(dados[0].NOME, dados[0].MATERIALNOME)).subscribe(
+                                            (dados: any) => {
+
+                                            }
+                                        );
+                                    }
+                                );
+                            }
+                        );
+                    }
+                    this.sendAnswer({
+                        token: new VPUtils().generateGUID().toUpperCase()
+                    });
+                },
+                (error: any) => {
+                    this.sendError(error);
                 }
-                this.sendAnswer({
-                    token: new VPUtils().generateGUID().toUpperCase()
-                });
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+            );
+        }
     }
 
     @Post('/EditOMMaterialQTD')
     public Edit() {
-        this.validateData();
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-            (data: any) => {
-                if (!data.length || data.length <= 0) {
-                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Material não encontrado'));
-                    return;
-                } else {
-                    new MySQLFactory().getConnection().select(this.updateSQL()).subscribe(
-                        (data: any) => {
-                            new MySQLFactory().getConnection().select(this.getNomes()).subscribe(
-                                (dados: any) => {
-                                    new MySQLFactory().getConnection().select(this.historicoUp(dados[0].NOME, dados[0].MATERIALNOME)).subscribe(
-                                        (dados: any) => {
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            this.validateData();
 
-                                        }
-                                    );
-                                }
-                            );
-                        }
-                    );
+            new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+                (data: any) => {
+                    if (!data.length || data.length <= 0) {
+                        this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Material não encontrado'));
+                        return;
+                    } else {
+                        new MySQLFactory().getConnection().select(this.updateSQL()).subscribe(
+                            (data: any) => {
+                                new MySQLFactory().getConnection().select(this.getNomes()).subscribe(
+                                    (dados: any) => {
+                                        new MySQLFactory().getConnection().select(this.historicoUp(dados[0].NOME, dados[0].MATERIALNOME)).subscribe(
+                                            (dados: any) => {
+
+                                            }
+                                        );
+                                    }
+                                );
+                            }
+                        );
+                    }
+                    this.sendAnswer({
+                        token: new VPUtils().generateGUID().toUpperCase()
+                    });
+                },
+                (error: any) => {
+                    this.sendError(error);
                 }
-                this.sendAnswer({
-                    token: new VPUtils().generateGUID().toUpperCase()
-                });
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+            );
+        }
     }
     @Patch('/DeleteOMMaterial')
     public Delete() {
-        this.validateData();
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-            (data: any) => {
-                if (!data.length || data.length <= 0) {
-                    this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Material não encontrado'));
-                    return;
-                } else {
-                    new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
-                        (data: any) => {
-                            new MySQLFactory().getConnection().select(this.getNomes()).subscribe(
-                                (dados: any) => {
-                                    new MySQLFactory().getConnection().select(this.historicoDel(dados[0].NOME, dados[0].MATERIALNOME)).subscribe(
-                                        (dados: any) => {
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            this.validateData();
 
-                                        }
-                                    );
-                                }
-                            );
-                        }
-                    );
+            new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
+                (data: any) => {
+                    if (!data.length || data.length <= 0) {
+                        this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Material não encontrado'));
+                        return;
+                    } else {
+                        new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
+                            (data: any) => {
+                                new MySQLFactory().getConnection().select(this.getNomes()).subscribe(
+                                    (dados: any) => {
+                                        new MySQLFactory().getConnection().select(this.historicoDel(dados[0].NOME, dados[0].MATERIALNOME)).subscribe(
+                                            (dados: any) => {
+
+                                            }
+                                        );
+                                    }
+                                );
+                            }
+                        );
+                    }
+                    this.sendAnswer({
+                        token: new VPUtils().generateGUID().toUpperCase()
+                    });
+                },
+                (error: any) => {
+                    this.sendError(error);
                 }
-                this.sendAnswer({
-                    token: new VPUtils().generateGUID().toUpperCase()
-                });
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+            );
+        }
     }
+
     defineVisibility() {
         this.actionEscope = ActionType.atPublic;
     }

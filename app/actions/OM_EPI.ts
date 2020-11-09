@@ -5,6 +5,7 @@ import { VPUtils } from '../utils/vputils';
 import { KernelUtils } from '../kernel/kernel-utils';
 import { MySQL } from '../mysql/mysql';
 import { MySQLFactory } from '../mysql/mysql_factory';
+import { jwts } from '../utils/jwt';
 
 export class OMEPIAction extends Action {
 
@@ -19,7 +20,7 @@ export class OMEPIAction extends Action {
         var desc = 'EPI - Manuntentor ' + manutNome + ' sinalizou que está utilizando o EPI ' + epiNome;
         return 'insert into TBHISTORICO (TBHISTORICO.IDUSER, TBHISTORICO.IDOM, TBHISTORICO.DESC, TBHISTORICO.DTALTER) values (\'' + this.req.body.idUser + '\',\'' + this.req.body.idOm + '\',\'' + desc + '\', now());';
     }
-    private generateSQL(epi:any) {
+    private generateSQL(epi: any) {
         return 'select * from TBEPI_WITH_TBOM where TBEPI_WITH_TBOM.IDEPI = \'' + epi + '\' AND TBEPI_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\' AND TBEPI_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\';';
     }
     private getNomes(epi: any) {
@@ -40,17 +41,19 @@ export class OMEPIAction extends Action {
 
     @Post('/AddOMEPI')
     public Post() {
-        this.validateData();
-        if (this.req.body.epis) {
-            this.req.body.epis.forEach((epi: any) => {
-                new MySQLFactory().getConnection().select(this.insertSQL(epi)).subscribe(
+        var jwtss = new jwts();
 
-                    new MySQLFactory().getConnection().select(this.generateSQL(epi)).subscribe(
-                        (data: any) => {
-                            // if (data.length || data.length > 0) {
-                            //     this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
-                            //     return;
-                            // } else {
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            this.validateData();
+            if (this.req.body.epis) {
+                this.req.body.epis.forEach((epi: any) => {
+                    new MySQLFactory().getConnection().select(this.insertSQL(epi)).subscribe(
+
+                        new MySQLFactory().getConnection().select(this.generateSQL(epi)).subscribe(
+                            (data: any) => {
 
                                 new MySQLFactory().getConnection().select(this.insertSQL(epi)).subscribe(
                                     (data: any) => {
@@ -65,69 +68,96 @@ export class OMEPIAction extends Action {
                                         );
                                     }
                                 );
-                            // }
-                            
-                        },
-                        (error: any) => {
-                            this.sendError(error);
-                        }
 
-                    ));
-            });
-            this.sendAnswer({
-                token: new VPUtils().generateGUID().toUpperCase()
-            });
+                            },
+                            (error: any) => {
+                                this.sendError(error);
+                            }
+
+                        ));
+                });
+                this.sendAnswer({
+                    token: new VPUtils().generateGUID().toUpperCase()
+                });
+            }
         }
     }
     @Post('/GetOMEPI')
     public Getone() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
     @Post('/GetOMEPINotUsed')
     public GetEpisNot() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectEPISNotUsed()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectEPISNotUsed()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
     @Post('/GetOMEPIUsed')
     public GetEpisIn() {
+        var jwtss = new jwts();
 
-        new MySQLFactory().getConnection().select(this.selectEPISUsed()).subscribe(
-            (data: any) => {
-                this.sendAnswer(data);
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.selectEPISUsed()).subscribe(
+                (data: any) => {
+                    this.sendAnswer(data);
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
     @Patch('/DelOMEPI')
     public Patch() {
-        new MySQLFactory().getConnection().select(this.deleteEpi()).subscribe(
-            (data: any) => {
-                this.sendAnswer({
-                token: new VPUtils().generateGUID().toUpperCase()
-            });
-            },
-            (error: any) => {
-                this.sendError(error);
-            }
-        );
+        var jwtss = new jwts();
+
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        } else {
+            new MySQLFactory().getConnection().select(this.deleteEpi()).subscribe(
+                (data: any) => {
+                    this.sendAnswer({
+                        token: new VPUtils().generateGUID().toUpperCase()
+                    });
+                },
+                (error: any) => {
+                    this.sendError(error);
+                }
+            );
+        }
     }
+
+    
     defineVisibility() {
         this.actionEscope = ActionType.atPublic;
     }

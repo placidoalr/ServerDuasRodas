@@ -64,13 +64,11 @@ var UserAction = /** @class */ (function (_super) {
         var _this = this;
         this.validateData();
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
-            console.log(data);
             if (data.length || data.length > 0) {
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
                 return;
             }
             else {
-                console.log("else");
                 new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
                 });
             }
