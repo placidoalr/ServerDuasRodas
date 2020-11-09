@@ -26,6 +26,7 @@ var decorators_1 = require("../decorators");
 var action_1 = require("../kernel/action");
 var route_types_1 = require("../kernel/route-types");
 var mysql_factory_1 = require("../mysql/mysql_factory");
+var jwt_1 = require("../utils/jwt");
 var ListaOMAction = /** @class */ (function (_super) {
     __extends(ListaOMAction, _super);
     function ListaOMAction() {
@@ -36,11 +37,18 @@ var ListaOMAction = /** @class */ (function (_super) {
     };
     ListaOMAction.prototype.GetListaOM = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL(this.req.query.userid, this.req.query.setorid)).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL(this.req.query.userid, this.req.query.setorid)).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     ListaOMAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;

@@ -28,6 +28,7 @@ var route_types_1 = require("../kernel/route-types");
 var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
+var jwt_1 = require("../utils/jwt");
 +2;
 var EndOMAction = /** @class */ (function (_super) {
     __extends(EndOMAction, _super);
@@ -72,36 +73,43 @@ var EndOMAction = /** @class */ (function (_super) {
     };
     EndOMAction.prototype.Post = function () {
         var _this = this;
-        this.validateData();
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
-            var estado = adm[0].CARGO + 2;
-            new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
-                if (admon.length || admon.length > 0 || adm[0].CARGO > 1) {
-                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL()).subscribe(function (data) {
-                        if (data[0].ESTADO > estado) {
-                            _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Estado setado é menor que o atual.'));
-                            return;
-                        }
-                        else {
-                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL(estado)).subscribe(function (data) {
-                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(adm[0].NOME, estado)).subscribe(function (data) {
-                                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.assinar()).subscribe(function (data) {
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            this.validateData();
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
+                var estado = adm[0].CARGO + 2;
+                new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
+                    if (admon.length || admon.length > 0 || adm[0].CARGO > 1) {
+                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL()).subscribe(function (data) {
+                            if (data[0].ESTADO > estado) {
+                                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Estado setado é menor que o atual.'));
+                                return;
+                            }
+                            else {
+                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL(estado)).subscribe(function (data) {
+                                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(adm[0].NOME, estado)).subscribe(function (data) {
+                                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.assinar()).subscribe(function (data) {
+                                        });
                                     });
                                 });
+                            }
+                            _this.sendAnswer({
+                                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
                             });
-                        }
-                        _this.sendAnswer({
-                            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+                        }, function (error) {
+                            _this.sendError(error);
                         });
-                    }, function (error) {
-                        _this.sendError(error);
-                    });
-                }
-                else {
-                    _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
-                }
+                    }
+                    else {
+                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                    }
+                });
             });
-        });
+        }
     };
     EndOMAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;

@@ -26,6 +26,7 @@ var decorators_1 = require("../decorators");
 var action_1 = require("../kernel/action");
 var route_types_1 = require("../kernel/route-types");
 var mysql_factory_1 = require("../mysql/mysql_factory");
+var jwt_1 = require("../utils/jwt");
 var selectManutsAction = /** @class */ (function (_super) {
     __extends(selectManutsAction, _super);
     function selectManutsAction() {
@@ -36,11 +37,18 @@ var selectManutsAction = /** @class */ (function (_super) {
     };
     selectManutsAction.prototype.Post = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     selectManutsAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;

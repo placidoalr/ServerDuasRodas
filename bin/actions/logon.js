@@ -43,9 +43,7 @@ var LogonAction = /** @class */ (function (_super) {
     LogonAction.prototype.Post = function () {
         var _this = this;
         this.validateData();
-        console.log(this.req.body);
         new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
-            console.log('data', data);
             if (!data.length || data.length != 1) {
                 _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário e senha inválidos'));
                 return;
@@ -63,7 +61,6 @@ var LogonAction = /** @class */ (function (_super) {
                 cargoNome: data[0].CARGONOME
             });
         }, function (error) {
-            console.log('Err', error);
             _this.sendError(error);
         });
     };
