@@ -72,7 +72,6 @@ export class CausaDefAction extends Action {
     @Get('/GetCAUSADEF')
     public Get() {
         var jwtss = new jwts();
-
         var retorno = jwtss.verifyJWT(this.req, this.resp);
         if (retorno.val == false) {
             return retorno.res;

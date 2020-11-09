@@ -28,6 +28,7 @@ var route_types_1 = require("../kernel/route-types");
 var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
+var jwt_1 = require("../utils/jwt");
 var DescOMAction = /** @class */ (function (_super) {
     __extends(DescOMAction, _super);
     function DescOMAction() {
@@ -71,61 +72,186 @@ var DescOMAction = /** @class */ (function (_super) {
     };
     DescOMAction.prototype.GetDescOM = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectDesc()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectDesc()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     DescOMAction.prototype.GetTempoOM = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectTempo()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectTempo()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     DescOMAction.prototype.GetDescOMROTA = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectDescROTA()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectDescROTA()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     DescOMAction.prototype.Post = function () {
         var _this = this;
-        this.validateData();
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
-            if (adm[0].CARGO == 1) {
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
-                    if (admon.length || admon.length > 0) {
-                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                        });
-                    }
-                    else {
-                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
-                    }
-                });
-            }
-            else {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
-            }
-        });
-        this.sendAnswer({
-            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-        });
-    };
-    DescOMAction.prototype.PostRota = function () {
-        var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
-            if (adm[0]) {
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            this.validateData();
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
                 if (adm[0].CARGO == 1) {
                     new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
                         if (admon.length || admon.length > 0) {
-                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertRota()).subscribe(function (data) {
-                                _this.sendAnswer({
-                                    token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
+                            });
+                        }
+                        else {
+                            _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                        }
+                    });
+                }
+                else {
+                    _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
+                }
+            });
+            this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }
+    };
+    DescOMAction.prototype.PostRota = function () {
+        var _this = this;
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
+                if (adm[0]) {
+                    if (adm[0].CARGO == 1) {
+                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
+                            if (admon.length || admon.length > 0) {
+                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertRota()).subscribe(function (data) {
+                                    _this.sendAnswer({
+                                        token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+                                    });
+                                });
+                            }
+                            else {
+                                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                            }
+                        });
+                    }
+                    else {
+                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
+                    }
+                }
+                else {
+                    _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário não encontrado'));
+                }
+            });
+        }
+    };
+    DescOMAction.prototype.Update = function () {
+        var _this = this;
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
+                if (adm[0].CARGO == 1) {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
+                        if (admon.length || admon.length > 0) {
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateSQL()).subscribe(function (data) {
+                            });
+                        }
+                        else {
+                            _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                        }
+                    });
+                }
+                else {
+                    _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
+                }
+            });
+            this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }
+    };
+    DescOMAction.prototype.UpdateRota = function () {
+        var _this = this;
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
+                if (adm[0].CARGO == 1) {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
+                        if (admon.length || admon.length > 0) {
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateRotaSQL()).subscribe(function (data) {
+                            });
+                        }
+                        else {
+                            _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                        }
+                    });
+                }
+                else {
+                    _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
+                }
+            });
+            this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }
+    };
+    DescOMAction.prototype.PostLista = function () {
+        var _this = this;
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            this.validateData();
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
+                if (adm[0].CARGO == 1) {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
+                        if (admon.length || admon.length > 0) {
+                            _this.req.body.equips.forEach(function (equip) {
+                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateEQUIPSQL(equip)).subscribe(function (data1) {
                                 });
                             });
                         }
@@ -137,90 +263,28 @@ var DescOMAction = /** @class */ (function (_super) {
                 else {
                     _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
                 }
-            }
-            else {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário não encontrado'));
-            }
-        });
-    };
-    DescOMAction.prototype.Update = function () {
-        var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
-            if (adm[0].CARGO == 1) {
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
-                    if (admon.length || admon.length > 0) {
-                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateSQL()).subscribe(function (data) {
-                        });
-                    }
-                    else {
-                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
-                    }
-                });
-            }
-            else {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
-            }
-        });
-        this.sendAnswer({
-            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-        });
-    };
-    DescOMAction.prototype.UpdateRota = function () {
-        var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
-            if (adm[0].CARGO == 1) {
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
-                    if (admon.length || admon.length > 0) {
-                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateRotaSQL()).subscribe(function (data) {
-                        });
-                    }
-                    else {
-                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
-                    }
-                });
-            }
-            else {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
-            }
-        });
-        this.sendAnswer({
-            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-        });
-    };
-    DescOMAction.prototype.PostLista = function () {
-        var _this = this;
-        this.validateData();
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
-            if (adm[0].CARGO == 1) {
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
-                    if (admon.length || admon.length > 0) {
-                        _this.req.body.equips.forEach(function (equip) {
-                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.updateEQUIPSQL(equip)).subscribe(function (data1) {
-                            });
-                        });
-                    }
-                    else {
-                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
-                    }
-                });
-            }
-            else {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para descrever'));
-            }
-        });
-        this.sendAnswer({
-            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-        });
+            });
+            this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }
     };
     DescOMAction.prototype.Patch = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteDescOMRota()).subscribe(function (data) {
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteDescOMRota()).subscribe(function (data) {
+                _this.sendAnswer({
+                    token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+                });
+            }, function (error) {
+                _this.sendError(error);
             });
-        }, function (error) {
-            _this.sendError(error);
-        });
+        }
     };
     DescOMAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;

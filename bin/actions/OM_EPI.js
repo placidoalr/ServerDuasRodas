@@ -28,6 +28,7 @@ var route_types_1 = require("../kernel/route-types");
 var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
+var jwt_1 = require("../utils/jwt");
 var OMEPIAction = /** @class */ (function (_super) {
     __extends(OMEPIAction, _super);
     function OMEPIAction() {
@@ -63,63 +64,93 @@ var OMEPIAction = /** @class */ (function (_super) {
     };
     OMEPIAction.prototype.Post = function () {
         var _this = this;
-        this.validateData();
-        if (this.req.body.epis) {
-            this.req.body.epis.forEach(function (epi) {
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL(epi)).subscribe(new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL(epi)).subscribe(function (data) {
-                    // if (data.length || data.length > 0) {
-                    //     this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
-                    //     return;
-                    // } else {
-                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL(epi)).subscribe(function (data) {
-                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.getNomes(epi)).subscribe(function (dados) {
-                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(dados[0].NOME, dados[0].EPINOME)).subscribe(function (dados) {
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            this.validateData();
+            if (this.req.body.epis) {
+                this.req.body.epis.forEach(function (epi) {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL(epi)).subscribe(new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL(epi)).subscribe(function (data) {
+                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL(epi)).subscribe(function (data) {
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.getNomes(epi)).subscribe(function (dados) {
+                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(dados[0].NOME, dados[0].EPINOME)).subscribe(function (dados) {
+                                });
                             });
                         });
-                    });
-                    // }
-                }, function (error) {
-                    _this.sendError(error);
-                }));
-            });
-            this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-            });
+                    }, function (error) {
+                        _this.sendError(error);
+                    }));
+                });
+                this.sendAnswer({
+                    token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+                });
+            }
         }
     };
     OMEPIAction.prototype.Getone = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMEPIAction.prototype.GetEpisNot = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectEPISNotUsed()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectEPISNotUsed()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMEPIAction.prototype.GetEpisIn = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectEPISUsed()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectEPISUsed()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMEPIAction.prototype.Patch = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteEpi()).subscribe(function (data) {
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteEpi()).subscribe(function (data) {
+                _this.sendAnswer({
+                    token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+                });
+            }, function (error) {
+                _this.sendError(error);
             });
-        }, function (error) {
-            _this.sendError(error);
-        });
+        }
     };
     OMEPIAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;

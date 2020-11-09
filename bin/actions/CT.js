@@ -28,6 +28,7 @@ var route_types_1 = require("../kernel/route-types");
 var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
+var jwt_1 = require("../utils/jwt");
 var CTAction = /** @class */ (function (_super) {
     __extends(CTAction, _super);
     function CTAction() {
@@ -53,64 +54,84 @@ var CTAction = /** @class */ (function (_super) {
     };
     CTAction.prototype.Post = function () {
         var _this = this;
-        this.validateData();
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
-            if (data.length || data.length > 0) {
-                //console.log("Centro de trabalho já existe "+data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Centro de trabalho já existe'));
-                return;
-            }
-            else {
-                //console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
-                    //console.log("DEU CERTO ADD "+data);
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            this.validateData();
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+                if (data.length || data.length > 0) {
+                    _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Centro de trabalho já existe'));
+                    return;
+                }
+                else {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
+                    });
+                }
+                _this.sendAnswer({
+                    token: new vputils_1.VPUtils().generateGUID().toUpperCase()
                 });
-            }
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            }, function (error) {
+                _this.sendError(error);
             });
-        }, function (error) {
-            _this.sendError(error);
-        });
+        }
     };
     CTAction.prototype.GetCT = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     CTAction.prototype.PatchCT = function () {
         var _this = this;
-        //console.log("ENTROU"+this.req.body.name)
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
-            //console.log(data);
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     CTAction.prototype.EditCT = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
-            if (data.length || data.length > 0) {
-                //console.log(data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Novo centro de trabalho já existe'));
-                return;
-            }
-            else {
-                //console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
-                    //  console.log(data);
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+                if (data.length || data.length > 0) {
+                    _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Novo centro de trabalho já existe'));
+                    return;
+                }
+                else {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
+                    });
+                }
+                _this.sendAnswer({
+                    token: new vputils_1.VPUtils().generateGUID().toUpperCase()
                 });
-            }
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            }, function (error) {
+                _this.sendError(error);
             });
-        }, function (error) {
-            _this.sendError(error);
-        });
+        }
     };
     CTAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;

@@ -28,6 +28,7 @@ var route_types_1 = require("../kernel/route-types");
 var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
+var jwt_1 = require("../utils/jwt");
 var UserAction = /** @class */ (function (_super) {
     __extends(UserAction, _super);
     function UserAction() {
@@ -62,69 +63,99 @@ var UserAction = /** @class */ (function (_super) {
     };
     UserAction.prototype.Post = function () {
         var _this = this;
-        this.validateData();
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
-            if (data.length || data.length > 0) {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
-                return;
-            }
-            else {
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            this.validateData();
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
+                if (data.length || data.length > 0) {
+                    _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
+                    return;
+                }
+                else {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data) {
+                    });
+                }
+                _this.sendAnswer({
+                    token: new vputils_1.VPUtils().generateGUID().toUpperCase()
                 });
-            }
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            }, function (error) {
+                _this.sendError(error);
             });
-        }, function (error) {
-            _this.sendError(error);
-        });
+        }
     };
     UserAction.prototype.Get = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     UserAction.prototype.GetLeads = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectLideres()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectLideres()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     UserAction.prototype.Patch = function () {
         var _this = this;
-        //console.log("ENTROU"+this.req.body.name)
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
-            //console.log(data);
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     UserAction.prototype.Edit = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
-            if (data.length || data.length > 0 && _this.req.body.idsap != _this.req.body.idsaplast) {
-                //console.log(data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
-                return;
-            }
-            else {
-                //console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
-                    //  console.log(data);
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+                if (data.length || data.length > 0 && _this.req.body.idsap != _this.req.body.idsaplast) {
+                    _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário já existe'));
+                    return;
+                }
+                else {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
+                    });
+                }
+                _this.sendAnswer({
+                    token: new vputils_1.VPUtils().generateGUID().toUpperCase()
                 });
-            }
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            }, function (error) {
+                _this.sendError(error);
             });
-        }, function (error) {
-            _this.sendError(error);
-        });
+        }
     };
     UserAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
@@ -162,115 +193,3 @@ var UserAction = /** @class */ (function (_super) {
     return UserAction;
 }(action_1.Action));
 exports.UserAction = UserAction;
-/*
-
-export class CTAction extends Action{
-    private validateData(){
-        new KernelUtils().createExceptionApiError('1001', 'Informe o nome do Centro de Trabalho', this.req.body.name == '' || this.req.body.name == undefined);
-    }
-
-    private selectSQL() : string {
-        return 'select NOME from TBCT where STATUS = 1;';
-    }
-
-    private deleteSQL() : string {
-        return 'UPDATE TBCT SET STATUS = \'0\' WHERE NOME =  \'' + this.req.body.name + '\';';
-    }
-
-    private editSQL() : string {
-        
-        return 'UPDATE TBCT SET NOME = \'' + this.req.body.name + '\' WHERE NOME =  \'' + this.req.body.namelast + '\';';
-    }
-
-
-    private insertSQL() : string{
-        return 'insert into TBCT (TBCT.NOME ) values (\''+ this.req.body.name+'\');';
-    }
-
-    @Post('/AddCT')
-    public Post(){
-        this.validateData();
-
-        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-            (data : any) => {
-                if (data.length || data.length > 0){
-                    //console.log("Centro de trabalho já existe "+data);
-                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Centro de trabalho já existe'));
-                  return;
-                }else{
-                    //console.log(data);
-                    new MySQLFactory().getConnection().select(this.insertSQL()).subscribe(
-                        (data : any) => {
-                            //console.log("DEU CERTO ADD "+data);
-                        }
-                    );
-                }
-                this.sendAnswer({
-                    token    : new VPUtils().generateGUID().toUpperCase()
-                });
-            },
-            (error : any) => {
-                this.sendError(error);
-            }
-        );
-    }
-
-    @Get('/GetCT')
-    public GetCT(){
-        
-        new MySQLFactory().getConnection().select(this.selectSQL()).subscribe(
-            (data : any) => {
-                this.sendAnswer(data);
-            },
-            (error : any) => {
-                this.sendError(error);
-            }
-        );
-    }
-
-    @Patch('/DelCT')
-    public PatchCT(){
-        //console.log("ENTROU"+this.req.body.name)
-        new MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(
-            (data : any) => {
-                //console.log(data);
-                this.sendAnswer(data);
-            },
-            (error : any) => {
-                this.sendError(error);
-            }
-        );
-}
-@Post('/EditCT')
-    public EditCT(){
-
-        new MySQLFactory().getConnection().select(this.generateSQL()).subscribe(
-            (data : any) => {
-                if (data.length || data.length > 0){
-                    //console.log(data);
-                  this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Novo centro de trabalho já existe'));
-                  return;
-                }else{
-                    //console.log(data);
-                    new MySQLFactory().getConnection().select(this.editSQL()).subscribe(
-                        (data : any) => {
-                          //  console.log(data);
-                        }
-                    );
-                }
-                this.sendAnswer({
-                    token    : new VPUtils().generateGUID().toUpperCase()
-                });
-            },
-            (error : any) => {
-                this.sendError(error);
-            }
-        );
-    
-}
-
-    defineVisibility() {
-        this.actionEscope = ActionType.atPublic;
-    }
-}
-*/ 

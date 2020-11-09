@@ -28,6 +28,7 @@ var route_types_1 = require("../kernel/route-types");
 var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
+var jwt_1 = require("../utils/jwt");
 var InviteOMAction = /** @class */ (function (_super) {
     __extends(InviteOMAction, _super);
     function InviteOMAction() {
@@ -57,45 +58,52 @@ var InviteOMAction = /** @class */ (function (_super) {
     };
     InviteOMAction.prototype.Post = function () {
         var _this = this;
-        this.validateData();
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
-            if (adm[0].CARGO == 1) {
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.validateManut()).subscribe(function (manut) {
-                    if (manut[0].CARGO == 1) {
-                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
-                            if (admon.length || admon.length > 0) {
-                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL()).subscribe(function (data) {
-                                    if (data.length || data.length > 0) {
-                                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
-                                        return;
-                                    }
-                                    else {
-                                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data1) {
-                                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(adm[0].NOME, manut[0].NOME)).subscribe(function (data2) {
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            this.validateData();
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.validateADM()).subscribe(function (adm) {
+                if (adm[0].CARGO == 1) {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.validateManut()).subscribe(function (manut) {
+                        if (manut[0].CARGO == 1) {
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.ADMonOM()).subscribe(function (admon) {
+                                if (admon.length || admon.length > 0) {
+                                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.generateSQL()).subscribe(function (data) {
+                                        if (data.length || data.length > 0) {
+                                            _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Vínculo já existe'));
+                                            return;
+                                        }
+                                        else {
+                                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertSQL()).subscribe(function (data1) {
+                                                new mysql_factory_1.MySQLFactory().getConnection().select(_this.historico(adm[0].NOME, manut[0].NOME)).subscribe(function (data2) {
+                                                });
                                             });
+                                        }
+                                        _this.sendAnswer({
+                                            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
                                         });
-                                    }
-                                    _this.sendAnswer({
-                                        token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+                                    }, function (error) {
+                                        _this.sendError(error);
                                     });
-                                }, function (error) {
-                                    _this.sendError(error);
-                                });
-                            }
-                            else {
-                                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
-                            }
-                        });
-                    }
-                    else {
-                        _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para receber a OM'));
-                    }
-                });
-            }
-            else {
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para convidar'));
-            }
-        });
+                                }
+                                else {
+                                    _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Manutentor ADM não está na OM '));
+                                }
+                            });
+                        }
+                        else {
+                            _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para receber a OM'));
+                        }
+                    });
+                }
+                else {
+                    _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Usuário sem permissão para convidar'));
+                }
+            });
+        }
     };
     InviteOMAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;

@@ -28,6 +28,7 @@ var route_types_1 = require("../kernel/route-types");
 var vputils_1 = require("../utils/vputils");
 var kernel_utils_1 = require("../kernel/kernel-utils");
 var mysql_factory_1 = require("../mysql/mysql_factory");
+var jwt_1 = require("../utils/jwt");
 var OMAction = /** @class */ (function (_super) {
     __extends(OMAction, _super);
     function OMAction() {
@@ -129,164 +130,263 @@ var OMAction = /** @class */ (function (_super) {
     };
     OMAction.prototype.Post = function () {
         var _this = this;
-        this.validateData();
-        console.log(this.req.body);
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.insertSQL()).subscribe(function (data) {
-            if (_this.req.body.layout == 2) {
-                if (_this.req.body.equips) {
-                    _this.req.body.equips.forEach(function (equip) {
-                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertEQUIPROTA(equip, data.insertId)).subscribe(function (data1) {
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            this.validateData();
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.insertSQL()).subscribe(function (data) {
+                if (_this.req.body.layout == 2) {
+                    if (_this.req.body.equips) {
+                        _this.req.body.equips.forEach(function (equip) {
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertEQUIPROTA(equip, data.insertId)).subscribe(function (data1) {
+                            });
                         });
-                    });
+                    }
                 }
-            }
-            else {
-                if (_this.req.body.equips) {
-                    _this.req.body.equips.forEach(function (equip) {
-                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertEQUIPSQL(equip, data.insertId)).subscribe(function (data1) {
+                else {
+                    if (_this.req.body.equips) {
+                        _this.req.body.equips.forEach(function (equip) {
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertEQUIPSQL(equip, data.insertId)).subscribe(function (data1) {
+                            });
                         });
-                    });
-                }
-                if (_this.req.body.opers) {
-                    _this.req.body.opers.forEach(function (oper) {
-                        new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertOPERSQL(oper, data.insertId)).subscribe(function (data1) {
+                    }
+                    if (_this.req.body.opers) {
+                        _this.req.body.opers.forEach(function (oper) {
+                            new mysql_factory_1.MySQLFactory().getConnection().select(_this.insertOPERSQL(oper, data.insertId)).subscribe(function (data1) {
+                            });
                         });
-                    });
+                    }
                 }
-            }
-        });
-        this.sendAnswer({
-            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-        });
+            });
+            this.sendAnswer({
+                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            });
+        }
     };
     OMAction.prototype.EquipWOMROTA = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectEquipWOMROTA()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectEquipWOMROTA()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMAction.prototype.EquipWOM = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectEquipWOM()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectEquipWOM()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMAction.prototype.MatWOM = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectMATWOM()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectMATWOM()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMAction.prototype.OperWOM = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectOPERWOM()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectOPERWOM()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMAction.prototype.Get = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectSQL()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMAction.prototype.getOMsFinalizadaADM = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectOMsFinalizadaADM()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectOMsFinalizadaADM()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMAction.prototype.getOMsAndamentoLider = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectOMsAndamentoLider()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectOMsAndamentoLider()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMAction.prototype.getOMsAndamentoADM = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectOMsAndamentoADM()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectOMsAndamentoADM()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMAction.prototype.getOMsBySetor = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectOMsBySetor()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectOMsBySetor()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMAction.prototype.getOMsFinalizadaLider = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.selectOMsFinalizadaLider()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.selectOMsFinalizadaLider()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMAction.prototype.Get1 = function () {
         var _this = this;
-        console.log(this.req.body);
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.generateADDSQL()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMAction.prototype.Patch = function () {
         var _this = this;
-        //console.log("ENTROU"+this.req.body.name)
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
-            //console.log(data);
-            _this.sendAnswer(data);
-        }, function (error) {
-            _this.sendError(error);
-        });
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.deleteSQL()).subscribe(function (data) {
+                _this.sendAnswer(data);
+            }, function (error) {
+                _this.sendError(error);
+            });
+        }
     };
     OMAction.prototype.Edit = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
-            if (data.length || data.length > 0) {
-                //console.log(data);
-                _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'OM já existe'));
-                return;
-            }
-            else {
-                //console.log(data);
-                new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.generateSQL()).subscribe(function (data) {
+                if (data.length || data.length > 0) {
+                    _this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'OM já existe'));
+                    return;
+                }
+                else {
+                    new mysql_factory_1.MySQLFactory().getConnection().select(_this.editSQL()).subscribe(function (data) {
+                    });
+                }
+                _this.sendAnswer({
+                    token: new vputils_1.VPUtils().generateGUID().toUpperCase()
                 });
-            }
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+            }, function (error) {
+                _this.sendError(error);
             });
-        }, function (error) {
-            _this.sendError(error);
-        });
+        }
     };
     OMAction.prototype.EditObsEquipLista = function () {
         var _this = this;
-        new mysql_factory_1.MySQLFactory().getConnection().select(this.insertEQUIPSQLObs()).subscribe(function (data) {
-            _this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+        var jwtss = new jwt_1.jwts();
+        var retorno = jwtss.verifyJWT(this.req, this.resp);
+        if (retorno.val == false) {
+            return retorno.res;
+        }
+        else {
+            new mysql_factory_1.MySQLFactory().getConnection().select(this.insertEQUIPSQLObs()).subscribe(function (data) {
+                _this.sendAnswer({
+                    token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+                });
+            }, function (error) {
+                _this.sendError(error);
             });
-        }, function (error) {
-            _this.sendError(error);
-        });
+        }
     };
     OMAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;

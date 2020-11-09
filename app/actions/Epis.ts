@@ -82,10 +82,10 @@ export class EPIAction extends Action {
             );
         }
     }
+    
     @Get('/GetEPIs')
     public GetCT() {
         var jwtss = new jwts();
-
         var retorno = jwtss.verifyJWT(this.req, this.resp);
         if (retorno.val == false) {
             return retorno.res;
