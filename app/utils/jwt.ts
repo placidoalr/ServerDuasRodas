@@ -6,7 +6,7 @@ var jwt = require('jsonwebtoken');
 export class jwts {
     public verifyJWT(req:any, res:any) {
         
-        var token = req.headers['x-access-token'];
+        var token = req.headers['Authorization'];
         if (!token) return {val : false,res:res.status(401).json(
             { auth: false, message: 'No token provided.' })};
 
