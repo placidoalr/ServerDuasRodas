@@ -30,7 +30,7 @@ export class FiltrosAction extends Action {
         }else if(this.req.body.GetOM){
             sql += ' AND TBOM.ESTADO = 1';
         }else if(this.req.body.GetOMByUserIDAtribuida){
-            sql += ' AND TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.GetOMByUserIDAtribuida + '\' AND TBOM.ESTADO = 3 '
+            sql += ' AND TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.GetOMByUserIDAtribuida + '\' AND TBOM.ESTADO = 2 '
         }else{
             sql += '  AND TBOM.ESTADO = 1 '
         }
