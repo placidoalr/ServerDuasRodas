@@ -7,17 +7,32 @@ import { jwts } from '../utils/jwt';
 export class FiltrosAction extends Action {
 
     private selectSQL(): string {
-        var sql = 'select TBOM.*, TBSINTOMA.NOME as SINTOMANOME,TBLOC_INST.NOME as TBLOC_INSTNOME,TBCT.NOME as TBCTNOME,TBLAYOUTOM.NOME as TBLAYOUTOMNOME, TBLAYOUTOM.IDESTILO AS ESTILO, TBTIPOMAN.NOME as TBTIPOMANNOME, TBCAUSADEF.DSCAUSA as TBCAUSADEFNOME, TBPRIORIDADE.NOME as TBPRIORIDADENOME from TBOM INNER JOIN TBLOC_INST ON TBOM.LOC_INST_ATRIB = TBLOC_INST.ID inner join TBCT on TBOM.IDCT = TBCT.ID inner join TBSINTOMA ON TBOM.SINTOMA = TBSINTOMA.ID inner join TBLAYOUTOM on TBOM.IDLAYOUT = TBLAYOUTOM.ID INNER JOIN TBTIPOMAN ON TBOM.TPOM = TBTIPOMAN.ID INNER JOIN TBCAUSADEF ON TBOM.CAUSADEF = TBCAUSADEF.ID INNER JOIN TBPRIORIDADE ON TBOM.PRIORIDADE = TBPRIORIDADE.ID where TBOM.STATUS = 1 ';
-        if(this.req.body.GetOMsFinalizadaADM){
-            sql += 'AND TBOM.ESTADO = 5';
+        var sql = 'select TBOM.*, TBSINTOMA.NOME as SINTOMANOME,TBLOC_INST.NOME as TBLOC_INSTNOME,TBCT.NOME as TBCTNOME,TBLAYOUTOM.NOME as TBLAYOUTOMNOME, TBLAYOUTOM.IDESTILO AS ESTILO, TBTIPOMAN.NOME as TBTIPOMANNOME, TBCAUSADEF.DSCAUSA as TBCAUSADEFNOME, TBPRIORIDADE.NOME as TBPRIORIDADENOME from TBOM INNER JOIN TBLOC_INST ON TBOM.LOC_INST_ATRIB = TBLOC_INST.ID inner join TBCT on TBOM.IDCT = TBCT.ID inner join TBSINTOMA ON TBOM.SINTOMA = TBSINTOMA.ID inner join TBLAYOUTOM on TBOM.IDLAYOUT = TBLAYOUTOM.ID INNER JOIN TBTIPOMAN ON TBOM.TPOM = TBTIPOMAN.ID INNER JOIN TBCAUSADEF ON TBOM.CAUSADEF = TBCAUSADEF.ID INNER JOIN TBPRIORIDADE ON TBOM.PRIORIDADE = TBPRIORIDADE.ID ';
+        
+        if(this.req.body.GetOMByUserIDFinalizada || this.req.body.GetOMByUserIDAtribuida){
+            sql += ' INNER JOIN TBUSUARIO_WITH_TBOM ON TBOM.ID = TBUSUARIO_WITH_TBOM.IDOM '
+        }
+
+        sql += 'where TBOM.STATUS = 1 ';
+        
+        if(this.req.body.GetOMByUserIDFinalizada){
+            sql += ' AND TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.GetOMByUserIDFinalizada + '\' AND TBOM.ESTADO = 3 '
+        }else if(this.req.body.GetOMsFinalizadaADM){
+            sql += ' AND TBOM.ESTADO = 5';
         }else if(this.req.body.GetOMsAndamentoLider){
-            sql += 'AND (TBOM.ESTADO = 2 OR TBOM.ESTADO = 3) AND TBOM.LOC_INST_ATRIB = (SELECT ID from TBLOC_INST where TBLOC_INST.IDLIDER = ' + this.req.body.GetOMsAndamentoLider + ' )';
+            sql += ' AND (TBOM.ESTADO = 2 OR TBOM.ESTADO = 3) AND TBOM.LOC_INST_ATRIB = (SELECT ID from TBLOC_INST where TBLOC_INST.IDLIDER = ' + this.req.body.GetOMsAndamentoLider + ' )';
         }else if(this.req.body.GetOMsAndamentoADM){
-            sql += 'AND (TBOM.ESTADO = 2 OR TBOM.ESTADO = 3 OR TBOM.ESTADO = 4)';
+            sql += ' AND (TBOM.ESTADO = 2 OR TBOM.ESTADO = 3 OR TBOM.ESTADO = 4)';
         }else if(this.req.body.GetOMsFinalizadaLider){
-            sql += 'AND TBOM.ESTADO = 4 AND TBOM.LOC_INST_ATRIB = (SELECT ID from TBLOC_INST where TBLOC_INST.IDLIDER = ' + this.req.body.GetOMsFinalizadaLider + ' )';
+            sql += ' AND TBOM.ESTADO = 4 AND TBOM.LOC_INST_ATRIB = (SELECT ID from TBLOC_INST where TBLOC_INST.IDLIDER = ' + this.req.body.GetOMsFinalizadaLider + ' )';
         }else if(this.req.body.GetOMsBySetor){
-            sql += 'AND TBOM.ESTADO = 1 AND TBOM.LOC_INST_ATRIB = (SELECT ID from TBLOC_INST where TBLOC_INST.IDLIDER = ' + this.req.body.GetOMsBySetor + ' )';
+            sql += ' AND TBOM.ESTADO = 1 AND TBOM.LOC_INST_ATRIB = (SELECT ID from TBLOC_INST where TBLOC_INST.IDLIDER = ' + this.req.body.GetOMsBySetor + ' )';
+        }else if(this.req.body.GetOM){
+            sql += ' AND TBOM.ESTADO = 1';
+        }else if(this.req.body.GetOMByUserIDAtribuida){
+            sql += ' AND TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.GetOMByUserIDAtribuida + '\' AND TBOM.ESTADO = 3 '
+        }else{
+            sql += '  AND TBOM.ESTADO = 1 '
         }
 
         if(this.req.body.estado){
