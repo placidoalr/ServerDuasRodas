@@ -31,6 +31,8 @@ export class FiltrosAction extends Action {
             sql += ' AND TBOM.ESTADO = 1';
         }else if(this.req.body.GetOMByUserIDAtribuida){
             sql += ' AND TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.GetOMByUserIDAtribuida + '\' AND TBOM.ESTADO = 3 '
+        }else{
+            sql += '  AND TBOM.ESTADO = 1 '
         }
 
         if(this.req.body.estado){
