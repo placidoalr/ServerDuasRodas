@@ -30,7 +30,7 @@ export class ReproveOMAction extends Action {
         return 'select ID from TBUSUARIO_WITH_TBOM where TBUSUARIO_WITH_TBOM.IDMANUT = \'' + this.req.body.idUser + '\' AND TBUSUARIO_WITH_TBOM.IDOM = \'' + this.req.body.idOm + '\';';
     }
     private Reprove(state: any) {
-        return 'update TBOM set ESTADO = ' + state + ' and ISREJECTED = true where ID = ' + this.req.body.idOm + ';';
+        return 'update TBOM set ESTADO = ' + state + ', ISREJECTED = true where ID = ' + this.req.body.idOm + ';';
     }
     private rejeitar() {
         return 'DELETE from TBASSINATURAS where IDOM = ' + this.req.body.idOm + ';';
