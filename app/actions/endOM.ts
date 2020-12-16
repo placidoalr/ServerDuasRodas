@@ -14,11 +14,11 @@ export class EndOMAction extends Action {
     private insertSQL(estado: any): string {
 
         if (estado == 3) {
-            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', ISREJECTED = false WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
+            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\' WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
         } else if (estado == 4) {
-            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', ISREJECTED = false WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
+            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\' WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
         } else {
-            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\', ISREJECTED = false WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
+            return 'update TBOM SET TBOM.ESTADO = \'' + estado + '\' WHERE TBOM.ID = \'' + this.req.body.idOm + '\';';
         }
     }
     private historico(nome: any, estado: any): string {
